@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
@@ -70,6 +70,7 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
   const tip = tipShape.getPoints(100);
 
   const vertices = [];
+  const indices = [];
 
   for (let i = 0; i < root.length; i++) {
     const rp = root[i];
@@ -79,12 +80,33 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     vertices.push(tp.x + sweep, tp.y, 150);
   }
 
-  const mirroredVertices = mirrored ? vertices.map((v, i) => i % 3 === 2 ? -v : v) : [];
+  for (let i = 0; i < root.length - 1; i++) {
+    const r1 = 2 * i;
+    const t1 = 2 * i + 1;
+    const r2 = 2 * (i + 1);
+    const t2 = 2 * (i + 1) + 1;
+    indices.push(r1, t1, r2);
+    indices.push(t1, t2, r2);
+  }
 
-  const finalVerts = new Float32Array([...vertices, ...mirroredVertices]);
+  let mirroredVertices = [];
+  let mirroredIndices = [];
+  if (mirrored) {
+    const offset = vertices.length / 3;
+    mirroredVertices = vertices.map((v, i) => (i % 3 === 2 ? -v : v));
+    mirroredIndices = indices.map((idx) => idx + offset);
+  }
 
   const wingGeom = new THREE.BufferGeometry();
-  wingGeom.setAttribute('position', new THREE.BufferAttribute(finalVerts, 3));
+  wingGeom.setAttribute(
+    'position',
+    new THREE.BufferAttribute(
+      new Float32Array([...vertices, ...mirroredVertices]),
+      3
+    )
+  );
+  wingGeom.setIndex([...indices, ...mirroredIndices]);
+  wingGeom.computeVertexNormals();
   return wingGeom;
 }
 
