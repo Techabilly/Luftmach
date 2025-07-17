@@ -1,5 +1,6 @@
 import React from 'react';
 import * as THREE from 'three';
+import { useControls } from 'leva';
 
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
@@ -43,7 +44,11 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
-export default function AirfoilPreview({ chord, thickness, camber, camberPos, label, angle = 0 }) {
+export default function AirfoilPreview({ chord, thickness, camber, camberPos, label }) {
+  const { angle } = useControls(label, {
+    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }
+  });
+
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);
 
   // Rotate points by angle of attack (in degrees)
@@ -52,12 +57,12 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, la
   const sin = Math.sin(radians);
   const rotatedPoints = points.map(([x, y]) => {
     return [
-      (x * cos - y * sin).toFixed(2),
-      (-x * sin - y * cos).toFixed(2) // invert y for SVG
+      x * cos - y * sin,
+      -(x * sin + y * cos) // invert y for SVG
     ];
   });
 
-  const pathData = rotatedPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ');
+  const pathData = rotatedPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(' ');
 
   const padding = 20;
   const width = chord + padding * 2;
