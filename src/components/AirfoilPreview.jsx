@@ -43,9 +43,21 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
-export default function AirfoilPreview({ chord, thickness, camber, camberPos, label }) {
+export default function AirfoilPreview({ chord, thickness, camber, camberPos, label, angle = 0 }) {
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);
-  const pathData = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0].toFixed(2)} ${-p[1].toFixed(2)}`).join(' ');
+
+  // Rotate points by angle of attack (in degrees)
+  const radians = (angle * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const rotatedPoints = points.map(([x, y]) => {
+    return [
+      (x * cos - y * sin).toFixed(2),
+      (-x * sin - y * cos).toFixed(2) // invert y for SVG
+    ];
+  });
+
+  const pathData = rotatedPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ');
 
   const padding = 20;
   const width = chord + padding * 2;
@@ -54,7 +66,6 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, la
 
   const inchSpacing = 25.4; // 1 inch in mm
   const numGridLines = Math.floor(chord / inchSpacing);
-
   const gridLines = Array.from({ length: numGridLines + 1 }, (_, i) => i * inchSpacing);
 
   return (
