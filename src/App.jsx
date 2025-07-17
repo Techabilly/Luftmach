@@ -5,7 +5,7 @@ import { useControls, Leva } from 'leva';
 import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
-
+// Trigger rebuild
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
   const yt = x.map(xi =>
