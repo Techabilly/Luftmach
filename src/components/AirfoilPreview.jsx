@@ -51,15 +51,21 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, la
 
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);
 
-  // Rotate points by angle of attack (in degrees)
+  // Rotate points by angle of attack (pivot around trailing edge)
   const radians = (angle * Math.PI) / 180;
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
+
+  // Use trailing edge as pivot (x = chord)
+  const pivotX = chord;
+  const pivotY = 0;
+
   const rotatedPoints = points.map(([x, y]) => {
-    return [
-      x * cos - y * sin,
-      -(x * sin + y * cos) // invert y for SVG
-    ];
+    const dx = x - pivotX;
+    const dy = y - pivotY;
+    const xr = dx * cos - dy * sin + pivotX;
+    const yr = -(dx * sin + dy * cos + pivotY); // invert y for SVG
+    return [xr, yr];
   });
 
   const pathData = rotatedPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(' ');
