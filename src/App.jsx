@@ -48,19 +48,46 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
+function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
+  const radians = (angle * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const pivotX = chord * pivotRatio;
+  const pivotY = 0;
+  return points.map((p) => {
+    const dx = p.x - pivotX;
+    const dy = p.y - pivotY;
+    const xr = dx * cos - dy * sin + pivotX;
+    const yr = dx * sin + dy * cos + pivotY;
+    return new THREE.Vector2(xr, yr);
+  });
+}
+
 function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
-  const rootPoints = createAirfoilPoints(
+  let rootPoints = createAirfoilPoints(
     rootParams.chord,
     rootParams.thickness,
     rootParams.camber,
     rootParams.camberPos
   );
+  rootPoints = rotateAirfoil(
+    rootPoints,
+    rootParams.angle || 0,
+    rootParams.chord,
+    1
+  );
 
-  const tipPoints = createAirfoilPoints(
+  let tipPoints = createAirfoilPoints(
     tipParams.chord,
     tipParams.thickness,
     tipParams.camber,
     tipParams.camberPos
+  );
+  tipPoints = rotateAirfoil(
+    tipPoints,
+    tipParams.angle || 0,
+    tipParams.chord,
+    (tipParams.pivotPercent ?? 100) / 100
   );
 
   const rootShape = new THREE.Shape(rootPoints);
@@ -133,6 +160,7 @@ export default function App() {
     thickness: { value: 0.12, min: 0.05, max: 0.25 },
     camber: { value: 0.02, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
   });
 
   const tipParams = useControls('Tip Airfoil', {
@@ -140,6 +168,14 @@ export default function App() {
     thickness: { value: 0.12, min: 0.05, max: 0.25 },
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
+    pivotPercent: {
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+      label: 'Rotation Center (%)',
+    },
   });
 
   return (
@@ -166,6 +202,7 @@ export default function App() {
           thickness={rootParams.thickness}
           camber={rootParams.camber}
           camberPos={rootParams.camberPos}
+          angle={rootParams.angle}
           label="Root Airfoil"
         />
         <AirfoilPreview
@@ -174,6 +211,8 @@ export default function App() {
           thickness={tipParams.thickness}
           camber={tipParams.camber}
           camberPos={tipParams.camberPos}
+          angle={tipParams.angle}
+          pivotPercent={tipParams.pivotPercent}
           label="Tip Airfoil"
         />
       </div>

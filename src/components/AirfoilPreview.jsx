@@ -1,6 +1,5 @@
 import React from 'react';
 import * as THREE from 'three';
-import { useControls } from 'leva';
 
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
@@ -44,10 +43,7 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
-export default function AirfoilPreview({ chord, thickness, camber, camberPos, label }) {
-  const { angle } = useControls(label, {
-    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }
-  });
+export default function AirfoilPreview({ chord, thickness, camber, camberPos, angle = 0, pivotPercent = 100, label }) {
 
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);
 
@@ -56,8 +52,8 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, la
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
 
-  // Use trailing edge as pivot (x = chord)
-  const pivotX = chord;
+  // Pivot along the chord according to provided percent
+  const pivotX = chord * (pivotPercent / 100);
   const pivotY = 0;
 
   const rotatedPoints = points.map(([x, y]) => {
