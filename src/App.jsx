@@ -48,11 +48,18 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
+function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
+  const radians = (angle * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const pivotX = chord * pivotRatio;
+
 function rotateAirfoil(points, angle, chord) {
   const radians = (angle * Math.PI) / 180;
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
   const pivotX = chord;
+main
   const pivotY = 0;
   return points.map((p) => {
     const dx = p.x - pivotX;
@@ -70,7 +77,16 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     rootParams.camber,
     rootParams.camberPos
   );
+codex/make-angle-of-attack-sliders-affect-3d-view
+  rootPoints = rotateAirfoil(
+    rootPoints,
+    rootParams.angle || 0,
+    rootParams.chord,
+    1
+  );
+
   rootPoints = rotateAirfoil(rootPoints, rootParams.angle || 0, rootParams.chord);
+ main
 
   let tipPoints = createAirfoilPoints(
     tipParams.chord,
@@ -78,7 +94,16 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     tipParams.camber,
     tipParams.camberPos
   );
+codex/make-angle-of-attack-sliders-affect-3d-view
+  tipPoints = rotateAirfoil(
+    tipPoints,
+    tipParams.angle || 0,
+    tipParams.chord,
+    (tipParams.pivotPercent ?? 100) / 100
+  );
+
   tipPoints = rotateAirfoil(tipPoints, tipParams.angle || 0, tipParams.chord);
+main
 
   const rootShape = new THREE.Shape(rootPoints);
   const tipShape = new THREE.Shape(tipPoints);
@@ -159,6 +184,16 @@ export default function App() {
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
+ codex/make-angle-of-attack-sliders-affect-3d-view
+    pivotPercent: {
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+      label: 'Rotation Center (%)',
+    },
+
+main
   });
 
   return (
@@ -195,6 +230,9 @@ export default function App() {
           camber={tipParams.camber}
           camberPos={tipParams.camberPos}
           angle={tipParams.angle}
+ codex/make-angle-of-attack-sliders-affect-3d-view
+          pivotPercent={tipParams.pivotPercent}
+main
           label="Tip Airfoil"
         />
       </div>

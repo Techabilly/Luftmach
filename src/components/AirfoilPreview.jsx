@@ -43,7 +43,11 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
+codex/make-angle-of-attack-sliders-affect-3d-view
+export default function AirfoilPreview({ chord, thickness, camber, camberPos, angle = 0, pivotPercent = 100, label }) {
+
 export default function AirfoilPreview({ chord, thickness, camber, camberPos, angle = 0, label }) {
+ main
 
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);
 
@@ -52,8 +56,8 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, an
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
 
-  // Use trailing edge as pivot (x = chord)
-  const pivotX = chord;
+  // Pivot along the chord according to provided percent
+  const pivotX = chord * (pivotPercent / 100);
   const pivotY = 0;
 
   const rotatedPoints = points.map(([x, y]) => {
