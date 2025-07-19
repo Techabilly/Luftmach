@@ -77,7 +77,7 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     rootParams.camber,
     rootParams.camberPos
   );
-codex/make-angle-of-attack-sliders-affect-3d-view
+//codex/make-angle-of-attack-sliders-affect-3d-view
   rootPoints = rotateAirfoil(
     rootPoints,
     rootParams.angle || 0,
@@ -94,7 +94,7 @@ codex/make-angle-of-attack-sliders-affect-3d-view
     tipParams.camber,
     tipParams.camberPos
   );
-codex/make-angle-of-attack-sliders-affect-3d-view
+//codex/make-angle-of-attack-sliders-affect-3d-view
   tipPoints = rotateAirfoil(
     tipPoints,
     tipParams.angle || 0,
@@ -184,7 +184,7 @@ export default function App() {
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
- codex/make-angle-of-attack-sliders-affect-3d-view
+ //codex/make-angle-of-attack-sliders-affect-3d-view
     pivotPercent: {
       value: 100,
       min: 0,
@@ -230,7 +230,7 @@ main
           camber={tipParams.camber}
           camberPos={tipParams.camberPos}
           angle={tipParams.angle}
- codex/make-angle-of-attack-sliders-affect-3d-view
+ //codex/make-angle-of-attack-sliders-affect-3d-view
           pivotPercent={tipParams.pivotPercent}
 main
           label="Tip Airfoil"
