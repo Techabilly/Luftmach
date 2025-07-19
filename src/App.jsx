@@ -53,14 +53,8 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
   const pivotX = chord * pivotRatio;
-
-function rotateAirfoil(points, angle, chord) {
-  const radians = (angle * Math.PI) / 180;
-  const cos = Math.cos(radians);
-  const sin = Math.sin(radians);
-  const pivotX = chord;
-main
   const pivotY = 0;
+
   return points.map((p) => {
     const dx = p.x - pivotX;
     const dy = p.y - pivotY;
@@ -85,8 +79,6 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     1
   );
 
-  rootPoints = rotateAirfoil(rootPoints, rootParams.angle || 0, rootParams.chord);
- main
 
   let tipPoints = createAirfoilPoints(
     tipParams.chord,
@@ -102,8 +94,6 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
     (tipParams.pivotPercent ?? 100) / 100
   );
 
-  tipPoints = rotateAirfoil(tipPoints, tipParams.angle || 0, tipParams.chord);
-main
 
   const rootShape = new THREE.Shape(rootPoints);
   const tipShape = new THREE.Shape(tipPoints);
@@ -192,8 +182,6 @@ export default function App() {
       step: 1,
       label: 'Rotation Center (%)',
     },
-
-main
   });
 
   return (
@@ -232,7 +220,6 @@ main
           angle={tipParams.angle}
  //codex/make-angle-of-attack-sliders-affect-3d-view
           pivotPercent={tipParams.pivotPercent}
-main
           label="Tip Airfoil"
         />
       </div>
