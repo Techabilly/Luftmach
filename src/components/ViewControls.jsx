@@ -35,8 +35,8 @@ export default function ViewControls({ controls, targetGroup }) {
   };
 
   return (
-    <Html prepend>
-      <div style={{ position: 'absolute', bottom: 20, left: 20, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+    <Html fullscreen>
+      <div style={{ position: 'absolute', top: 20, left: 20, display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
           <button onClick={() => pan(0, 1)}>▲</button>
         </div>

@@ -107,6 +107,7 @@ export default function Fuselage({
   cornerDiameter,
   curveH = 1,
   curveV = 1,
+  wireframe = false,
 }) {
   const geom = useMemo(
     () =>
@@ -126,7 +127,7 @@ export default function Fuselage({
 
   return (
     <mesh geometry={geom}>
-      <meshStandardMaterial color="gray" side={THREE.DoubleSide} />
+      <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
     </mesh>
   );
 }

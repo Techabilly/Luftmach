@@ -130,7 +130,7 @@ function createWingGeometry(sections, span, sweep, mirrored) {
   return wingGeom;
 }
 
-export default function Wing({ sections, span, sweep, mirrored, mountHeight = 0, mountX = 0 }) {
+export default function Wing({ sections, span, sweep, mirrored, mountHeight = 0, mountX = 0, wireframe = false }) {
   const geom = useMemo(() => {
     return createWingGeometry(sections, span, sweep, mirrored);
   }, [sections, span, sweep, mirrored]);
@@ -138,7 +138,7 @@ export default function Wing({ sections, span, sweep, mirrored, mountHeight = 0,
   return (
     <group position={[mountX, mountHeight, 0]}>
       <mesh geometry={geom}>
-        <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} />
+        <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
     </group>
   );

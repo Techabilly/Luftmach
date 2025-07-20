@@ -219,10 +219,10 @@ export default function App() {
         <div
           style={{
             position: 'absolute',
-            bottom: 20,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            top: 20,
+            left: 20,
             display: 'flex',
+            flexDirection: 'column',
             gap: '10px',
           }}
         >
@@ -235,6 +235,7 @@ export default function App() {
               mountHeight={mountHeight}
               mountX={mountX}
               fuselageParams={fuselageParams}
+              wireframe
             />
           </MiniView>
           <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
@@ -246,6 +247,7 @@ export default function App() {
               mountHeight={mountHeight}
               mountX={mountX}
               fuselageParams={fuselageParams}
+              wireframe
             />
           </MiniView>
         </div>
