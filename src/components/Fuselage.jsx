@@ -21,6 +21,7 @@ function createRoundedRectShape(width, height, radius) {
 function createFuselageGeometry(
   length,
   width,
+  height,
   taperH,
   taperV,
   taperPosH,
@@ -50,7 +51,7 @@ function createFuselageGeometry(
     const vScale = scale(p, taperPosV, taperV, curveV);
     const shape = createRoundedRectShape(
       width * hScale,
-      width * vScale,
+      height * vScale,
       radius * Math.min(hScale, vScale),
     );
     return shape.getPoints(32);
@@ -98,6 +99,7 @@ function createFuselageGeometry(
 export default function Fuselage({
   length,
   width,
+  height,
   taperH,
   taperV,
   taperPosH,
@@ -114,6 +116,7 @@ export default function Fuselage({
       createFuselageGeometry(
         length,
         width,
+        height,
         taperH,
         taperV,
         taperPosH,
@@ -123,7 +126,7 @@ export default function Fuselage({
         curveV,
         tailHeight,
       ),
-    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
+    [length, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
   );
 
   const noseGeom = useMemo(() => {
@@ -131,6 +134,7 @@ export default function Fuselage({
     return createFuselageGeometry(
       noseLength,
       width * taperH,
+      height * taperV,
       1 / taperH,
       1 / taperV,
       taperPosH,
@@ -139,7 +143,7 @@ export default function Fuselage({
       curveH,
       curveV,
     );
-  }, [noseLength, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
+  }, [noseLength, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
 
   const nosePos = useMemo(() => [-length / 2 - noseLength / 2, 0, 0], [length, noseLength]);
 

@@ -108,6 +108,7 @@ export default function App() {
   const fuselageParams = useControls('Fuselage', {
     length: { value: 200, min: 50, max: 600 },
     width: { value: 40, min: 10, max: 200 },
+    height: { value: 40, min: 10, max: 200 },
     taperH: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' },
     taperV: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Vertical Taper' },
     taperPosH: { value: 0, min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' },
