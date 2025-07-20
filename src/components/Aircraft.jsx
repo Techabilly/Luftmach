@@ -11,6 +11,7 @@ export default function Aircraft({
   mountX,
   fuselageParams,
   groupRef,
+  wireframe = false,
 }) {
   return (
     <group ref={groupRef}>
@@ -24,6 +25,7 @@ export default function Aircraft({
         cornerDiameter={fuselageParams.cornerDiameter}
         curveH={fuselageParams.curveH}
         curveV={fuselageParams.curveV}
+        wireframe={wireframe}
       />
       <Wing
         sections={sections}
@@ -32,6 +34,7 @@ export default function Aircraft({
         mirrored={mirrored}
         mountHeight={mountHeight}
         mountX={mountX}
+        wireframe={wireframe}
       />
     </group>
   );
