@@ -304,8 +304,8 @@ export default function App() {
       </div>
 
       {/* Canvas */}
-      <div style={{ flex: 1, position: 'relative' }}>
-        <Canvas camera={{ position: [0, 0, 400], fov: 50 }}>
+      <div style={{ flex: 1, position: 'relative', height: '100%' }}>
+        <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [0, 0, 400], fov: 50 }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[1, 2, 3]} intensity={1} />
           <group ref={groupRef}>
