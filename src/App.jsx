@@ -223,7 +223,12 @@ export default function App() {
   const fuselageParams = useControls('Fuselage', {
     length: { value: 200, min: 50, max: 600 },
     width: { value: 40, min: 10, max: 200 },
-    taper: { value: 0.8, min: 0.1, max: 1, step: 0.01 },
+    taperH: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' },
+    taperV: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Vertical Taper' },
+    curveH: { value: 1, min: 0.1, max: 3, step: 0.1, label: 'Horizontal Curve' },
+    curveV: { value: 1, min: 0.1, max: 3, step: 0.1, label: 'Vertical Curve' },
+    taperPosH: { value: 0, min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' },
+    taperPosV: { value: 0, min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' },
     cornerDiameter: { value: 10, min: 0, max: 50, label: 'Corner Diameter' },
   });
 
@@ -303,7 +308,12 @@ export default function App() {
           <Fuselage
             length={fuselageParams.length}
             width={fuselageParams.width}
-            taper={fuselageParams.taper}
+            taperH={fuselageParams.taperH}
+            taperV={fuselageParams.taperV}
+            curveH={fuselageParams.curveH}
+            curveV={fuselageParams.curveV}
+            taperPosH={fuselageParams.taperPosH}
+            taperPosV={fuselageParams.taperPosV}
             cornerDiameter={fuselageParams.cornerDiameter}
           />
           <Wing
