@@ -64,9 +64,8 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   });
 }
 
-function createWingGeometry(sections, sweep, mirrored) {
+function createWingGeometry(sections, span, sweep, mirrored) {
   // sections: array of airfoil parameter objects describing each spanwise station
-  const span = 150;
   const vertices = [];
   const indices = [];
   let yOffset = 0;
@@ -138,10 +137,10 @@ function createWingGeometry(sections, sweep, mirrored) {
   return wingGeom;
 }
 
-function Wing({ sections, sweep, mirrored }) {
+function Wing({ sections, span, sweep, mirrored }) {
   const geom = useMemo(() => {
-    return createWingGeometry(sections, sweep, mirrored);
-  }, [sections, sweep, mirrored]);
+    return createWingGeometry(sections, span, sweep, mirrored);
+  }, [sections, span, sweep, mirrored]);
 
   return (
     <mesh geometry={geom}>
@@ -151,7 +150,8 @@ function Wing({ sections, sweep, mirrored }) {
 }
 
 export default function App() {
-  const { sweep, mirrored, enablePanel1, enablePanel2 } = useControls('Wing Settings', {
+  const { span, sweep, mirrored, enablePanel1, enablePanel2 } = useControls('Wing Settings', {
+    span: { value: 150, min: 10, max: 500 },
     sweep: { value: 0, min: -100, max: 100 },
     mirrored: true,
     enablePanel1: { value: false, label: 'Enable Panel 1' },
@@ -290,6 +290,7 @@ export default function App() {
           <directionalLight position={[1, 2, 3]} intensity={1} />
           <Wing
             sections={sections}
+            span={span}
             sweep={sweep}
             mirrored={mirrored}
           />
