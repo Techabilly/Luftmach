@@ -43,7 +43,6 @@ function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 5
   return [...top, ...bottom];
 }
 
-//codex/make-angle-of-attack-sliders-affect-3d-view
 export default function AirfoilPreview({ chord, thickness, camber, camberPos, angle = 0, pivotPercent = 100, label }) {
 
   const points = createAirfoilPoints(chord, thickness, camber, camberPos);

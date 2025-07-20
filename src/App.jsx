@@ -64,61 +64,57 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   });
 }
 
-function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
-  let rootPoints = createAirfoilPoints(
-    rootParams.chord,
-    rootParams.thickness,
-    rootParams.camber,
-    rootParams.camberPos
-  );
-//codex/make-angle-of-attack-sliders-affect-3d-view
-  rootPoints = rotateAirfoil(
-    rootPoints,
-    rootParams.angle || 0,
-    rootParams.chord,
-    1
-  );
-
-
-  let tipPoints = createAirfoilPoints(
-    tipParams.chord,
-    tipParams.thickness,
-    tipParams.camber,
-    tipParams.camberPos
-  );
-//codex/make-angle-of-attack-sliders-affect-3d-view
-  tipPoints = rotateAirfoil(
-    tipPoints,
-    tipParams.angle || 0,
-    tipParams.chord,
-    (tipParams.pivotPercent ?? 100) / 100
-  );
-
-
-  const rootShape = new THREE.Shape(rootPoints);
-  const tipShape = new THREE.Shape(tipPoints);
-
-  const root = rootShape.getPoints(100);
-  const tip = tipShape.getPoints(100);
-
+function createWingGeometry(sections, sweep, mirrored) {
+  // sections: array of airfoil parameter objects describing each spanwise station
+  const span = 150;
   const vertices = [];
   const indices = [];
+  let yOffset = 0;
 
-  for (let i = 0; i < root.length; i++) {
-    const rp = root[i];
-    const tp = tip[i];
+  // Precompute rotated point arrays for each section
+  const sectionPoints = sections.map((p) => {
+    let pts = createAirfoilPoints(
+      p.chord,
+      p.thickness,
+      p.camber,
+      p.camberPos
+    );
+    pts = rotateAirfoil(
+      pts,
+      p.angle || 0,
+      p.chord,
+      (p.pivotPercent ?? 100) / 100
+    );
+    return new THREE.Shape(pts).getPoints(100);
+  });
 
-    vertices.push(rp.x, rp.y, 0);
-    vertices.push(tp.x + sweep, tp.y, 150);
-  }
+  for (let s = 0; s < sections.length - 1; s++) {
+    const startZ = span * s;
+    const endZ = span * (s + 1);
+    const startSweep = sweep * (s / (sections.length - 1));
+    const endSweep = sweep * ((s + 1) / (sections.length - 1));
+    const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
+    const root = sectionPoints[s];
+    const tip = sectionPoints[s + 1];
 
-  for (let i = 0; i < root.length - 1; i++) {
-    const r1 = 2 * i;
-    const t1 = 2 * i + 1;
-    const r2 = 2 * (i + 1);
-    const t2 = 2 * (i + 1) + 1;
-    indices.push(r1, t1, r2);
-    indices.push(t1, t2, r2);
+    const offset = vertices.length / 3;
+    for (let i = 0; i < root.length; i++) {
+      const rp = root[i];
+      const tp = tip[i];
+      const startY = rp.y + yOffset;
+      const endY = tp.y + yOffset + Math.tan(dihedralRad) * span;
+      vertices.push(rp.x + startSweep, startY, startZ);
+      vertices.push(tp.x + endSweep, endY, endZ);
+    }
+    for (let i = 0; i < root.length - 1; i++) {
+      const r1 = offset + 2 * i;
+      const t1 = offset + 2 * i + 1;
+      const r2 = offset + 2 * (i + 1);
+      const t2 = offset + 2 * (i + 1) + 1;
+      indices.push(r1, t1, r2);
+      indices.push(t1, t2, r2);
+    }
+    yOffset += Math.tan(dihedralRad) * span;
   }
 
   let mirroredVertices = [];
@@ -142,10 +138,10 @@ function createWingGeometry(rootParams, tipParams, sweep, mirrored) {
   return wingGeom;
 }
 
-function Wing({ rootParams, tipParams, sweep, mirrored }) {
+function Wing({ sections, sweep, mirrored }) {
   const geom = useMemo(() => {
-    return createWingGeometry(rootParams, tipParams, sweep, mirrored);
-  }, [rootParams, tipParams, sweep, mirrored]);
+    return createWingGeometry(sections, sweep, mirrored);
+  }, [sections, sweep, mirrored]);
 
   return (
     <mesh geometry={geom}>
@@ -155,9 +151,11 @@ function Wing({ rootParams, tipParams, sweep, mirrored }) {
 }
 
 export default function App() {
-  const { sweep, mirrored } = useControls('Wing Settings', {
+  const { sweep, mirrored, enablePanel1, enablePanel2 } = useControls('Wing Settings', {
     sweep: { value: 0, min: -100, max: 100 },
     mirrored: true,
+    enablePanel1: { value: false, label: 'Enable Panel 1' },
+    enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
 
   const rootParams = useControls('Root Airfoil', {
@@ -166,6 +164,7 @@ export default function App() {
     camber: { value: 0.02, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
+    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
   });
 
   const tipParams = useControls('Tip Airfoil', {
@@ -174,7 +173,6 @@ export default function App() {
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
- //codex/make-angle-of-attack-sliders-affect-3d-view
     pivotPercent: {
       value: 100,
       min: 0,
@@ -183,6 +181,43 @@ export default function App() {
       label: 'Rotation Center (%)',
     },
   });
+
+  const panel1Params = useControls('Panel 1 Airfoil', {
+    chord: { value: 80, min: 10, max: 400 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25 },
+    camber: { value: 0.015, min: 0, max: 0.1 },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
+    pivotPercent: {
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+      label: 'Rotation Center (%)',
+    },
+    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
+  });
+
+  const panel2Params = useControls('Panel 2 Airfoil', {
+    chord: { value: 70, min: 10, max: 400 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25 },
+    camber: { value: 0.015, min: 0, max: 0.1 },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
+    pivotPercent: {
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+      label: 'Rotation Center (%)',
+    },
+    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
+  });
+
+  const sections = [rootParams];
+  if (enablePanel1) sections.push(panel1Params);
+  if (enablePanel2) sections.push(panel2Params);
+  sections.push(tipParams);
 
   return (
     <div id="app" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -211,6 +246,30 @@ export default function App() {
           angle={rootParams.angle}
           label="Root Airfoil"
         />
+        {enablePanel1 && (
+          <AirfoilPreview
+            key={`panel1-${JSON.stringify(panel1Params)}`}
+            chord={panel1Params.chord}
+            thickness={panel1Params.thickness}
+            camber={panel1Params.camber}
+            camberPos={panel1Params.camberPos}
+            angle={panel1Params.angle}
+            pivotPercent={panel1Params.pivotPercent}
+            label="Panel 1 Airfoil"
+          />
+        )}
+        {enablePanel2 && (
+          <AirfoilPreview
+            key={`panel2-${JSON.stringify(panel2Params)}`}
+            chord={panel2Params.chord}
+            thickness={panel2Params.thickness}
+            camber={panel2Params.camber}
+            camberPos={panel2Params.camberPos}
+            angle={panel2Params.angle}
+            pivotPercent={panel2Params.pivotPercent}
+            label="Panel 2 Airfoil"
+          />
+        )}
         <AirfoilPreview
           key={`tip-${JSON.stringify(tipParams)}`}
           chord={tipParams.chord}
@@ -218,7 +277,6 @@ export default function App() {
           camber={tipParams.camber}
           camberPos={tipParams.camberPos}
           angle={tipParams.angle}
- //codex/make-angle-of-attack-sliders-affect-3d-view
           pivotPercent={tipParams.pivotPercent}
           label="Tip Airfoil"
         />
@@ -230,8 +288,7 @@ export default function App() {
           <ambientLight intensity={0.5} />
           <directionalLight position={[1, 2, 3]} intensity={1} />
           <Wing
-            rootParams={rootParams}
-            tipParams={tipParams}
+            sections={sections}
             sweep={sweep}
             mirrored={mirrored}
           />
