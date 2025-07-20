@@ -5,6 +5,7 @@ import { useControls, Leva } from 'leva';
 import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
+import Fuselage from './components/Fuselage';
 // Trigger rebuild
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
@@ -215,6 +216,13 @@ export default function App() {
     },
   });
 
+  const fuselageParams = useControls('Fuselage', {
+    length: { value: 200, min: 50, max: 600 },
+    width: { value: 40, min: 10, max: 200 },
+    taper: { value: 0.8, min: 0.1, max: 1, step: 0.01 },
+    cornerDiameter: { value: 10, min: 0, max: 50, label: 'Corner Diameter' },
+  });
+
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
   if (enablePanel2) sections.push(panel2Params);
@@ -288,6 +296,12 @@ export default function App() {
         <Canvas camera={{ position: [0, 0, 400], fov: 50 }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[1, 2, 3]} intensity={1} />
+          <Fuselage
+            length={fuselageParams.length}
+            width={fuselageParams.width}
+            taper={fuselageParams.taper}
+            cornerDiameter={fuselageParams.cornerDiameter}
+          />
           <Wing
             sections={sections}
             span={span}
