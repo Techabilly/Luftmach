@@ -6,21 +6,20 @@ import * as THREE from 'three';
 export default function ViewControls({ controls, targetGroup }) {
   const { camera } = useThree();
   const step = 20;
-  const angleStep = THREE.MathUtils.degToRad(15);
 
-  const slide = (dir) => {
-    camera.position.x += dir * step;
+  const pan = (dx, dy) => {
+    camera.position.x += dx * step;
+    camera.position.y += dy * step;
     if (controls.current) {
-      controls.current.target.x += dir * step;
+      controls.current.target.x += dx * step;
+      controls.current.target.y += dy * step;
       controls.current.update();
     }
   };
 
-  const rotate = () => {
+  const zoom = (factor) => {
     const center = controls.current ? controls.current.target : new THREE.Vector3();
-    camera.position.sub(center);
-    camera.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), angleStep);
-    camera.position.add(center);
+    camera.position.sub(center).multiplyScalar(factor).add(center);
     if (controls.current) controls.current.update();
   };
 
@@ -37,11 +36,22 @@ export default function ViewControls({ controls, targetGroup }) {
 
   return (
     <Html prepend>
-      <div style={{ position: 'absolute', bottom: 20, left: 20, display: 'flex', gap: '8px' }}>
-        <button onClick={() => slide(-1)}>◀</button>
-        <button onClick={centerView}>Center</button>
-        <button onClick={() => slide(1)}>▶</button>
-        <button onClick={rotate}>⟳</button>
+      <div style={{ position: 'absolute', bottom: 20, left: 20, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+          <button onClick={() => pan(0, 1)}>▲</button>
+        </div>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button onClick={() => pan(-1, 0)}>◀</button>
+          <button onClick={centerView}>Center</button>
+          <button onClick={() => pan(1, 0)}>▶</button>
+        </div>
+        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+          <button onClick={() => pan(0, -1)}>▼</button>
+        </div>
+        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+          <button onClick={() => zoom(0.8)}>+</button>
+          <button onClick={() => zoom(1.25)}>-</button>
+        </div>
       </div>
     </Html>
   );
