@@ -106,6 +106,7 @@ export default function Fuselage({
   curveH = 1,
   curveV = 1,
   tailHeight = 0,
+  noseLength = 0,
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -125,9 +126,33 @@ export default function Fuselage({
     [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
   );
 
+  const noseGeom = useMemo(() => {
+    if (noseLength <= 0) return null;
+    return createFuselageGeometry(
+      noseLength,
+      width * taperH,
+      1 / taperH,
+      1 / taperV,
+      taperPosH,
+      taperPosV,
+      cornerDiameter * Math.min(taperH, taperV),
+      curveH,
+      curveV,
+    );
+  }, [noseLength, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
+
+  const nosePos = useMemo(() => [-length / 2 - noseLength / 2, 0, 0], [length, noseLength]);
+
   return (
-    <mesh geometry={geom}>
-      <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
-    </mesh>
+    <group>
+      <mesh geometry={geom}>
+        <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
+      </mesh>
+      {noseGeom && (
+        <mesh geometry={noseGeom} position={nosePos}>
+          <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
+        </mesh>
+      )}
+    </group>
   );
 }

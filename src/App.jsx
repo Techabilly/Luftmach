@@ -116,6 +116,7 @@ export default function App() {
     curveH: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' },
     curveV: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' },
     tailHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Tail Height' },
+    noseLength: { value: 0, min: 0, max: 300, step: 1, label: 'Nose Length' },
   });
 
   const sections = [rootParams];
