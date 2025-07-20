@@ -182,7 +182,7 @@ export default function App() {
       label: 'Rotation Center (%)',
     },
     dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
-  }, { render: () => enablePanel1 });
+  }, { render: (get) => get('Wing Settings.enablePanel1') });
 
   const panel2Params = useControls('Panel 2 Airfoil', {
     chord: { value: 70, min: 10, max: 400 },
@@ -198,7 +198,7 @@ export default function App() {
       label: 'Rotation Center (%)',
     },
     dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
-  }, { render: () => enablePanel2 });
+  }, { render: (get) => get('Wing Settings.enablePanel2') });
 
   const tipParams = useControls('Tip Airfoil', {
     chord: { value: 60, min: 10, max: 400 },
