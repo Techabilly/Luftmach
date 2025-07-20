@@ -26,6 +26,8 @@ function createFuselageGeometry(
   taperPosH,
   taperPosV,
   cornerDiameter,
+  curveH,
+  curveV,
 ) {
   const radius = cornerDiameter / 2;
 
@@ -39,15 +41,17 @@ function createFuselageGeometry(
   positions.push(1);
   positions.sort((a, b) => a - b);
 
-  function scale(p, pos, taper) {
+  function scale(p, pos, taper, curve) {
     if (pos >= 1) return p < 1 ? 1 : taper;
     if (p <= pos) return 1;
-    return 1 + ((p - pos) / (1 - pos)) * (taper - 1);
+    const t = (p - pos) / (1 - pos);
+    const curved = Math.pow(t, curve);
+    return 1 + curved * (taper - 1);
   }
 
   const pointArrays = positions.map((p) => {
-    const hScale = scale(p, taperPosH, taperH);
-    const vScale = scale(p, taperPosV, taperV);
+    const hScale = scale(p, taperPosH, taperH, curveH);
+    const vScale = scale(p, taperPosV, taperV, curveV);
     const shape = createRoundedRectShape(
       width * hScale,
       width * vScale,
@@ -101,6 +105,8 @@ export default function Fuselage({
   taperPosH,
   taperPosV,
   cornerDiameter,
+  curveH = 1,
+  curveV = 1,
 }) {
   const geom = useMemo(
     () =>
@@ -112,8 +118,10 @@ export default function Fuselage({
         taperPosH,
         taperPosV,
         cornerDiameter,
+        curveH,
+        curveV,
       ),
-    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter]
+    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]
   );
 
   return (
