@@ -36,8 +36,7 @@ function CameraCenter({ controlsRef, targetGroup }) {
 export default function App() {
   const controlsRef = useRef();
   const groupRef = useRef();
-  const { span, sweep, mirrored, enablePanel1, enablePanel2, mountHeight, mountX } = useControls('Wing Settings', {
-    span: { value: 150, min: 10, max: 500 },
+  const { sweep, mirrored, enablePanel1, enablePanel2, mountHeight, mountX } = useControls('Wing Settings', {
     sweep: { value: 0, min: -100, max: 100 },
     mirrored: true,
     mountHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Mount Height' },
@@ -51,6 +50,7 @@ export default function App() {
     thickness: { value: 0.12, min: 0.05, max: 0.25 },
     camber: { value: 0.02, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
   });
@@ -61,6 +61,7 @@ export default function App() {
     thickness: { value: 0.12, min: 0.05, max: 0.25 },
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     pivotPercent: {
       value: 100,
@@ -77,6 +78,7 @@ export default function App() {
     thickness: { value: 0.12, min: 0.05, max: 0.25 },
     camber: { value: 0.015, min: 0, max: 0.1 },
     camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     pivotPercent: {
       value: 100,
@@ -206,7 +208,6 @@ export default function App() {
           <Aircraft
             groupRef={groupRef}
             sections={sections}
-            span={span}
             sweep={sweep}
             mirrored={mirrored}
             mountHeight={mountHeight}
@@ -229,7 +230,6 @@ export default function App() {
           <MiniView position={[0, 0, 400]} up={[0, 1, 0]}>
             <Aircraft
               sections={sections}
-              span={span}
               sweep={sweep}
               mirrored={mirrored}
               mountHeight={mountHeight}
@@ -241,7 +241,6 @@ export default function App() {
           <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
             <Aircraft
               sections={sections}
-              span={span}
               sweep={sweep}
               mirrored={mirrored}
               mountHeight={mountHeight}
