@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
 import Fuselage from './components/Fuselage';
+import ViewControls from './components/ViewControls';
 // Trigger rebuild
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
@@ -153,6 +154,8 @@ function Wing({ sections, span, sweep, mirrored, mountHeight = 0, mountX = 0 }) 
 }
 
 export default function App() {
+  const controlsRef = useRef();
+  const groupRef = useRef();
   const { span, sweep, mirrored, enablePanel1, enablePanel2, mountHeight, mountX } = useControls('Wing Settings', {
     span: { value: 150, min: 10, max: 500 },
     sweep: { value: 0, min: -100, max: 100 },
@@ -301,30 +304,33 @@ export default function App() {
       </div>
 
       {/* Canvas */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, position: 'relative' }}>
         <Canvas camera={{ position: [0, 0, 400], fov: 50 }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[1, 2, 3]} intensity={1} />
-          <Fuselage
-            length={fuselageParams.length}
-            width={fuselageParams.width}
-            taperH={fuselageParams.taperH}
-            taperV={fuselageParams.taperV}
-            taperPosH={fuselageParams.taperPosH}
-            taperPosV={fuselageParams.taperPosV}
-            cornerDiameter={fuselageParams.cornerDiameter}
-            curveH={fuselageParams.curveH}
-            curveV={fuselageParams.curveV}
-          />
-          <Wing
-            sections={sections}
-            span={span}
-            sweep={sweep}
-            mirrored={mirrored}
-            mountHeight={mountHeight}
-            mountX={mountX}
-          />
-          <OrbitControls />
+          <group ref={groupRef}>
+            <Fuselage
+              length={fuselageParams.length}
+              width={fuselageParams.width}
+              taperH={fuselageParams.taperH}
+              taperV={fuselageParams.taperV}
+              taperPosH={fuselageParams.taperPosH}
+              taperPosV={fuselageParams.taperPosV}
+              cornerDiameter={fuselageParams.cornerDiameter}
+              curveH={fuselageParams.curveH}
+              curveV={fuselageParams.curveV}
+            />
+            <Wing
+              sections={sections}
+              span={span}
+              sweep={sweep}
+              mirrored={mirrored}
+              mountHeight={mountHeight}
+              mountX={mountX}
+            />
+          </group>
+          <OrbitControls ref={controlsRef} />
+          <ViewControls controls={controlsRef} targetGroup={groupRef} />
         </Canvas>
       </div>
     </div>
