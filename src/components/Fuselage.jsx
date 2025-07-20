@@ -31,15 +31,10 @@ function createFuselageGeometry(
 ) {
   const radius = cornerDiameter / 2;
 
-  const positions = [0];
-  if (taperPosH > 0 && taperPosH < 1 && !positions.includes(taperPosH)) {
-    positions.push(taperPosH);
-  }
-  if (taperPosV > 0 && taperPosV < 1 && !positions.includes(taperPosV)) {
-    positions.push(taperPosV);
-  }
-  positions.push(1);
-  positions.sort((a, b) => a - b);
+  // Sample several positions along the fuselage so taper transitions
+  // form smooth curves instead of a single angled segment.
+  const segments = 20;
+  const positions = Array.from({ length: segments + 1 }, (_, i) => i / segments);
 
   function scale(p, pos, taper, curve) {
     if (pos >= 1) return p < 1 ? 1 : taper;
