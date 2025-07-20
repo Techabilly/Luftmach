@@ -4,7 +4,6 @@ import Wing from './Wing';
 
 export default function Aircraft({
   sections,
-  span,
   sweep,
   mirrored,
   mountHeight,
@@ -29,7 +28,6 @@ export default function Aircraft({
       />
       <Wing
         sections={sections}
-        span={span}
         sweep={sweep}
         mirrored={mirrored}
         mountHeight={mountHeight}

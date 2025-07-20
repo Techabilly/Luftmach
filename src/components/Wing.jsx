@@ -59,7 +59,7 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   });
 }
 
-function createWingGeometry(sections, span, sweep, mirrored) {
+function createWingGeometry(sections, sweep, mirrored) {
   const vertices = [];
   const indices = [];
   let yOffset = 0;
@@ -80,11 +80,20 @@ function createWingGeometry(sections, span, sweep, mirrored) {
     return new THREE.Shape(pts).getPoints(100);
   });
 
+  const zPositions = [0];
+  for (let i = 0; i < sections.length - 1; i++) {
+    const len = sections[i].length || 0;
+    zPositions.push(zPositions[i] + len);
+  }
+
+  const totalSpan = zPositions[zPositions.length - 1] || 1;
+
   for (let s = 0; s < sections.length - 1; s++) {
-    const startZ = span * s;
-    const endZ = span * (s + 1);
-    const startSweep = sweep * (s / (sections.length - 1));
-    const endSweep = sweep * ((s + 1) / (sections.length - 1));
+    const startZ = zPositions[s];
+    const endZ = zPositions[s + 1];
+    const spanLen = endZ - startZ;
+    const startSweep = sweep * (startZ / totalSpan);
+    const endSweep = sweep * (endZ / totalSpan);
     const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
     const root = sectionPoints[s];
     const tip = sectionPoints[s + 1];
@@ -94,7 +103,7 @@ function createWingGeometry(sections, span, sweep, mirrored) {
       const rp = root[i];
       const tp = tip[i];
       const startY = rp.y + yOffset;
-      const endY = tp.y + yOffset + Math.tan(dihedralRad) * span;
+      const endY = tp.y + yOffset + Math.tan(dihedralRad) * spanLen;
       vertices.push(rp.x + startSweep, startY, startZ);
       vertices.push(tp.x + endSweep, endY, endZ);
     }
@@ -106,7 +115,7 @@ function createWingGeometry(sections, span, sweep, mirrored) {
       indices.push(r1, t1, r2);
       indices.push(t1, t2, r2);
     }
-    yOffset += Math.tan(dihedralRad) * span;
+    yOffset += Math.tan(dihedralRad) * spanLen;
   }
 
   let mirroredVertices = [];
@@ -130,10 +139,10 @@ function createWingGeometry(sections, span, sweep, mirrored) {
   return wingGeom;
 }
 
-export default function Wing({ sections, span, sweep, mirrored, mountHeight = 0, mountX = 0, wireframe = false }) {
+export default function Wing({ sections, sweep, mirrored, mountHeight = 0, mountX = 0, wireframe = false }) {
   const geom = useMemo(() => {
-    return createWingGeometry(sections, span, sweep, mirrored);
-  }, [sections, span, sweep, mirrored]);
+    return createWingGeometry(sections, sweep, mirrored);
+  }, [sections, sweep, mirrored]);
 
   return (
     <group position={[mountX, mountHeight, 0]}>
