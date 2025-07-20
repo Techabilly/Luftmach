@@ -24,6 +24,7 @@ export default function Aircraft({
         cornerDiameter={fuselageParams.cornerDiameter}
         curveH={fuselageParams.curveH}
         curveV={fuselageParams.curveV}
+        tailHeight={fuselageParams.tailHeight}
         wireframe={wireframe}
       />
       <Wing
