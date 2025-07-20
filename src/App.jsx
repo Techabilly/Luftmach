@@ -228,6 +228,8 @@ export default function App() {
     taperPosH: { value: 0, min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' },
     taperPosV: { value: 0, min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' },
     cornerDiameter: { value: 10, min: 0, max: 50, label: 'Corner Diameter' },
+    curveH: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' },
+    curveV: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' },
   });
 
   const sections = [rootParams];
@@ -311,6 +313,8 @@ export default function App() {
             taperPosH={fuselageParams.taperPosH}
             taperPosV={fuselageParams.taperPosV}
             cornerDiameter={fuselageParams.cornerDiameter}
+            curveH={fuselageParams.curveH}
+            curveV={fuselageParams.curveV}
           />
           <Wing
             sections={sections}
