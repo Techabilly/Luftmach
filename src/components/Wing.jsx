@@ -123,7 +123,7 @@ function createWingGeometry(sections, sweep, mirrored) {
   let mirroredIndices = [];
   if (mirrored) {
     const offset = vertices.length / 3;
-    mirroredVertices = vertices.map((v, i) => (i % 3 === 1 ? -v : v)); // mirror Y
+   mirroredVertices = vertices.map((v, i) => (i % 3 === 0 ? -v : v)); // mirrors X
     mirroredIndices = indices.map((idx) => idx + offset);
   }
 
