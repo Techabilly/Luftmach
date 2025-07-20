@@ -1,12 +1,37 @@
-import React, { useRef } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
+import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
 import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
+
+function ResizeHandler() {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    camera.aspect = size.width / size.height;
+    camera.updateProjectionMatrix();
+  }, [camera, size]);
+  return null;
+}
+
+function CameraCenter({ controlsRef, targetGroup }) {
+  const { camera } = useThree();
+  useEffect(() => {
+    if (!controlsRef.current || !targetGroup.current) return;
+    const box = new THREE.Box3().setFromObject(targetGroup.current);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const offset = new THREE.Vector3().subVectors(camera.position, controlsRef.current.target);
+    controlsRef.current.target.copy(center);
+    camera.position.copy(center.clone().add(offset));
+    controlsRef.current.update();
+  }, [camera, controlsRef, targetGroup]);
+  return null;
+}
 // Trigger rebuild
 export default function App() {
   const controlsRef = useRef();
@@ -95,6 +120,19 @@ export default function App() {
   if (enablePanel2) sections.push(panel2Params);
   sections.push(tipParams);
 
+  // Center the orbit controls on the aircraft when it is first rendered
+  useEffect(() => {
+    if (!controlsRef.current || !groupRef.current) return;
+    const box = new THREE.Box3().setFromObject(groupRef.current);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const camera = controlsRef.current.object;
+    const offset = new THREE.Vector3().subVectors(camera.position, controlsRef.current.target);
+    controlsRef.current.target.copy(center);
+    camera.position.copy(center.clone().add(offset));
+    controlsRef.current.update();
+  }, []);
+
   return (
     <div id="app" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       {/* Sidebar: Controls + Previews */}
@@ -161,6 +199,8 @@ export default function App() {
       {/* Canvas */}
       <div style={{ flex: 1, position: 'relative', height: '100%' }}>
         <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [0, 0, 400], fov: 50 }}>
+          <ResizeHandler />
+          <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
           <ambientLight intensity={0.5} />
           <directionalLight position={[1, 2, 3]} intensity={1} />
           <Aircraft
