@@ -28,6 +28,7 @@ function createFuselageGeometry(
   cornerDiameter,
   curveH,
   curveV,
+  tailHeight = 0,
 ) {
   const radius = cornerDiameter / 2;
 
@@ -62,12 +63,14 @@ function createFuselageGeometry(
   for (let s = 0; s < pointArrays.length - 1; s++) {
     const startX = -length / 2 + length * positions[s];
     const endX = -length / 2 + length * positions[s + 1];
+    const startZOffset = tailHeight * positions[s];
+    const endZOffset = tailHeight * positions[s + 1];
     const start = pointArrays[s];
     const end = pointArrays[s + 1];
 
     for (let i = 0; i < start.length; i++) {
-      vertices.push(startX, start[i].x, start[i].y);
-      vertices.push(endX, end[i].x, end[i].y);
+      vertices.push(startX, start[i].x, start[i].y + startZOffset);
+      vertices.push(endX, end[i].x, end[i].y + endZOffset);
     }
 
     for (let i = 0; i < start.length - 1; i++) {
@@ -102,6 +105,7 @@ export default function Fuselage({
   cornerDiameter,
   curveH = 1,
   curveV = 1,
+  tailHeight = 0,
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -116,8 +120,9 @@ export default function Fuselage({
         cornerDiameter,
         curveH,
         curveV,
+        tailHeight,
       ),
-    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]
+    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
   );
 
   return (
