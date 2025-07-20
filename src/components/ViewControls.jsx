@@ -7,15 +7,28 @@ export default function ViewControls({ controls, targetGroup }) {
   const { camera } = useThree();
   const step = 20;
 
-  const pan = (dx, dy) => {
-    camera.position.x += dx * step;
-    camera.position.y += dy * step;
-    if (controls.current) {
-      controls.current.target.x += dx * step;
-      controls.current.target.y += dy * step;
-      controls.current.update();
-    }
-  };
+const pan = (dx, dy) => {
+  if (!controls.current) return;
+
+  const direction = new THREE.Vector3();
+  const up = new THREE.Vector3();
+  const right = new THREE.Vector3();
+
+  // Get camera basis vectors
+  camera.getWorldDirection(direction);
+  up.copy(camera.up).normalize();
+  right.crossVectors(direction, up).normalize();
+
+  // Pan relative to camera view
+  const panOffset = new THREE.Vector3()
+    .addScaledVector(right, dx * step)
+    .addScaledVector(up, dy * step);
+
+  camera.position.add(panOffset);
+  controls.current.target.add(panOffset);
+  controls.current.update();
+};
+
 
   const zoom = (factor) => {
     const center = controls.current ? controls.current.target : new THREE.Vector3();
