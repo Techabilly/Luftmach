@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
 
@@ -69,31 +70,31 @@ function createWingGeometry(sections, sweep, mirrored) {
       p.chord,
       p.thickness,
       p.camber,
-      p.camberPos,
+      p.camberPos
     );
     pts = rotateAirfoil(
       pts,
       p.angle || 0,
       p.chord,
-      (p.pivotPercent ?? 100) / 100,
+      (p.pivotPercent ?? 100) / 100
     );
     return new THREE.Shape(pts).getPoints(100);
   });
 
-  const zPositions = [0];
+  const xPositions = [0];
   for (let i = 0; i < sections.length - 1; i++) {
     const len = sections[i].length || 0;
-    zPositions.push(zPositions[i] + len);
+    xPositions.push(xPositions[i] + len);
   }
 
-  const totalSpan = zPositions[zPositions.length - 1] || 1;
+  const totalSpan = xPositions[xPositions.length - 1] || 1;
 
   for (let s = 0; s < sections.length - 1; s++) {
-    const startZ = zPositions[s];
-    const endZ = zPositions[s + 1];
-    const spanLen = endZ - startZ;
-    const startSweep = sweep * (startZ / totalSpan);
-    const endSweep = sweep * (endZ / totalSpan);
+    const startX = xPositions[s];
+    const endX = xPositions[s + 1];
+    const spanLen = endX - startX;
+    const startSweep = sweep * (startX / totalSpan);
+    const endSweep = sweep * (endX / totalSpan);
     const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
     const root = sectionPoints[s];
     const tip = sectionPoints[s + 1];
@@ -104,8 +105,8 @@ function createWingGeometry(sections, sweep, mirrored) {
       const tp = tip[i];
       const startY = rp.y + yOffset;
       const endY = tp.y + yOffset + Math.tan(dihedralRad) * spanLen;
-      vertices.push(rp.x + startSweep, startY, startZ);
-      vertices.push(tp.x + endSweep, endY, endZ);
+      vertices.push(startX, startY, rp.x + startSweep);
+      vertices.push(endX, endY, tp.x + endSweep);
     }
     for (let i = 0; i < root.length - 1; i++) {
       const r1 = offset + 2 * i;
@@ -122,7 +123,7 @@ function createWingGeometry(sections, sweep, mirrored) {
   let mirroredIndices = [];
   if (mirrored) {
     const offset = vertices.length / 3;
-    mirroredVertices = vertices.map((v, i) => (i % 3 === 2 ? -v : v));
+    mirroredVertices = vertices.map((v, i) => (i % 3 === 1 ? -v : v)); // mirror Y
     mirroredIndices = indices.map((idx) => idx + offset);
   }
 
@@ -131,21 +132,21 @@ function createWingGeometry(sections, sweep, mirrored) {
     'position',
     new THREE.BufferAttribute(
       new Float32Array([...vertices, ...mirroredVertices]),
-      3,
-    ),
+      3
+    )
   );
   wingGeom.setIndex([...indices, ...mirroredIndices]);
   wingGeom.computeVertexNormals();
   return wingGeom;
 }
 
-export default function Wing({ sections, sweep, mirrored, mountHeight = 0, mountX = 0, wireframe = false }) {
+export default function Wing({ sections, sweep, mirrored, mountHeight = 0, mountZ = 0, wireframe = false }) {
   const geom = useMemo(() => {
     return createWingGeometry(sections, sweep, mirrored);
   }, [sections, sweep, mirrored]);
 
   return (
-    <group position={[mountX, mountHeight, 0]}>
+    <group position={[0, mountHeight, mountZ]}>
       <mesh geometry={geom}>
         <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
