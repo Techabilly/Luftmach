@@ -64,14 +64,18 @@ function createFuselageGeometry(
   for (let s = 0; s < pointArrays.length - 1; s++) {
     const startX = -length / 2 + length * positions[s];
     const endX = -length / 2 + length * positions[s + 1];
-    const startYOffset = tailHeight * positions[s];
-    const endYOffset = tailHeight * positions[s + 1];
+const topShift = tailHeight * positions[s];
+const bottomShift = 0;
+const startYOffset = (pt) => pt.y >= 0 ? topShift : bottomShift;
+const nextTopShift = tailHeight * positions[s + 1];
+const nextBottomShift = 0;
+const endYOffset = (pt) => pt.y >= 0 ? nextTopShift : nextBottomShift;
     const start = pointArrays[s];
     const end = pointArrays[s + 1];
 
     for (let i = 0; i < start.length; i++) {
-      vertices.push(startX, start[i].y + startYOffset, start[i].x);
-      vertices.push(endX, end[i].y + endYOffset, end[i].x);
+vertices.push(startX, start[i].x, start[i].y + startYOffset(start[i]));
+vertices.push(endX, end[i].x, end[i].y + endYOffset(end[i]));
     }
 
     for (let i = 0; i < start.length - 1; i++) {
