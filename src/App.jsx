@@ -138,23 +138,26 @@ function createWingGeometry(sections, span, sweep, mirrored) {
   return wingGeom;
 }
 
-function Wing({ sections, span, sweep, mirrored }) {
+function Wing({ sections, span, sweep, mirrored, mountHeight = 0 }) {
   const geom = useMemo(() => {
     return createWingGeometry(sections, span, sweep, mirrored);
   }, [sections, span, sweep, mirrored]);
 
   return (
-    <mesh geometry={geom}>
-      <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} />
-    </mesh>
+    <group position={[0, mountHeight, 0]}>
+      <mesh geometry={geom}>
+        <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} />
+      </mesh>
+    </group>
   );
 }
 
 export default function App() {
-  const { span, sweep, mirrored, enablePanel1, enablePanel2 } = useControls('Wing Settings', {
+  const { span, sweep, mirrored, enablePanel1, enablePanel2, mountHeight } = useControls('Wing Settings', {
     span: { value: 150, min: 10, max: 500 },
     sweep: { value: 0, min: -100, max: 100 },
     mirrored: true,
+    mountHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Mount Height' },
     enablePanel1: { value: false, label: 'Enable Panel 1' },
     enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
@@ -307,6 +310,7 @@ export default function App() {
             span={span}
             sweep={sweep}
             mirrored={mirrored}
+            mountHeight={mountHeight}
           />
           <OrbitControls />
         </Canvas>
