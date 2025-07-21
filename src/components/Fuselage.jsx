@@ -18,6 +18,12 @@ function createRoundedRectShape(width, height, radius) {
   return shape;
 }
 
+function createEllipseShape(width, height) {
+  const shape = new THREE.Shape();
+  shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
+  return shape;
+}
+
 function createFuselageGeometry(
   length,
   width,
@@ -30,6 +36,7 @@ function createFuselageGeometry(
   curveH,
   curveV,
   tailHeight = 0,
+  shape = 'Square',
 ) {
   const radius = cornerDiameter / 2;
 
@@ -49,13 +56,17 @@ function createFuselageGeometry(
   const pointArrays = positions.map((p) => {
     const hScale = scale(p, taperPosH, taperH, curveH);
     const vScale = scale(p, taperPosV, taperV, curveV);
-    const shape = createRoundedRectShape(
-      width * hScale,
-      width * vScale,
-      height * vScale,
-      radius * Math.min(hScale, vScale),
-    );
-    return shape.getPoints(32);
+    let cross;
+    if (shape === 'Ellipse') {
+      cross = createEllipseShape(width * hScale, height * vScale);
+    } else {
+      cross = createRoundedRectShape(
+        width * hScale,
+        height * vScale,
+        radius * Math.min(hScale, vScale),
+      );
+    }
+    return cross.getPoints(32);
   });
 
   const vertices = [];
@@ -141,6 +152,7 @@ export default function Fuselage({
   curveH = 1,
   curveV = 1,
   tailHeight = 0,
+  shape = 'Square',
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -157,6 +169,7 @@ export default function Fuselage({
         curveH,
         curveV,
         tailHeight,
+        shape,
       ),
     [
       length,
@@ -170,6 +183,7 @@ export default function Fuselage({
       curveH,
       curveV,
       tailHeight,
+      shape,
     ]
   );
 
