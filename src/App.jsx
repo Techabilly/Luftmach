@@ -136,6 +136,16 @@ export default function App() {
     tailHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Tail Height' },
   });
 
+  const {
+    showNacelles,
+    nacelleRadius,
+    nacelleLength,
+  } = useControls('Nacelles', {
+    showNacelles: false,
+    nacelleRadius: { value: 10, min: 1, max: 100, step: 1, label: 'Radius' },
+    nacelleLength: { value: 40, min: 10, max: 200, step: 1, label: 'Length' },
+  });
+
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
   if (enablePanel2) sections.push(panel2Params);
@@ -231,6 +241,9 @@ export default function App() {
             mirrored={mirrored}
             mountHeight={mountHeight}
             mountZ={mountZ}
+            showNacelles={showNacelles}
+            nacelleRadius={nacelleRadius}
+            nacelleLength={nacelleLength}
             fuselageParams={fuselageParams}
           />
           <OrbitControls ref={controlsRef} />
@@ -253,6 +266,9 @@ export default function App() {
               mirrored={mirrored}
               mountHeight={mountHeight}
               mountZ={mountZ}
+              showNacelles={showNacelles}
+              nacelleRadius={nacelleRadius}
+              nacelleLength={nacelleLength}
               fuselageParams={fuselageParams}
               wireframe
             />
@@ -264,6 +280,9 @@ export default function App() {
               mirrored={mirrored}
               mountHeight={mountHeight}
               mountZ={mountZ}
+              showNacelles={showNacelles}
+              nacelleRadius={nacelleRadius}
+              nacelleLength={nacelleLength}
               fuselageParams={fuselageParams}
               wireframe
             />

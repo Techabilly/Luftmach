@@ -1,6 +1,7 @@
 
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
+import Nacelle from './Nacelle';
 
 function createAirfoilPoints(chord, thickness, camber, camberPos, resolution = 50) {
   const x = Array.from({ length: resolution }, (_, i) => i / (resolution - 1));
@@ -141,16 +142,73 @@ function createWingGeometry(sections, sweep, mirrored) {
   return wingGeom;
 }
 
-export default function Wing({ sections, sweep, mirrored, mountHeight = 0, mountZ = 0, wireframe = false }) {
+function computeNacellePositions(sections, sweep) {
+  const xPositions = [0];
+  for (let i = 0; i < sections.length - 1; i++) {
+    const len = sections[i].length || 0;
+    xPositions.push(xPositions[i] + len);
+  }
+
+  const totalSpan = xPositions[xPositions.length - 1] || 1;
+
+  let yOffset = 0;
+  const positions = [];
+  for (let s = 0; s < sections.length - 1; s++) {
+    const startX = xPositions[s];
+    const endX = xPositions[s + 1];
+    const spanLen = endX - startX;
+    const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
+    yOffset += Math.tan(dihedralRad) * spanLen;
+    const endSweep = sweep * (endX / totalSpan);
+    const chord = sections[s + 1].chord || sections[s].chord || 0;
+    const z = endSweep + chord / 2;
+    positions.push([endX, yOffset, z]);
+  }
+  return positions;
+}
+
+export default function Wing({
+  sections,
+  sweep,
+  mirrored,
+  mountHeight = 0,
+  mountZ = 0,
+  wireframe = false,
+  showNacelles = false,
+  nacelleRadius = 10,
+  nacelleLength = 40,
+}) {
   const geom = useMemo(() => {
     return createWingGeometry(sections, sweep, mirrored);
   }, [sections, sweep, mirrored]);
+  const nacellePositions = useMemo(() => computeNacellePositions(sections, sweep), [sections, sweep]);
 
   return (
     <group position={[0, mountHeight, mountZ]}>
       <mesh geometry={geom}>
         <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
+      {showNacelles &&
+        nacellePositions.map((pos, i) => (
+          <Nacelle
+            key={i}
+            position={pos}
+            radius={nacelleRadius}
+            length={nacelleLength}
+            wireframe={wireframe}
+          />
+        ))}
+      {showNacelles &&
+        mirrored &&
+        nacellePositions.map((pos, i) => (
+          <Nacelle
+            key={`m-${i}`}
+            position={[-pos[0], pos[1], pos[2]]}
+            radius={nacelleRadius}
+            length={nacelleLength}
+            wireframe={wireframe}
+          />
+        ))}
     </group>
   );
 }

@@ -11,6 +11,9 @@ export default function Aircraft({
   fuselageParams,
   groupRef,
   wireframe = false,
+  showNacelles = false,
+  nacelleRadius = 10,
+  nacelleLength = 40,
 }) {
   return (
     <group ref={groupRef}>
@@ -36,6 +39,9 @@ export default function Aircraft({
         mirrored={mirrored}
         mountHeight={mountHeight}
         mountZ={mountZ}
+        showNacelles={showNacelles}
+        nacelleRadius={nacelleRadius}
+        nacelleLength={nacelleLength}
         wireframe={wireframe}
       />
     </group>
