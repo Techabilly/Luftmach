@@ -127,8 +127,19 @@ export default function Fuselage({
         curveV,
         tailHeight,
       ),
-    [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
-    [length, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
+    [
+      length,
+      width,
+      height,
+      taperH,
+      taperV,
+      taperPosH,
+      taperPosV,
+      cornerDiameter,
+      curveH,
+      curveV,
+      tailHeight,
+    ]
   );
 
   const noseGeom = useMemo(() => {
@@ -145,8 +156,18 @@ export default function Fuselage({
       curveH,
       curveV,
     );
-  }, [noseLength, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
-  }, [noseLength, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
+  }, [
+    noseLength,
+    width,
+    height,
+    taperH,
+    taperV,
+    taperPosH,
+    taperPosV,
+    cornerDiameter,
+    curveH,
+    curveV,
+  ]);
 
   const nosePos = useMemo(() => [-length / 2 - noseLength / 2, 0, 0], [length, noseLength]);
 
