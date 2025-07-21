@@ -17,5 +17,5 @@ If you are developing a production application, we recommend using TypeScript wi
 - Curvature controls for both horizontal and vertical fuselage tapers.
 - Fuselage tapers now form smooth curves rather than abrupt angles.
 - Adjustable tail height relative to the nose using the new "Tail Height" control.
-- Optional nose section that tapers in the opposite direction of the main fuselage.
+- Fuselage ends are automatically beveled and closed.
 - Adjustable fuselage height independent of width.
