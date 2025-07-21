@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
 
@@ -22,6 +21,7 @@ function createRoundedRectShape(width, height, radius) {
 function createFuselageGeometry(
   length,
   width,
+  height,
   taperH,
   taperV,
   taperPosH,
@@ -29,9 +29,12 @@ function createFuselageGeometry(
   cornerDiameter,
   curveH,
   curveV,
-  tailHeight = 0
+  tailHeight = 0,
 ) {
   const radius = cornerDiameter / 2;
+
+  // Sample several positions along the fuselage so taper transitions
+  // form smooth curves instead of a single angled segment.
   const segments = 20;
   const positions = Array.from({ length: segments + 1 }, (_, i) => i / segments);
 
@@ -49,7 +52,8 @@ function createFuselageGeometry(
     const shape = createRoundedRectShape(
       width * hScale,
       width * vScale,
-      radius * Math.min(hScale, vScale)
+      height * vScale,
+      radius * Math.min(hScale, vScale),
     );
     return shape.getPoints(32);
   });
@@ -59,18 +63,16 @@ function createFuselageGeometry(
   let offset = 0;
 
   for (let s = 0; s < pointArrays.length - 1; s++) {
-    const startZ = -length / 2 + length * positions[s];
-    const endZ = -length / 2 + length * positions[s + 1];
-
-    const startYOffset = (pt) => pt.y >= 0 ? 0 : tailHeight * positions[s];
-    const endYOffset = (pt) => pt.y >= 0 ? 0 : tailHeight * positions[s + 1];
-
+    const startX = -length / 2 + length * positions[s];
+    const endX = -length / 2 + length * positions[s + 1];
+    const startYOffset = tailHeight * positions[s];
+    const endYOffset = tailHeight * positions[s + 1];
     const start = pointArrays[s];
     const end = pointArrays[s + 1];
 
     for (let i = 0; i < start.length; i++) {
-      vertices.push(start[i].x, start[i].y + startYOffset(start[i]), startZ);
-      vertices.push(end[i].x, end[i].y + endYOffset(end[i]), endZ);
+      vertices.push(startX, start[i].y + startYOffset, start[i].x);
+      vertices.push(endX, end[i].y + endYOffset, end[i].x);
     }
 
     for (let i = 0; i < start.length - 1; i++) {
@@ -81,7 +83,6 @@ function createFuselageGeometry(
       indices.push(r1, t1, r2);
       indices.push(t1, t2, r2);
     }
-
     const last = start.length - 1;
     indices.push(offset + 2 * last, offset + 2 * last + 1, offset);
     indices.push(offset + 2 * last + 1, offset + 1, offset);
@@ -99,6 +100,7 @@ function createFuselageGeometry(
 export default function Fuselage({
   length,
   width,
+  height,
   taperH,
   taperV,
   taperPosH,
@@ -108,13 +110,14 @@ export default function Fuselage({
   curveV = 1,
   tailHeight = 0,
   noseLength = 0,
-  wireframe = false
+  wireframe = false,
 }) {
   const geom = useMemo(
     () =>
       createFuselageGeometry(
         length,
         width,
+        height,
         taperH,
         taperV,
         taperPosH,
@@ -122,9 +125,10 @@ export default function Fuselage({
         cornerDiameter,
         curveH,
         curveV,
-        tailHeight
+        tailHeight,
       ),
     [length, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
+    [length, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV, tailHeight]
   );
 
   const noseGeom = useMemo(() => {
@@ -132,17 +136,19 @@ export default function Fuselage({
     return createFuselageGeometry(
       noseLength,
       width * taperH,
+      height * taperV,
       1 / taperH,
       1 / taperV,
       taperPosH,
       taperPosV,
       cornerDiameter * Math.min(taperH, taperV),
       curveH,
-      curveV
+      curveV,
     );
   }, [noseLength, width, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
+  }, [noseLength, width, height, taperH, taperV, taperPosH, taperPosV, cornerDiameter, curveH, curveV]);
 
-  const nosePos = useMemo(() => [0, 0, -length / 2 - noseLength / 2], [length, noseLength]);
+  const nosePos = useMemo(() => [-length / 2 - noseLength / 2, 0, 0], [length, noseLength]);
 
   return (
     <group>
