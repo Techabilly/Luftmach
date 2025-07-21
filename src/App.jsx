@@ -36,11 +36,18 @@ function CameraCenter({ controlsRef, targetGroup }) {
 export default function App() {
   const controlsRef = useRef();
   const groupRef = useRef();
-  const { sweep, mirrored, enablePanel1, enablePanel2, mountHeight, mountX } = useControls('Wing Settings', {
+  const {
+    sweep,
+    mirrored,
+    enablePanel1,
+    enablePanel2,
+    mountHeight,
+    mountZ,
+  } = useControls('Wing Settings', {
     sweep: { value: 0, min: -100, max: 100 },
     mirrored: true,
     mountHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Mount Height' },
-    mountX: { value: 0, min: -300, max: 300, step: 1, label: 'Mount Position' },
+    mountZ: { value: 0, min: -300, max: 300, step: 1, label: 'Mount Position' },
     enablePanel1: { value: false, label: 'Enable Panel 1' },
     enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
@@ -214,7 +221,7 @@ export default function App() {
             sweep={sweep}
             mirrored={mirrored}
             mountHeight={mountHeight}
-            mountX={mountX}
+            mountZ={mountZ}
             fuselageParams={fuselageParams}
           />
           <OrbitControls ref={controlsRef} />
@@ -236,7 +243,7 @@ export default function App() {
               sweep={sweep}
               mirrored={mirrored}
               mountHeight={mountHeight}
-              mountX={mountX}
+              mountZ={mountZ}
               fuselageParams={fuselageParams}
               wireframe
             />
@@ -247,7 +254,7 @@ export default function App() {
               sweep={sweep}
               mirrored={mirrored}
               mountHeight={mountHeight}
-              mountX={mountX}
+              mountZ={mountZ}
               fuselageParams={fuselageParams}
               wireframe
             />

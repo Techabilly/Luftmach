@@ -7,7 +7,7 @@ export default function Aircraft({
   sweep,
   mirrored,
   mountHeight,
-  mountX,
+  mountZ,
   fuselageParams,
   groupRef,
   wireframe = false,
@@ -34,7 +34,7 @@ export default function Aircraft({
         sweep={sweep}
         mirrored={mirrored}
         mountHeight={mountHeight}
-        mountX={mountX}
+        mountZ={mountZ}
         wireframe={wireframe}
       />
     </group>

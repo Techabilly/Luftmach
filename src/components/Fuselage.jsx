@@ -63,16 +63,16 @@ function createFuselageGeometry(
   let offset = 0;
 
   for (let s = 0; s < pointArrays.length - 1; s++) {
-    const startX = -length / 2 + length * positions[s];
-    const endX = -length / 2 + length * positions[s + 1];
+    const startPos = -length / 2 + length * positions[s];
+    const endPos = -length / 2 + length * positions[s + 1];
     const startYOffset = tailHeight * positions[s];
     const endYOffset = tailHeight * positions[s + 1];
     const start = pointArrays[s];
     const end = pointArrays[s + 1];
 
     for (let i = 0; i < start.length; i++) {
-      vertices.push(startX, start[i].y + startYOffset, start[i].x);
-      vertices.push(endX, end[i].y + endYOffset, end[i].x);
+      vertices.push(start[i].x, start[i].y + startYOffset, startPos);
+      vertices.push(end[i].x, end[i].y + endYOffset, endPos);
     }
 
     for (let i = 0; i < start.length - 1; i++) {
@@ -169,7 +169,10 @@ export default function Fuselage({
     curveV,
   ]);
 
-  const nosePos = useMemo(() => [-length / 2 - noseLength / 2, 0, 0], [length, noseLength]);
+  const nosePos = useMemo(
+    () => [0, 0, -length / 2 - noseLength / 2],
+    [length, noseLength]
+  );
 
   return (
     <group>
