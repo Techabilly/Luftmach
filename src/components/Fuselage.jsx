@@ -18,6 +18,36 @@ function createRoundedRectShape(width, height, radius) {
   return shape;
 }
 
+function createTopBottomShape(width, height, radius, topShape, bottomShape) {
+  const halfW = width / 2;
+  const halfH = height / 2;
+  const r = Math.min(radius, halfW, halfH);
+  const shape = new THREE.Shape();
+  shape.moveTo(halfW, 0);
+
+  if (bottomShape === 'Ellipse') {
+    shape.absellipse(0, 0, halfW, halfH, 0, Math.PI, true, 0);
+  } else {
+    shape.lineTo(halfW, -halfH + r);
+    shape.quadraticCurveTo(halfW, -halfH, halfW - r, -halfH);
+    shape.lineTo(-halfW + r, -halfH);
+    shape.quadraticCurveTo(-halfW, -halfH, -halfW, -halfH + r);
+    shape.lineTo(-halfW, 0);
+  }
+
+  if (topShape === 'Ellipse') {
+    shape.absellipse(0, 0, halfW, halfH, Math.PI, Math.PI * 2, true, 0);
+  } else {
+    shape.lineTo(-halfW, halfH - r);
+    shape.quadraticCurveTo(-halfW, halfH, -halfW + r, halfH);
+    shape.lineTo(halfW - r, halfH);
+    shape.quadraticCurveTo(halfW, halfH, halfW, halfH - r);
+    shape.lineTo(halfW, 0);
+  }
+
+  return shape;
+}
+
 function createEllipseShape(width, height) {
   const shape = new THREE.Shape();
   shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
@@ -36,7 +66,8 @@ function createFuselageGeometry(
   curveH,
   curveV,
   tailHeight = 0,
-  shape = 'Square',
+  topShape = 'Square',
+  bottomShape = 'Square',
 ) {
   const radius = cornerDiameter / 2;
 
@@ -58,13 +89,21 @@ function createFuselageGeometry(
     const hScale = scale(p, taperPosH, taperH, curveH);
     const vScale = scale(p, taperPosV, taperV, curveV);
     let cross;
-    if (shape === 'Ellipse') {
+    if (topShape === 'Ellipse' && bottomShape === 'Ellipse') {
       cross = createEllipseShape(width * hScale, height * vScale);
-    } else {
+    } else if (topShape === 'Square' && bottomShape === 'Square') {
       cross = createRoundedRectShape(
         width * hScale,
         height * vScale,
         radius * Math.min(hScale, vScale),
+      );
+    } else {
+      cross = createTopBottomShape(
+        width * hScale,
+        height * vScale,
+        radius * Math.min(hScale, vScale),
+        topShape,
+        bottomShape,
       );
     }
     return cross.getPoints(32);
@@ -153,7 +192,8 @@ export default function Fuselage({
   curveH = 1,
   curveV = 1,
   tailHeight = 0,
-  shape = 'Square',
+  topShape = 'Square',
+  bottomShape = 'Square',
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -170,7 +210,8 @@ export default function Fuselage({
         curveH,
         curveV,
         tailHeight,
-        shape,
+        topShape,
+        bottomShape,
       ),
     [
       length,
@@ -184,7 +225,8 @@ export default function Fuselage({
       curveH,
       curveV,
       tailHeight,
-      shape,
+      topShape,
+      bottomShape,
     ]
   );
 
