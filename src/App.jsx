@@ -113,7 +113,8 @@ export default function App() {
   });
 
   const fuselageParams = useControls('Fuselage', {
-    shape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Fuselage Shape' },
+    topShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Top Shape' },
+    bottomShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Bottom Shape' },
     length: { value: 200, min: 50, max: 600 },
     width: { value: 40, min: 10, max: 200 },
     height: { value: 40, min: 10, max: 200 },
@@ -126,7 +127,9 @@ export default function App() {
       min: 0,
       max: 50,
       label: 'Corner Diameter',
-      render: (get) => get('Fuselage.shape') === 'Square',
+      render: (get) =>
+        get('Fuselage.topShape') === 'Square' ||
+        get('Fuselage.bottomShape') === 'Square',
     },
     curveH: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' },
     curveV: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' },
