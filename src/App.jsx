@@ -8,13 +8,6 @@ import AirfoilPreview from './components/AirfoilPreview';
 import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
-// App.jsx
-import DesignFlow from './components/DesignFlow';
-
-export default function App() {
-  return <DesignFlow />;
-}
-
 //
 function ResizeHandler() {
   const { camera, size } = useThree();
