@@ -121,11 +121,12 @@ function createWingGeometry(sections, sweep, mirrored) {
 
   let mirroredVertices = [];
   let mirroredIndices = [];
-  if (mirrored) {
-    const offset = vertices.length / 3;
-    mirroredVertices = vertices.map((v, i) => (i % 3 === 1 ? -v : v)); // mirror Y
-    mirroredIndices = indices.map((idx) => idx + offset);
-  }
+ if (mirrored) {
+  const offset = vertices.length / 3;
+  mirroredVertices = vertices.map((v, i) => (i % 3 === 0 ? -v : v)); // mirror X
+  mirroredIndices = indices.map((idx) => idx + offset);
+}
+
 
   const wingGeom = new THREE.BufferGeometry();
   wingGeom.setAttribute(
