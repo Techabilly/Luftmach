@@ -90,6 +90,38 @@ function createFuselageGeometry(
     offset += start.length * 2;
   }
 
+  // Close the front of the fuselage
+  const front = pointArrays[0];
+  const frontPos = -length / 2 + length * positions[0];
+  const frontYOffset = tailHeight * positions[0];
+  const frontStart = vertices.length / 3;
+  for (let i = 0; i < front.length; i++) {
+    vertices.push(front[i].x, front[i].y + frontYOffset, frontPos);
+  }
+  const frontCenter = vertices.length / 3;
+  vertices.push(0, frontYOffset, frontPos);
+  for (let i = 0; i < front.length; i++) {
+    const v1 = frontStart + i;
+    const v2 = frontStart + ((i + 1) % front.length);
+    indices.push(v1, v2, frontCenter);
+  }
+
+  // Close the back of the fuselage
+  const back = pointArrays[pointArrays.length - 1];
+  const backPos = -length / 2 + length * positions[positions.length - 1];
+  const backYOffset = tailHeight * positions[positions.length - 1];
+  const backStart = vertices.length / 3;
+  for (let i = 0; i < back.length; i++) {
+    vertices.push(back[i].x, back[i].y + backYOffset, backPos);
+  }
+  const backCenter = vertices.length / 3;
+  vertices.push(0, backYOffset, backPos);
+  for (let i = 0; i < back.length; i++) {
+    const v1 = backStart + i;
+    const v2 = backStart + ((i + 1) % back.length);
+    indices.push(v2, v1, backCenter);
+  }
+
   const geom = new THREE.BufferGeometry();
   geom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geom.setIndex(indices);
@@ -109,7 +141,6 @@ export default function Fuselage({
   curveH = 1,
   curveV = 1,
   tailHeight = 0,
-  noseLength = 0,
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -142,48 +173,12 @@ export default function Fuselage({
     ]
   );
 
-  const noseGeom = useMemo(() => {
-    if (noseLength <= 0) return null;
-    return createFuselageGeometry(
-      noseLength,
-      width * taperH,
-      height * taperV,
-      1 / taperH,
-      1 / taperV,
-      taperPosH,
-      taperPosV,
-      cornerDiameter * Math.min(taperH, taperV),
-      curveH,
-      curveV,
-    );
-  }, [
-    noseLength,
-    width,
-    height,
-    taperH,
-    taperV,
-    taperPosH,
-    taperPosV,
-    cornerDiameter,
-    curveH,
-    curveV,
-  ]);
-
-  const nosePos = useMemo(
-    () => [0, 0, -length / 2 - noseLength / 2],
-    [length, noseLength]
-  );
 
   return (
     <group>
       <mesh geometry={geom}>
         <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
-      {noseGeom && (
-        <mesh geometry={noseGeom} position={nosePos}>
-          <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
-        </mesh>
-      )}
     </group>
   );
 }
