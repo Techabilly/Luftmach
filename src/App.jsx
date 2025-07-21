@@ -1,12 +1,12 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { useControls, Leva } from 'leva';
+import { Leva } from 'leva';
 import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
-import ViewControls from './components/ViewControls_window_locked';
+import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
 
