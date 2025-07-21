@@ -50,7 +50,8 @@ function createFuselageGeometry(
     if (p <= pos) return 1;
     const t = (p - pos) / (1 - pos);
     const curved = Math.pow(t, curve);
-    return 1 + curved * (taper - 1);
+    const s = 1 + curved * (taper - 1);
+    return Math.max(s, 0.001); // prevent zero scale which can crash geometry
   }
 
   const pointArrays = positions.map((p) => {
