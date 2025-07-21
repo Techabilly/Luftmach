@@ -19,3 +19,4 @@ If you are developing a production application, we recommend using TypeScript wi
 - Adjustable tail height relative to the nose using the new "Tail Height" control.
 - Fuselage ends are automatically beveled and closed.
 - Adjustable fuselage height independent of width.
+- Option to choose an elliptical or square fuselage shape.
