@@ -15,31 +15,36 @@ export default function DesignFlow() {
   const [current, setCurrent] = useState(0);
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <nav
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <header
         style={{
-          width: '200px',
           background: '#222',
           color: '#fff',
           padding: '1rem',
+          borderBottom: '1px solid #333',
         }}
       >
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        <ul
+          style={{
+            display: 'flex',
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            gap: '1rem',
+          }}
+        >
           {steps.map((step, index) => (
-            <li key={step.label} style={{ marginBottom: '0.5rem' }}>
+            <li key={step.label} style={{ flex: 1 }}>
               <button
                 type="button"
                 onClick={() => setCurrent(index)}
                 style={{
                   width: '100%',
-                  padding: '0.5rem 1rem',
-                  background: 'transparent',
+                  padding: '0.75rem',
+                  background: current === index ? '#646cff' : '#333',
                   color: 'inherit',
                   border: 'none',
-                  textAlign: 'left',
                   cursor: 'pointer',
-                  borderLeft:
-                    current === index ? '4px solid #646cff' : '4px solid transparent',
                 }}
               >
                 {step.label}
@@ -47,8 +52,8 @@ export default function DesignFlow() {
             </li>
           ))}
         </ul>
-      </nav>
-      <div style={{ flex: 1 }}>{steps[current].component}</div>
+      </header>
+      <div style={{ flex: 1, overflow: 'auto' }}>{steps[current].component}</div>
     </div>
   );
 }
