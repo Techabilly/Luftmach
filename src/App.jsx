@@ -53,7 +53,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   });
 
   const rootParams = useControls('Root Airfoil', {
-    chord: { value: 100, min: 20, max: 400 },
+    chord: { value: 100, min: 20, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.02, min: 0, max: 0.1, render: () => showAirfoilControls },
     camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
@@ -64,7 +64,7 @@ export default function App({ showAirfoilControls = false } = {}) {
 
 
   const panel1Params = useControls('Panel 1 Airfoil', {
-    chord: { value: 80, min: 10, max: 400 },
+    chord: { value: 80, min: 10, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
     camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
@@ -81,7 +81,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   }, { render: (get) => get('Wing Settings.enablePanel1') });
 
   const panel2Params = useControls('Panel 2 Airfoil', {
-    chord: { value: 70, min: 10, max: 400 },
+    chord: { value: 70, min: 10, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
     camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
@@ -98,7 +98,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   }, { render: (get) => get('Wing Settings.enablePanel2') });
 
   const tipParams = useControls('Tip Airfoil', {
-    chord: { value: 60, min: 10, max: 400 },
+    chord: { value: 60, min: 10, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
     camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
