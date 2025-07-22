@@ -151,6 +151,54 @@ export default function App({ showAirfoilControls = false } = {}) {
   if (enablePanel2) sections.push(panel2Params);
   sections.push(tipParams);
 
+  const previewElements = (
+    <>
+      <AirfoilPreview
+        key={`root-${JSON.stringify(rootParams)}`}
+        chord={rootParams.chord}
+        thickness={rootParams.thickness}
+        camber={rootParams.camber}
+        camberPos={rootParams.camberPos}
+        angle={rootParams.angle}
+        label="Wing Root"
+      />
+      {enablePanel1 && (
+        <AirfoilPreview
+          key={`panel1-${JSON.stringify(panel1Params)}`}
+          chord={panel1Params.chord}
+          thickness={panel1Params.thickness}
+          camber={panel1Params.camber}
+          camberPos={panel1Params.camberPos}
+          angle={panel1Params.angle}
+          pivotPercent={panel1Params.pivotPercent}
+          label="Panel 1 Airfoil"
+        />
+      )}
+      {enablePanel2 && (
+        <AirfoilPreview
+          key={`panel2-${JSON.stringify(panel2Params)}`}
+          chord={panel2Params.chord}
+          thickness={panel2Params.thickness}
+          camber={panel2Params.camber}
+          camberPos={panel2Params.camberPos}
+          angle={panel2Params.angle}
+          pivotPercent={panel2Params.pivotPercent}
+          label="Panel 2 Airfoil"
+        />
+      )}
+      <AirfoilPreview
+        key={`tip-${JSON.stringify(tipParams)}`}
+        chord={tipParams.chord}
+        thickness={tipParams.thickness}
+        camber={tipParams.camber}
+        camberPos={tipParams.camberPos}
+        angle={tipParams.angle}
+        pivotPercent={tipParams.pivotPercent}
+        label="Wing Tip"
+      />
+    </>
+  );
+
   // Center the orbit controls on the aircraft when it is first rendered
   useEffect(() => {
     if (!controlsRef.current || !groupRef.current) return;
@@ -182,116 +230,75 @@ export default function App({ showAirfoilControls = false } = {}) {
           fill
           theme={{ colors: { elevation1: '#222' } }}
         />
-        {showAirfoilControls && (
-          <>
-            <AirfoilPreview
-              key={`root-${JSON.stringify(rootParams)}`}
-              chord={rootParams.chord}
-              thickness={rootParams.thickness}
-              camber={rootParams.camber}
-              camberPos={rootParams.camberPos}
-              angle={rootParams.angle}
-              label="Wing Root"
-            />
-            {enablePanel1 && (
-              <AirfoilPreview
-                key={`panel1-${JSON.stringify(panel1Params)}`}
-                chord={panel1Params.chord}
-                thickness={panel1Params.thickness}
-                camber={panel1Params.camber}
-                camberPos={panel1Params.camberPos}
-                angle={panel1Params.angle}
-                pivotPercent={panel1Params.pivotPercent}
-                label="Panel 1 Airfoil"
-              />
-            )}
-            {enablePanel2 && (
-              <AirfoilPreview
-                key={`panel2-${JSON.stringify(panel2Params)}`}
-                chord={panel2Params.chord}
-                thickness={panel2Params.thickness}
-                camber={panel2Params.camber}
-                camberPos={panel2Params.camberPos}
-                angle={panel2Params.angle}
-                pivotPercent={panel2Params.pivotPercent}
-                label="Panel 2 Airfoil"
-              />
-            )}
-            <AirfoilPreview
-              key={`tip-${JSON.stringify(tipParams)}`}
-              chord={tipParams.chord}
-              thickness={tipParams.thickness}
-              camber={tipParams.camber}
-              camberPos={tipParams.camberPos}
-              angle={tipParams.angle}
-              pivotPercent={tipParams.pivotPercent}
-              label="Wing Tip"
-            />
-          </>
-        )}
       </div>
 
-      {/* Canvas */}
-      <div style={{ flex: 1, position: 'relative', height: '100%' }}>
-        <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [0, 0, 400], fov: 50 }}>
-          <ResizeHandler />
-          <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[1, 2, 3]} intensity={1} />
-          <Aircraft
-            groupRef={groupRef}
-            sections={sections}
-            sweep={sweep}
-            mirrored={mirrored}
-            mountHeight={mountHeight}
-            mountZ={mountZ}
-            showNacelles={showNacelles}
-            nacelleRadius={nacelleRadius}
-            nacelleLength={nacelleLength}
-            fuselageParams={fuselageParams}
-          />
-          <OrbitControls ref={controlsRef} />
-          <ViewControls controls={controlsRef} targetGroup={groupRef} />
-        </Canvas>
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 20,
-            left: 20,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}
-        >
-          <MiniView position={[0, 0, 400]} up={[0, 1, 0]}>
-            <Aircraft
-              sections={sections}
-              sweep={sweep}
-              mirrored={mirrored}
-              mountHeight={mountHeight}
-              mountZ={mountZ}
-              showNacelles={showNacelles}
-              nacelleRadius={nacelleRadius}
-              nacelleLength={nacelleLength}
-              fuselageParams={fuselageParams}
-              wireframe
-            />
-          </MiniView>
-          <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
-            <Aircraft
-              sections={sections}
-              sweep={sweep}
-              mirrored={mirrored}
-              mountHeight={mountHeight}
-              mountZ={mountZ}
-              showNacelles={showNacelles}
-              nacelleRadius={nacelleRadius}
-              nacelleLength={nacelleLength}
-              fuselageParams={fuselageParams}
-              wireframe
-            />
-          </MiniView>
-        </div>
+      {/* Main Content */}
+      <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
+        {showAirfoilControls ? (
+          <div style={{ padding: '10px' }}>{previewElements}</div>
+        ) : (
+          <>
+            <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [0, 0, 400], fov: 50 }}>
+              <ResizeHandler />
+              <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
+              <ambientLight intensity={0.5} />
+              <directionalLight position={[1, 2, 3]} intensity={1} />
+              <Aircraft
+                groupRef={groupRef}
+                sections={sections}
+                sweep={sweep}
+                mirrored={mirrored}
+                mountHeight={mountHeight}
+                mountZ={mountZ}
+                showNacelles={showNacelles}
+                nacelleRadius={nacelleRadius}
+                nacelleLength={nacelleLength}
+                fuselageParams={fuselageParams}
+              />
+              <OrbitControls ref={controlsRef} />
+              <ViewControls controls={controlsRef} targetGroup={groupRef} />
+            </Canvas>
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                left: 20,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+              }}
+            >
+              <MiniView position={[0, 0, 400]} up={[0, 1, 0]}>
+                <Aircraft
+                  sections={sections}
+                  sweep={sweep}
+                  mirrored={mirrored}
+                  mountHeight={mountHeight}
+                  mountZ={mountZ}
+                  showNacelles={showNacelles}
+                  nacelleRadius={nacelleRadius}
+                  nacelleLength={nacelleLength}
+                  fuselageParams={fuselageParams}
+                  wireframe
+                />
+              </MiniView>
+              <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
+                <Aircraft
+                  sections={sections}
+                  sweep={sweep}
+                  mirrored={mirrored}
+                  mountHeight={mountHeight}
+                  mountZ={mountZ}
+                  showNacelles={showNacelles}
+                  nacelleRadius={nacelleRadius}
+                  nacelleLength={nacelleLength}
+                  fuselageParams={fuselageParams}
+                  wireframe
+                />
+              </MiniView>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
