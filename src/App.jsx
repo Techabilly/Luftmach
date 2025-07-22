@@ -52,7 +52,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
 
-  const rootParams = useControls('Root Airfoil', {
+  const rootParams = useControls('Wing Root', {
     chord: { value: 100, min: 20, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.02, min: 0, max: 0.1, render: () => showAirfoilControls },
@@ -97,7 +97,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
   }, { render: (get) => get('Wing Settings.enablePanel2') });
 
-  const tipParams = useControls('Tip Airfoil', {
+  const tipParams = useControls('Wing Tip', {
     chord: { value: 60, min: 10, max: 400, render: () => !showAirfoilControls },
     thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
     camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
@@ -191,7 +191,7 @@ export default function App({ showAirfoilControls = false } = {}) {
               camber={rootParams.camber}
               camberPos={rootParams.camberPos}
               angle={rootParams.angle}
-              label="Root Airfoil"
+              label="Wing Root"
             />
             {enablePanel1 && (
               <AirfoilPreview
@@ -225,7 +225,7 @@ export default function App({ showAirfoilControls = false } = {}) {
               camberPos={tipParams.camberPos}
               angle={tipParams.angle}
               pivotPercent={tipParams.pivotPercent}
-              label="Tip Airfoil"
+              label="Wing Tip"
             />
           </>
         )}
