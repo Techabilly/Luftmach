@@ -33,7 +33,7 @@ function CameraCenter({ controlsRef, targetGroup }) {
   return null;
 }
 // Trigger rebuild
-export default function App() {
+export default function App({ showAirfoilControls = false } = {}) {
   const controlsRef = useRef();
   const groupRef = useRef();
   const {
@@ -54,9 +54,9 @@ export default function App() {
 
   const rootParams = useControls('Root Airfoil', {
     chord: { value: 100, min: 20, max: 400 },
-    thickness: { value: 0.12, min: 0.05, max: 0.25 },
-    camber: { value: 0.02, min: 0, max: 0.1 },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
+    camber: { value: 0.02, min: 0, max: 0.1, render: () => showAirfoilControls },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
     length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
@@ -65,9 +65,9 @@ export default function App() {
 
   const panel1Params = useControls('Panel 1 Airfoil', {
     chord: { value: 80, min: 10, max: 400 },
-    thickness: { value: 0.12, min: 0.05, max: 0.25 },
-    camber: { value: 0.015, min: 0, max: 0.1 },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
+    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
     length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     pivotPercent: {
@@ -82,9 +82,9 @@ export default function App() {
 
   const panel2Params = useControls('Panel 2 Airfoil', {
     chord: { value: 70, min: 10, max: 400 },
-    thickness: { value: 0.12, min: 0.05, max: 0.25 },
-    camber: { value: 0.015, min: 0, max: 0.1 },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
+    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
     length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
     pivotPercent: {
@@ -99,9 +99,9 @@ export default function App() {
 
   const tipParams = useControls('Tip Airfoil', {
     chord: { value: 60, min: 10, max: 400 },
-    thickness: { value: 0.12, min: 0.05, max: 0.25 },
-    camber: { value: 0.015, min: 0, max: 0.1 },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9 },
+    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
+    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
+    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°' },
     pivotPercent: {
       value: 100,
@@ -182,49 +182,53 @@ export default function App() {
           fill
           theme={{ colors: { elevation1: '#222' } }}
         />
-        <AirfoilPreview
-          key={`root-${JSON.stringify(rootParams)}`}
-          chord={rootParams.chord}
-          thickness={rootParams.thickness}
-          camber={rootParams.camber}
-          camberPos={rootParams.camberPos}
-          angle={rootParams.angle}
-          label="Root Airfoil"
-        />
-        {enablePanel1 && (
-          <AirfoilPreview
-            key={`panel1-${JSON.stringify(panel1Params)}`}
-            chord={panel1Params.chord}
-            thickness={panel1Params.thickness}
-            camber={panel1Params.camber}
-            camberPos={panel1Params.camberPos}
-            angle={panel1Params.angle}
-            pivotPercent={panel1Params.pivotPercent}
-            label="Panel 1 Airfoil"
-          />
+        {showAirfoilControls && (
+          <>
+            <AirfoilPreview
+              key={`root-${JSON.stringify(rootParams)}`}
+              chord={rootParams.chord}
+              thickness={rootParams.thickness}
+              camber={rootParams.camber}
+              camberPos={rootParams.camberPos}
+              angle={rootParams.angle}
+              label="Root Airfoil"
+            />
+            {enablePanel1 && (
+              <AirfoilPreview
+                key={`panel1-${JSON.stringify(panel1Params)}`}
+                chord={panel1Params.chord}
+                thickness={panel1Params.thickness}
+                camber={panel1Params.camber}
+                camberPos={panel1Params.camberPos}
+                angle={panel1Params.angle}
+                pivotPercent={panel1Params.pivotPercent}
+                label="Panel 1 Airfoil"
+              />
+            )}
+            {enablePanel2 && (
+              <AirfoilPreview
+                key={`panel2-${JSON.stringify(panel2Params)}`}
+                chord={panel2Params.chord}
+                thickness={panel2Params.thickness}
+                camber={panel2Params.camber}
+                camberPos={panel2Params.camberPos}
+                angle={panel2Params.angle}
+                pivotPercent={panel2Params.pivotPercent}
+                label="Panel 2 Airfoil"
+              />
+            )}
+            <AirfoilPreview
+              key={`tip-${JSON.stringify(tipParams)}`}
+              chord={tipParams.chord}
+              thickness={tipParams.thickness}
+              camber={tipParams.camber}
+              camberPos={tipParams.camberPos}
+              angle={tipParams.angle}
+              pivotPercent={tipParams.pivotPercent}
+              label="Tip Airfoil"
+            />
+          </>
         )}
-        {enablePanel2 && (
-          <AirfoilPreview
-            key={`panel2-${JSON.stringify(panel2Params)}`}
-            chord={panel2Params.chord}
-            thickness={panel2Params.thickness}
-            camber={panel2Params.camber}
-            camberPos={panel2Params.camberPos}
-            angle={panel2Params.angle}
-            pivotPercent={panel2Params.pivotPercent}
-            label="Panel 2 Airfoil"
-          />
-        )}
-        <AirfoilPreview
-          key={`tip-${JSON.stringify(tipParams)}`}
-          chord={tipParams.chord}
-          thickness={tipParams.thickness}
-          camber={tipParams.camber}
-          camberPos={tipParams.camberPos}
-          angle={tipParams.angle}
-          pivotPercent={tipParams.pivotPercent}
-          label="Tip Airfoil"
-        />
       </div>
 
       {/* Canvas */}
