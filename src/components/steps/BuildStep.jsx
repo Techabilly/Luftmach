@@ -1,10 +1,6 @@
 import React from 'react';
+import DesignApp from '../../App.jsx';
 
 export default function BuildStep() {
-  return (
-    <div style={{ padding: '20px' }}>
-      <h2>Build</h2>
-      <p>Edit aircraft geometry and parameters in this step.</p>
-    </div>
-  );
+  return <DesignApp />;
 }
