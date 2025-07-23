@@ -32,6 +32,12 @@ export default function Aircraft({
         curveV={fuselageParams.curveV}
         tailHeight={fuselageParams.tailHeight}
         wireframe={wireframe}
+        closeNose={fuselageParams.closeNose}
+        closeTail={fuselageParams.closeTail}
+        nosecapLength={fuselageParams.nosecapLength}
+        nosecapSharpness={fuselageParams.nosecapSharpness}
+        tailcapLength={fuselageParams.nosecapLength}
+        tailcapSharpness={fuselageParams.nosecapSharpness}
       />
       <Wing
         sections={sections}
