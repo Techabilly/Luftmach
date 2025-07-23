@@ -184,12 +184,12 @@ function createFuselageGeometry(
     for (let i = 0; i < first.points.length; i++) {
       vertices.push(first.points[i].x, first.points[i].y + first.y, first.pos);
     }
-    const tipIndex = vertices.length / 3;
+    const nosetipIndex = vertices.length / 3;
     vertices.push(0, first.y, frontPos - nosecapLength);
     for (let i = 0; i < first.points.length; i++) {
       const v1 = startIndex + i;
       const v2 = startIndex + ((i + 1) % first.points.length);
-      indices.push(v1, v2, tipIndex);
+      indices.push(v1, v2, nosetipIndex);
     }
   } else {
     const front = pointArrays[0];
@@ -213,12 +213,12 @@ function createFuselageGeometry(
     for (let i = 0; i < last.points.length; i++) {
       vertices.push(last.points[i].x, last.points[i].y + last.y, last.pos);
     }
-    const tipIndex = vertices.length / 3;
+    const tailtipIndex = vertices.length / 3;
     vertices.push(0, last.y, backPos + tailcapLength);
     for (let i = 0; i < last.points.length; i++) {
       const v1 = startIndex + i;
       const v2 = startIndex + ((i + 1) % last.points.length);
-      indices.push(v2, v1, tipIndex);
+      indices.push(v2, v1, tailtipIndex);
     }
   } else {
     const back = pointArrays[pointArrays.length - 1];
