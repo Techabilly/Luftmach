@@ -136,8 +136,10 @@ export default function App({ showAirfoilControls = false } = {}) {
     tailHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Tail Height' },
       closeNose: { value: false, label: 'Close Nose' },
   closeTail: { value: false, label: 'Close Tail' },
-  capLength: { value: 20, min: 1, max: 100, step: 1, label: 'Cap Length' },
-  capSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Cap Sharpness' },
+  nosecapLength: { value: 20, min: 1, max: 100, step: 1, label: 'Nose Cap Length' },
+  nosecapSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Nose Cap Sharpness' },
+  tailcapLength: { value: 20, min: 1, max: 100, step: 1, label: 'Tail Cap Length' },
+  tailcapSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' },
   });
 
   const {
