@@ -14,6 +14,7 @@ If you are developing a production application, we recommend using TypeScript wi
 ## Features
 - Adjustable wing mount position along the fuselage using the new "Mount Position" control.
 - Independent vertical and horizontal fuselage taper with adjustable start positions.
+- Independent top and bottom fuselage tapers.
 - Curvature controls for both horizontal and vertical fuselage tapers.
 - Fuselage tapers now form smooth curves rather than abrupt angles.
 - Adjustable tail height relative to the nose using the new "Tail Height" control.

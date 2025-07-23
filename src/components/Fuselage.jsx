@@ -59,7 +59,8 @@ function createFuselageGeometry(
   width,
   height,
   taperH,
-  taperV,
+  taperTop,
+  taperBottom,
   taperPosH,
   taperPosV,
   cornerDiameter,
@@ -93,26 +94,33 @@ function createFuselageGeometry(
 
   const pointArrays = positions.map((p) => {
     const hScale = scale(p, taperPosH, taperH, curveH);
-    const vScale = scale(p, taperPosV, taperV, curveV);
+    const topScale = scale(p, taperPosV, taperTop, curveV);
+    const bottomScale = scale(p, taperPosV, taperBottom, curveV);
+    const avgScale = (topScale + bottomScale) / 2;
     let cross;
     if (topShape === 'Ellipse' && bottomShape === 'Ellipse') {
-      cross = createEllipseShape(width * hScale, height * vScale);
+      cross = createEllipseShape(width * hScale, height);
     } else if (topShape === 'Square' && bottomShape === 'Square') {
       cross = createRoundedRectShape(
         width * hScale,
-        height * vScale,
-        radius * Math.min(hScale, vScale),
+        height,
+        radius * Math.min(hScale, avgScale),
       );
     } else {
       cross = createTopBottomShape(
         width * hScale,
-        height * vScale,
-        radius * Math.min(hScale, vScale),
+        height,
+        radius * Math.min(hScale, avgScale),
         topShape,
         bottomShape,
       );
     }
-    return cross.getPoints(32);
+    const pts = cross.getPoints(32).map((pt) =>
+      pt.y >= 0
+        ? new THREE.Vector2(pt.x, pt.y * topScale)
+        : new THREE.Vector2(pt.x, pt.y * bottomScale),
+    );
+    return pts;
   });
 
   const sections = [];
@@ -247,7 +255,8 @@ export default function Fuselage({
   width,
   height,
   taperH,
-  taperV,
+  taperTop,
+  taperBottom,
   taperPosH,
   taperPosV,
   cornerDiameter,
@@ -271,7 +280,8 @@ export default function Fuselage({
         width,
         height,
         taperH,
-        taperV,
+        taperTop,
+        taperBottom,
         taperPosH,
         taperPosV,
         cornerDiameter,
@@ -292,7 +302,8 @@ export default function Fuselage({
       width,
       height,
       taperH,
-      taperV,
+      taperTop,
+      taperBottom,
       taperPosH,
       taperPosV,
       cornerDiameter,
