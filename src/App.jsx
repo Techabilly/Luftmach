@@ -134,6 +134,10 @@ export default function App({ showAirfoilControls = false } = {}) {
     curveH: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' },
     curveV: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' },
     tailHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Tail Height' },
+      closeNose: { value: false, label: 'Close Nose' },
+  closeTail: { value: false, label: 'Close Tail' },
+  capLength: { value: 20, min: 1, max: 100, step: 1, label: 'Cap Length' },
+  capSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Cap Sharpness' },
   });
 
   const {
