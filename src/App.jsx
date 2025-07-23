@@ -235,7 +235,7 @@ export default function App({ showAirfoilControls = false } = {}) {
         <Leva
           collapsed={false}
           fill
-          theme={{ colors: { elevation1: '#222' } }}
+          theme={{ colors: { elevation1: '#d1ebeb' } }}
         />
       </div>
 
