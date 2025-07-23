@@ -224,7 +224,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       {/* Sidebar: Controls + Previews */}
       <div style={{
         width: '340px',
-        backgroundColor: '#181818',
+        backgroundColor: '#b2bfbf',
         padding: '10px',
         display: 'flex',
         flexDirection: 'column',
