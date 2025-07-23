@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 function createRoundedRectShape(width, height, radius) {
-  const halfW = width / 2;
-  const halfH = height / 2;
+  const halfW = width / 1.25;
+  const halfH = height / 1.25;
   const r = Math.min(radius, halfW, halfH);
   const shape = new THREE.Shape();
   shape.moveTo(-halfW + r, -halfH);
@@ -20,8 +20,8 @@ function createRoundedRectShape(width, height, radius) {
 }
 
 function createTopBottomShape(width, height, radius, topShape, bottomShape) {
-  const halfW = width / 2;
-  const halfH = height / 2;
+  const halfW = width / 1.25;
+  const halfH = height / 1.25;
   const r = Math.min(radius, halfW, halfH);
   const shape = new THREE.Shape();
   shape.moveTo(halfW, 0);
