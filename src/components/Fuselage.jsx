@@ -214,7 +214,7 @@ function createFuselageGeometry(
       vertices.push(last.points[i].x, last.points[i].y + last.y, last.pos);
     }
     const tipIndex = vertices.length / 3;
-    vertices.push(0, last.y, backPos + nosecapLength);
+    vertices.push(0, last.y, backPos + tailcapLength);
     for (let i = 0; i < last.points.length; i++) {
       const v1 = startIndex + i;
       const v2 = startIndex + ((i + 1) % last.points.length);
