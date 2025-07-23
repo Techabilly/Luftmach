@@ -70,8 +70,10 @@ function createFuselageGeometry(
   bottomShape = 'Square',
   closeNose = false,
   closeTail = false,
-  capLength = 0,
-  capSharpness = 1,
+  nosecapLength = 0,
+  nosecapSharpness = 1,
+  tailcapLength = 0,
+  tailcapSharpness = 1,
 ) {
   const radius = cornerDiameter / 2;
 
@@ -117,13 +119,13 @@ function createFuselageGeometry(
   const frontPos = -length / 2;
   const backPos = length / 2;
 
-  if (closeNose && capLength > 0) {
+  if (closeNose && nosecapLength > 0) {
     const capSeg = 5;
     for (let i = 1; i <= capSeg; i++) {
       const r = i / (capSeg + 1);
-      const scaleF = Math.pow(r, capSharpness);
+      const scaleF = Math.pow(r, nosecapSharpness);
       const pts = pointArrays[0].map((p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF));
-      sections.push({ points: pts, pos: frontPos - capLength + capLength * r, y: 0 });
+      sections.push({ points: pts, pos: frontPos - nosecapLength + nosecapLength * r, y: 0 });
     }
   }
 
@@ -135,13 +137,13 @@ function createFuselageGeometry(
     });
   });
 
-  if (closeTail && capLength > 0) {
+  if (closeTail && tailcapLength > 0) {
     const capSeg = 5;
     for (let i = 1; i <= capSeg; i++) {
       const r = i / (capSeg + 1);
-      const scaleF = Math.pow(1 - r, capSharpness);
+      const scaleF = Math.pow(1 - r, tailcapSharpness);
       const pts = pointArrays[pointArrays.length - 1].map((p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF));
-      sections.push({ points: pts, pos: backPos + capLength * r, y: tailHeight });
+      sections.push({ points: pts, pos: backPos + tailcapLength * r, y: tailHeight });
     }
   }
 
@@ -176,14 +178,14 @@ function createFuselageGeometry(
   }
 
   // Close nose
-  if (closeNose && capLength > 0) {
+  if (closeNose && nosecapLength > 0) {
     const first = sections[0];
     const startIndex = vertices.length / 3;
     for (let i = 0; i < first.points.length; i++) {
       vertices.push(first.points[i].x, first.points[i].y + first.y, first.pos);
     }
     const tipIndex = vertices.length / 3;
-    vertices.push(0, first.y, frontPos - capLength);
+    vertices.push(0, first.y, frontPos - nosecapLength);
     for (let i = 0; i < first.points.length; i++) {
       const v1 = startIndex + i;
       const v2 = startIndex + ((i + 1) % first.points.length);
@@ -205,14 +207,14 @@ function createFuselageGeometry(
   }
 
   // Close tail
-  if (closeTail && capLength > 0) {
+  if (closeTail && tailcapLength > 0) {
     const last = sections[sections.length - 1];
     const startIndex = vertices.length / 3;
     for (let i = 0; i < last.points.length; i++) {
       vertices.push(last.points[i].x, last.points[i].y + last.y, last.pos);
     }
     const tipIndex = vertices.length / 3;
-    vertices.push(0, last.y, backPos + capLength);
+    vertices.push(0, last.y, backPos + nosecapLength);
     for (let i = 0; i < last.points.length; i++) {
       const v1 = startIndex + i;
       const v2 = startIndex + ((i + 1) % last.points.length);
@@ -256,8 +258,10 @@ export default function Fuselage({
   bottomShape = 'Square',
   closeNose = false,
   closeTail = false,
-  capLength = 0,
-  capSharpness = 1,
+  nosecapLength = 0,
+  nosecapSharpness = 1,
+  tailcapLength = 0,
+  tailcapSharpness = 1,
   wireframe = false,
 }) {
   const geom = useMemo(
@@ -278,8 +282,10 @@ export default function Fuselage({
         bottomShape,
         closeNose,
         closeTail,
-        capLength,
-        capSharpness,
+        nosecapLength,
+        nosecapSharpness,
+        tailcapLength,
+        tailcapSharpness,
       ),
     [
       length,
@@ -297,8 +303,10 @@ export default function Fuselage({
       bottomShape,
       closeNose,
       closeTail,
-      capLength,
-      capSharpness,
+      nosecapLength,
+      nosecapSharpness,
+      tailcapLength,
+      tailcapSharpness,
     ]
   );
 
