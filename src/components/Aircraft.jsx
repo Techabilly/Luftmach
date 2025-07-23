@@ -24,7 +24,8 @@ export default function Aircraft({
         topShape={fuselageParams.topShape}
         bottomShape={fuselageParams.bottomShape}
         taperH={fuselageParams.taperH}
-        taperV={fuselageParams.taperV}
+        taperTop={fuselageParams.taperTop}
+        taperBottom={fuselageParams.taperBottom}
         taperPosH={fuselageParams.taperPosH}
         taperPosV={fuselageParams.taperPosV}
         cornerDiameter={fuselageParams.cornerDiameter}

@@ -119,7 +119,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     width: { value: 40, min: 10, max: 200 },
     height: { value: 40, min: 10, max: 200 },
     taperH: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' },
-    taperV: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Vertical Taper' },
+    taperTop: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Top Taper' },
+    taperBottom: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Bottom Taper' },
     taperPosH: { value: 0, min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' },
     taperPosV: { value: 0, min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' },
     cornerDiameter: {
