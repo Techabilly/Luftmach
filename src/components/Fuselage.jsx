@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 function createRoundedRectShape(width, height, radius) {
   const halfW = width / 2;
@@ -52,6 +53,43 @@ function createEllipseShape(width, height) {
   const shape = new THREE.Shape();
   shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
   return shape;
+}
+
+// Generate a series of scaled cross-sections used for nose or tail caps.
+// `startPoints`   : Vector2 array describing the section where the cap joins
+// `length`        : length of the cap along the fuselage axis
+// `segments`      : number of intermediate rings to generate
+// `sharpness`     : exponent controlling taper aggressiveness
+// `reverse`       : true for tail caps so scaling goes from body to tip
+// `taperType`     : 'cone' (linear) or 'round' (sinusoidal)
+function createCapShape(
+  startPoints,
+  length,
+  segments = 5,
+  sharpness = 1,
+  reverse = false,
+  taperType = 'cone',
+) {
+  const results = [];
+
+  function taper(t) {
+    if (taperType === 'round') return 1 - Math.cos(t * Math.PI * 0.5);
+    return t; // cone
+  }
+
+  for (let i = 1; i <= segments; i++) {
+    const t = i / (segments + 1);
+    const r = reverse ? 1 - taper(t) : taper(t);
+    const scaleF = Math.pow(r, sharpness);
+    const pts = startPoints.map(
+      (p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF),
+    );
+    // Position offset along the axis relative to the start point
+    const offset = reverse ? length * t : -length + length * t;
+    results.push({ points: pts, offset });
+  }
+
+  return results;
 }
 
 function createFuselageGeometry(
@@ -128,13 +166,16 @@ function createFuselageGeometry(
   const backPos = length / 2;
 
   if (closeNose && nosecapLength > 0) {
-    const capSeg = 5;
-    for (let i = 1; i <= capSeg; i++) {
-      const r = i / (capSeg + 1);
-      const scaleF = Math.pow(r, nosecapSharpness);
-      const pts = pointArrays[0].map((p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF));
-      sections.push({ points: pts, pos: frontPos - nosecapLength + nosecapLength * r, y: 0 });
-    }
+    const noseSections = createCapShape(
+      pointArrays[0],
+      nosecapLength,
+      5,
+      nosecapSharpness,
+      false,
+    );
+    noseSections.forEach((sec) =>
+      sections.push({ points: sec.points, pos: frontPos + sec.offset, y: 0 }),
+    );
   }
 
   positions.forEach((p, idx) => {
@@ -146,13 +187,20 @@ function createFuselageGeometry(
   });
 
   if (closeTail && tailcapLength > 0) {
-    const capSeg = 5;
-    for (let i = 1; i <= capSeg; i++) {
-      const r = i / (capSeg + 1);
-      const scaleF = Math.pow(1 - r, tailcapSharpness);
-      const pts = pointArrays[pointArrays.length - 1].map((p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF));
-      sections.push({ points: pts, pos: backPos + tailcapLength * r, y: tailHeight });
-    }
+    const tailSections = createCapShape(
+      pointArrays[pointArrays.length - 1],
+      tailcapLength,
+      5,
+      tailcapSharpness,
+      true,
+    );
+    tailSections.forEach((sec) =>
+      sections.push({
+        points: sec.points,
+        pos: backPos + sec.offset,
+        y: tailHeight,
+      }),
+    );
   }
 
   const vertices = [];
@@ -246,6 +294,7 @@ function createFuselageGeometry(
   const geom = new THREE.BufferGeometry();
   geom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geom.setIndex(indices);
+  BufferGeometryUtils.mergeVertices(geom);
   geom.computeVertexNormals();
   return geom;
 }
