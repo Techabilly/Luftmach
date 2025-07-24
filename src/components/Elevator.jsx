@@ -129,7 +129,7 @@ export default function Elevator({
   );
 
   return (
-    <mesh geometry={geom} position={position} rotation={[0, -Math.PI / 2, 0]}>
+    <mesh geometry={geom} position={position}
       <meshStandardMaterial color="white" side={THREE.DoubleSide} wireframe={wireframe} />
     </mesh>
   );
