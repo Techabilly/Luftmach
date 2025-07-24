@@ -23,3 +23,6 @@ If you are developing a production application, we recommend using TypeScript wi
 - Option to choose an elliptical or square fuselage shape.
 - Optional nacelles can be added at the end of each wing panel.
 - A rudder can be added to the rear of the fuselage.
+- The rudder now supports separate root and tip lengths as well as
+  independent front and back curve controls.
+- The fuselage can be hidden entirely if desired.

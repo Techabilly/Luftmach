@@ -113,6 +113,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   });
 
   const fuselageParams = useControls('Fuselage', {
+    showFuselage: { value: true, label: 'Show Fuselage' },
     topShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Top Shape' },
     bottomShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Bottom Shape' },
     length: { value: 200, min: 50, max: 600 },
@@ -156,13 +157,19 @@ export default function App({ showAirfoilControls = false } = {}) {
   const {
     showRudder,
     rudderHeight,
-    rudderChord,
+    rootChord,
+    tipChord,
     rudderThickness,
+    frontCurve,
+    backCurve,
   } = useControls('Rudder', {
     showRudder: false,
     rudderHeight: { value: 40, min: 10, max: 100, step: 1, label: 'Height' },
-    rudderChord: { value: 30, min: 10, max: 100, step: 1, label: 'Chord' },
+    rootChord: { value: 30, min: 10, max: 100, step: 1, label: 'Root Chord' },
+    tipChord: { value: 0, min: 0, max: 100, step: 1, label: 'Tip Chord' },
     rudderThickness: { value: 2, min: 1, max: 10, step: 0.5, label: 'Thickness' },
+    frontCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Front Curve' },
+    backCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Back Curve' },
   });
 
   const sections = [rootParams];
@@ -274,8 +281,12 @@ export default function App({ showAirfoilControls = false } = {}) {
                 nacelleLength={nacelleLength}
                 showRudder={showRudder}
                 rudderHeight={rudderHeight}
-                rudderChord={rudderChord}
+                rootChord={rootChord}
+                tipChord={tipChord}
                 rudderThickness={rudderThickness}
+                frontCurve={frontCurve}
+                backCurve={backCurve}
+                showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
               <OrbitControls ref={controlsRef} />
@@ -303,8 +314,12 @@ export default function App({ showAirfoilControls = false } = {}) {
                   nacelleLength={nacelleLength}
                   showRudder={showRudder}
                   rudderHeight={rudderHeight}
-                  rudderChord={rudderChord}
+                  rootChord={rootChord}
+                  tipChord={tipChord}
                   rudderThickness={rudderThickness}
+                  frontCurve={frontCurve}
+                  backCurve={backCurve}
+                  showFuselage={fuselageParams.showFuselage}
                   fuselageParams={fuselageParams}
                   wireframe
                 />
@@ -321,8 +336,12 @@ export default function App({ showAirfoilControls = false } = {}) {
                   nacelleLength={nacelleLength}
                   showRudder={showRudder}
                   rudderHeight={rudderHeight}
-                  rudderChord={rudderChord}
+                  rootChord={rootChord}
+                  tipChord={tipChord}
                   rudderThickness={rudderThickness}
+                  frontCurve={frontCurve}
+                  backCurve={backCurve}
+                  showFuselage={fuselageParams.showFuselage}
                   fuselageParams={fuselageParams}
                   wireframe
                 />
