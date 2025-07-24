@@ -188,6 +188,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorSweep,
     elevatorLeadCurve,
     elevatorTrailCurve,
+    elevatorFrontRadius,
+    elevatorBackRadius,
   } = useControls('Elevator', {
     showElevator: false,
     elevatorType: { value: 'Flat', options: ['Flat', 'V'], label: 'Type' },
@@ -198,6 +200,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorSweep: { value: 0, min: -50, max: 50, step: 1, label: 'Sweep' },
     elevatorLeadCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' },
     elevatorTrailCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' },
+    elevatorFrontRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Front Radius' },
+    elevatorBackRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Back Radius' },
   });
 
   const sections = [rootParams];
@@ -326,6 +330,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorSweep={elevatorSweep}
                 elevatorLeadCurve={elevatorLeadCurve}
                 elevatorTrailCurve={elevatorTrailCurve}
+                elevatorFrontRadius={elevatorFrontRadius}
+                elevatorBackRadius={elevatorBackRadius}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -371,6 +377,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorSweep={elevatorSweep}
                 elevatorLeadCurve={elevatorLeadCurve}
                 elevatorTrailCurve={elevatorTrailCurve}
+                elevatorFrontRadius={elevatorFrontRadius}
+                elevatorBackRadius={elevatorBackRadius}
                  showFuselage={fuselageParams.showFuselage}
                  fuselageParams={fuselageParams}
                  wireframe
@@ -405,6 +413,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorSweep={elevatorSweep}
                 elevatorLeadCurve={elevatorLeadCurve}
                 elevatorTrailCurve={elevatorTrailCurve}
+                elevatorFrontRadius={elevatorFrontRadius}
+                elevatorBackRadius={elevatorBackRadius}
                  showFuselage={fuselageParams.showFuselage}
                  fuselageParams={fuselageParams}
                  wireframe
