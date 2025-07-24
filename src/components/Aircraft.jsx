@@ -36,6 +36,8 @@ export default function Aircraft({
   elevatorSweep = 0,
   elevatorLeadCurve = 1,
   elevatorTrailCurve = 1,
+  elevatorFrontRadius = 0,
+  elevatorBackRadius = 0,
 }) {
   return (
     <group ref={groupRef}>
@@ -93,6 +95,8 @@ export default function Aircraft({
           sweep={elevatorSweep}
           leadCurve={elevatorLeadCurve}
           trailCurve={elevatorTrailCurve}
+          frontRadius={elevatorFrontRadius}
+          backRadius={elevatorBackRadius}
           wireframe={wireframe}
           position={[0, fuselageParams.tailHeight, fuselageParams.length / 2]}
         />
