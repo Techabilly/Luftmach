@@ -27,8 +27,12 @@ export default function Rudder({
 
     function addCorner(cx, cy, radius, startA, endA, curve) {
       for (let i = 1; i <= cornerSegments; i++) {
-        const t = Math.pow(i / cornerSegments, curve);
-        const angle = startA + (endA - startA) * t;
+        const t = i / cornerSegments;
+        const eased =
+          t < 0.5
+            ? 0.5 * Math.pow(2 * t, curve)
+            : 1 - 0.5 * Math.pow(2 * (1 - t), curve);
+        const angle = startA + (endA - startA) * eased;
         shape.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
       }
     }
