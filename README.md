@@ -25,4 +25,7 @@ If you are developing a production application, we recommend using TypeScript wi
 - A rudder can be added to the rear of the fuselage.
 - The rudder now supports separate root and tip lengths as well as
   independent front and back curve controls.
+- The rudder can be shifted forward or backward along the fuselage.
+- The top front and back corners of the rudder have independent radius controls.
+- Curve settings now control how those corners are rounded.
 - The fuselage can be hidden entirely if desired.
