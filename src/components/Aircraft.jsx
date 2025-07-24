@@ -60,8 +60,8 @@ export default function Aircraft({
           rootChord={rootChord}
           tipChord={tipChord}
           thickness={rudderThickness}
-          frontCurve={frontCurve}
-          backCurve={backCurve}
+          frontCurve={backCurve}
+          backCurve={frontCurve}
           frontRadius={frontRadius}
           backRadius={backRadius}
           offset={rudderOffset}
