@@ -44,9 +44,9 @@ export default function App({ showAirfoilControls = false } = {}) {
     mountHeight,
     mountZ,
   } = useControls('Wing Settings', {
-    sweep: { value: 0, min: -100, max: 100 },
+    sweep: { value: 0, min: -300, max: 300 },
     mirrored: true,
-    mountHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Mount Height' },
+    mountHeight: { value: 0, min: -30, max: 30, step: 1, label: 'Mount Height' },
     mountZ: { value: 0, min: -300, max: 300, step: 1, label: 'Mount Position' },
     enablePanel1: { value: false, label: 'Enable Panel 1' },
     enablePanel2: { value: false, label: 'Enable Panel 2' },
@@ -59,7 +59,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
     length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
     angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
-    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
+    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
   });
 
 
@@ -77,7 +77,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       step: 1,
       label: 'Rotation Center (%)',
     },
-    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
+    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
   }, { render: (get) => get('Wing Settings.enablePanel1') });
 
   const panel2Params = useControls('Panel 2 Airfoil', {
@@ -94,7 +94,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       step: 1,
       label: 'Rotation Center (%)',
     },
-    dihedral: { value: 0, min: -10, max: 10, step: 0.1, label: 'Dihedral (°)' },
+    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
   }, { render: (get) => get('Wing Settings.enablePanel2') });
 
   const tipParams = useControls('Wing Tip', {
