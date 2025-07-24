@@ -153,6 +153,18 @@ export default function App({ showAirfoilControls = false } = {}) {
     nacelleLength: { value: 40, min: 10, max: 200, step: 1, label: 'Length' },
   });
 
+  const {
+    showRudder,
+    rudderHeight,
+    rudderChord,
+    rudderThickness,
+  } = useControls('Rudder', {
+    showRudder: false,
+    rudderHeight: { value: 40, min: 10, max: 100, step: 1, label: 'Height' },
+    rudderChord: { value: 30, min: 10, max: 100, step: 1, label: 'Chord' },
+    rudderThickness: { value: 2, min: 1, max: 10, step: 0.5, label: 'Thickness' },
+  });
+
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
   if (enablePanel2) sections.push(panel2Params);
@@ -260,6 +272,10 @@ export default function App({ showAirfoilControls = false } = {}) {
                 showNacelles={showNacelles}
                 nacelleRadius={nacelleRadius}
                 nacelleLength={nacelleLength}
+                showRudder={showRudder}
+                rudderHeight={rudderHeight}
+                rudderChord={rudderChord}
+                rudderThickness={rudderThickness}
                 fuselageParams={fuselageParams}
               />
               <OrbitControls ref={controlsRef} />
@@ -285,6 +301,10 @@ export default function App({ showAirfoilControls = false } = {}) {
                   showNacelles={showNacelles}
                   nacelleRadius={nacelleRadius}
                   nacelleLength={nacelleLength}
+                  showRudder={showRudder}
+                  rudderHeight={rudderHeight}
+                  rudderChord={rudderChord}
+                  rudderThickness={rudderThickness}
                   fuselageParams={fuselageParams}
                   wireframe
                 />
@@ -299,6 +319,10 @@ export default function App({ showAirfoilControls = false } = {}) {
                   showNacelles={showNacelles}
                   nacelleRadius={nacelleRadius}
                   nacelleLength={nacelleLength}
+                  showRudder={showRudder}
+                  rudderHeight={rudderHeight}
+                  rudderChord={rudderChord}
+                  rudderThickness={rudderThickness}
                   fuselageParams={fuselageParams}
                   wireframe
                 />

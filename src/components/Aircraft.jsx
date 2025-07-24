@@ -1,6 +1,7 @@
 import React from 'react';
 import Fuselage from './Fuselage';
 import Wing from './Wing';
+import Rudder from './Rudder';
 
 export default function Aircraft({
   sections,
@@ -14,6 +15,10 @@ export default function Aircraft({
   showNacelles = false,
   nacelleRadius = 10,
   nacelleLength = 40,
+  showRudder = false,
+  rudderHeight = 40,
+  rudderChord = 30,
+  rudderThickness = 2,
 }) {
   return (
     <group ref={groupRef}>
@@ -40,6 +45,19 @@ export default function Aircraft({
         tailcapLength={fuselageParams.nosecapLength}
         tailcapSharpness={fuselageParams.nosecapSharpness}
       />
+      {showRudder && (
+        <Rudder
+          height={rudderHeight}
+          chord={rudderChord}
+          thickness={rudderThickness}
+          wireframe={wireframe}
+          position={[
+            0,
+            fuselageParams.tailHeight + fuselageParams.height / 2,
+            fuselageParams.length / 2,
+          ]}
+        />
+      )}
       <Wing
         sections={sections}
         sweep={sweep}
