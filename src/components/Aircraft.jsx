@@ -23,6 +23,9 @@ export default function Aircraft({
   rudderThickness = 2,
   frontCurve = 1,
   backCurve = 1,
+  frontRadius = 0,
+  backRadius = 0,
+  rudderOffset = 0,
 }) {
   return (
     <group ref={groupRef}>
@@ -59,6 +62,9 @@ export default function Aircraft({
           thickness={rudderThickness}
           frontCurve={frontCurve}
           backCurve={backCurve}
+          frontRadius={frontRadius}
+          backRadius={backRadius}
+          offset={rudderOffset}
           wireframe={wireframe}
           position={[
             0,

@@ -160,6 +160,9 @@ export default function App({ showAirfoilControls = false } = {}) {
     rootChord,
     tipChord,
     rudderThickness,
+    rudderOffset,
+    frontRadius,
+    backRadius,
     frontCurve,
     backCurve,
   } = useControls('Rudder', {
@@ -168,6 +171,9 @@ export default function App({ showAirfoilControls = false } = {}) {
     rootChord: { value: 30, min: 10, max: 100, step: 1, label: 'Root Chord' },
     tipChord: { value: 0, min: 0, max: 100, step: 1, label: 'Tip Chord' },
     rudderThickness: { value: 2, min: 1, max: 10, step: 0.5, label: 'Thickness' },
+    rudderOffset: { value: 0, min: -100, max: 100, step: 1, label: 'Offset' },
+    frontRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Front Radius' },
+    backRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Back Radius' },
     frontCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Front Curve' },
     backCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Back Curve' },
   });
@@ -286,6 +292,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                 rudderThickness={rudderThickness}
                 frontCurve={frontCurve}
                 backCurve={backCurve}
+                frontRadius={frontRadius}
+                backRadius={backRadius}
+                rudderOffset={rudderOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -319,6 +328,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                   rudderThickness={rudderThickness}
                   frontCurve={frontCurve}
                   backCurve={backCurve}
+                  frontRadius={frontRadius}
+                  backRadius={backRadius}
+                  rudderOffset={rudderOffset}
                   showFuselage={fuselageParams.showFuselage}
                   fuselageParams={fuselageParams}
                   wireframe
@@ -341,6 +353,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                   rudderThickness={rudderThickness}
                   frontCurve={frontCurve}
                   backCurve={backCurve}
+                  frontRadius={frontRadius}
+                  backRadius={backRadius}
+                  rudderOffset={rudderOffset}
                   showFuselage={fuselageParams.showFuselage}
                   fuselageParams={fuselageParams}
                   wireframe
