@@ -178,6 +178,28 @@ export default function App({ showAirfoilControls = false } = {}) {
     backCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Back Curve' },
   });
 
+  const {
+    showElevator,
+    elevatorType,
+    elevatorVAngle,
+    elevatorRootChord,
+    elevatorTipChord,
+    elevatorSpan,
+    elevatorSweep,
+    elevatorLeadCurve,
+    elevatorTrailCurve,
+  } = useControls('Elevator', {
+    showElevator: false,
+    elevatorType: { value: 'Flat', options: ['Flat', 'V'], label: 'Type' },
+    elevatorVAngle: { value: 0, min: -60, max: 60, step: 1, label: 'V Angle (°)' },
+    elevatorRootChord: { value: 20, min: 5, max: 100, step: 1, label: 'Root Chord' },
+    elevatorTipChord: { value: 20, min: 0, max: 100, step: 1, label: 'Tip Chord' },
+    elevatorSpan: { value: 60, min: 10, max: 200, step: 1, label: 'Span' },
+    elevatorSweep: { value: 0, min: -50, max: 50, step: 1, label: 'Sweep' },
+    elevatorLeadCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' },
+    elevatorTrailCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' },
+  });
+
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
   if (enablePanel2) sections.push(panel2Params);
@@ -295,6 +317,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                 frontRadius={frontRadius}
                 backRadius={backRadius}
                 rudderOffset={rudderOffset}
+                showElevator={showElevator}
+                elevatorType={elevatorType}
+                elevatorVAngle={elevatorVAngle}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorLeadCurve={elevatorLeadCurve}
+                elevatorTrailCurve={elevatorTrailCurve}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -329,12 +360,21 @@ export default function App({ showAirfoilControls = false } = {}) {
                   frontCurve={frontCurve}
                   backCurve={backCurve}
                   frontRadius={frontRadius}
-                  backRadius={backRadius}
-                  rudderOffset={rudderOffset}
-                  showFuselage={fuselageParams.showFuselage}
-                  fuselageParams={fuselageParams}
-                  wireframe
-                />
+                 backRadius={backRadius}
+                 rudderOffset={rudderOffset}
+                showElevator={showElevator}
+                elevatorType={elevatorType}
+                elevatorVAngle={elevatorVAngle}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorLeadCurve={elevatorLeadCurve}
+                elevatorTrailCurve={elevatorTrailCurve}
+                 showFuselage={fuselageParams.showFuselage}
+                 fuselageParams={fuselageParams}
+                 wireframe
+               />
               </MiniView>
               <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
                 <Aircraft
@@ -354,12 +394,21 @@ export default function App({ showAirfoilControls = false } = {}) {
                   frontCurve={frontCurve}
                   backCurve={backCurve}
                   frontRadius={frontRadius}
-                  backRadius={backRadius}
-                  rudderOffset={rudderOffset}
-                  showFuselage={fuselageParams.showFuselage}
-                  fuselageParams={fuselageParams}
-                  wireframe
-                />
+                 backRadius={backRadius}
+                 rudderOffset={rudderOffset}
+                showElevator={showElevator}
+                elevatorType={elevatorType}
+                elevatorVAngle={elevatorVAngle}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorLeadCurve={elevatorLeadCurve}
+                elevatorTrailCurve={elevatorTrailCurve}
+                 showFuselage={fuselageParams.showFuselage}
+                 fuselageParams={fuselageParams}
+                 wireframe
+               />
               </MiniView>
             </div>
           </>
