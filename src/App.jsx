@@ -43,8 +43,6 @@ export default function App({ showAirfoilControls = false } = {}) {
   const groupRef = useRef();
   const {
     sweep,
-    leadCurve,
-    trailCurve,
     mirrored,
     enablePanel1,
     enablePanel2,
@@ -52,8 +50,6 @@ export default function App({ showAirfoilControls = false } = {}) {
     mountZ,
   } = useControls('Wing Settings', {
     sweep: num(0, { min: -300, max: 300 }),
-    leadCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' }),
-    trailCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' }),
     mirrored: true,
     mountHeight: num(0, { min: -30, max: 30, step: 1, label: 'Mount Height' }),
     mountZ: num(0, { min: -300, max: 300, step: 1, label: 'Mount Position' }),
@@ -328,8 +324,6 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
-                leadCurve={leadCurve}
-                trailCurve={trailCurve}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -377,11 +371,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
-                leadCurve={leadCurve}
-                trailCurve={trailCurve}
-                 showFuselage={fuselageParams.showFuselage}
-                 fuselageParams={fuselageParams}
-                 wireframe
+                showFuselage={fuselageParams.showFuselage}
+                fuselageParams={fuselageParams}
+                wireframe
                />
               </MiniView>
               <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
@@ -415,11 +407,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
-                leadCurve={leadCurve}
-                trailCurve={trailCurve}
-                 showFuselage={fuselageParams.showFuselage}
-                 fuselageParams={fuselageParams}
-                 wireframe
+                showFuselage={fuselageParams.showFuselage}
+                fuselageParams={fuselageParams}
+                wireframe
                />
               </MiniView>
             </div>
