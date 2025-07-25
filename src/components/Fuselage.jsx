@@ -2,49 +2,27 @@ import React, { useMemo } from 'react';
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-function createRoundedRectShape(width, height, radius) {
-  const halfW = width / 1.25;
-  const halfH = height / 1.25;
-  const r = Math.min(radius, halfW, halfH);
+// Basic rectangular profile with independently rounded top and bottom edges
+function createRoundedRectShape(width, height, topRadius = 0, bottomRadius = 0) {
+  const halfW = width / 2;
+  const halfH = height / 2;
+  const tr = Math.min(topRadius, halfW, halfH);
+  const br = Math.min(bottomRadius, halfW, halfH);
   const shape = new THREE.Shape();
-  shape.moveTo(-halfW + r, -halfH);
-  shape.lineTo(halfW - r, -halfH);
-  shape.quadraticCurveTo(halfW, -halfH, halfW, -halfH + r);
-  shape.lineTo(halfW, halfH - r);
-  shape.quadraticCurveTo(halfW, halfH, halfW - r, halfH);
-  shape.lineTo(-halfW + r, halfH);
-  shape.quadraticCurveTo(-halfW, halfH, -halfW, halfH - r);
-  shape.lineTo(-halfW, -halfH + r);
-  shape.quadraticCurveTo(-halfW, -halfH, -halfW + r, -halfH);
-  return shape;
-}
 
-function createTopBottomShape(width, height, radius, topShape, bottomShape) {
-  const halfW = width / 1.25;
-  const halfH = height / 1.25;
-  const r = Math.min(radius, halfW, halfH);
-  const shape = new THREE.Shape();
-  shape.moveTo(halfW, 0);
-
-  if (bottomShape === 'Ellipse') {
-    shape.absellipse(0, 0, halfW, halfH, 0, Math.PI, true, 0);
-  } else {
-    shape.lineTo(halfW, -halfH + r);
-    shape.quadraticCurveTo(halfW, -halfH, halfW - r, -halfH);
-    shape.lineTo(-halfW + r, -halfH);
-    shape.quadraticCurveTo(-halfW, -halfH, -halfW, -halfH + r);
-    shape.lineTo(-halfW, 0);
-  }
-
-  if (topShape === 'Ellipse') {
-    shape.absellipse(0, 0, halfW, halfH, Math.PI, Math.PI * 2, true, 0);
-  } else {
-    shape.lineTo(-halfW, halfH - r);
-    shape.quadraticCurveTo(-halfW, halfH, -halfW + r, halfH);
-    shape.lineTo(halfW - r, halfH);
-    shape.quadraticCurveTo(halfW, halfH, halfW, halfH - r);
-    shape.lineTo(halfW, 0);
-  }
+  shape.moveTo(-halfW + br, -halfH);
+  shape.lineTo(halfW - br, -halfH);
+  if (br) shape.quadraticCurveTo(halfW, -halfH, halfW, -halfH + br);
+  else shape.lineTo(halfW, -halfH);
+  shape.lineTo(halfW, halfH - tr);
+  if (tr) shape.quadraticCurveTo(halfW, halfH, halfW - tr, halfH);
+  else shape.lineTo(halfW, halfH);
+  shape.lineTo(-halfW + tr, halfH);
+  if (tr) shape.quadraticCurveTo(-halfW, halfH, -halfW, halfH - tr);
+  else shape.lineTo(-halfW, halfH);
+  shape.lineTo(-halfW, -halfH + br);
+  if (br) shape.quadraticCurveTo(-halfW, -halfH, -halfW + br, -halfH);
+  else shape.lineTo(-halfW, -halfH);
 
   return shape;
 }
@@ -62,33 +40,18 @@ function createEllipseShape(width, height) {
 // `sharpness`     : exponent controlling taper aggressiveness
 // `reverse`       : true for tail caps so scaling goes from body to tip
 // `taperType`     : 'cone' (linear) or 'round' (sinusoidal)
-function createCapShape(
-  startPoints,
-  length,
-  segments = 5,
-  sharpness = 1,
-  reverse = false,
-  taperType = 'cone',
-) {
+// Generate concentric sections that approximate a hemispherical/elliptical dome
+function createDomeSections(startPoints, length, segments = 5, reverse = false) {
   const results = [];
-
-  function taper(t) {
-    if (taperType === 'round') return 1 - Math.cos(t * Math.PI * 0.5);
-    return t; // cone
-  }
-
   for (let i = 1; i <= segments; i++) {
-    const t = i / (segments + 1);
-    const r = reverse ? 1 - taper(t) : taper(t);
-    const scaleF = Math.pow(r, sharpness);
+    const t = i / segments; // 0..1
+    const scaleF = Math.cos((t * Math.PI) / 2); // 1 -> 0
     const pts = startPoints.map(
       (p) => new THREE.Vector2(p.x * scaleF, p.y * scaleF),
     );
-    // Position offset along the axis relative to the start point
-    const offset = reverse ? length * t : -length + length * t;
+    const offset = reverse ? length * t : -length * t;
     results.push({ points: pts, offset });
   }
-
   return results;
 }
 
@@ -101,7 +64,9 @@ function createFuselageGeometry(
   taperBottom,
   taperPosH,
   taperPosV,
-  cornerDiameter,
+  _cornerDiameter,
+  topCornerRadius,
+  bottomCornerRadius,
   curveH,
   curveV,
   tailHeight = 0,
@@ -110,15 +75,12 @@ function createFuselageGeometry(
   closeNose = false,
   closeTail = false,
   nosecapLength = 0,
-  nosecapSharpness = 1,
   tailcapLength = 0,
-  tailcapSharpness = 1,
+  segmentCount = 20,
 ) {
-  const radius = cornerDiameter / 2;
-
   // Sample several positions along the fuselage so taper transitions
   // form smooth curves instead of a single angled segment.
-  const segments = 20;
+  const segments = segmentCount;
   const positions = Array.from({ length: segments + 1 }, (_, i) => i / segments);
 
   function scale(p, pos, taper, curve) {
@@ -134,25 +96,17 @@ function createFuselageGeometry(
     const hScale = scale(p, taperPosH, taperH, curveH);
     const topScale = scale(p, taperPosV, taperTop, curveV);
     const bottomScale = scale(p, taperPosV, taperBottom, curveV);
-    const avgScale = (topScale + bottomScale) / 2;
-    let cross;
-    if (topShape === 'Ellipse' && bottomShape === 'Ellipse') {
-      cross = createEllipseShape(width * hScale, height);
-    } else if (topShape === 'Square' && bottomShape === 'Square') {
-      cross = createRoundedRectShape(
-        width * hScale,
-        height,
-        radius * Math.min(hScale, avgScale),
-      );
-    } else {
-      cross = createTopBottomShape(
-        width * hScale,
-        height,
-        radius * Math.min(hScale, avgScale),
-        topShape,
-        bottomShape,
-      );
-    }
+
+    const cross =
+      topShape === 'Ellipse' && bottomShape === 'Ellipse'
+        ? createEllipseShape(width * hScale, height)
+        : createRoundedRectShape(
+            width * hScale,
+            height,
+            topCornerRadius * Math.min(hScale, topScale),
+            bottomCornerRadius * Math.min(hScale, bottomScale),
+          );
+
     const pts = cross.getPoints(32).map((pt) =>
       pt.y >= 0
         ? new THREE.Vector2(pt.x, pt.y * topScale)
@@ -162,44 +116,36 @@ function createFuselageGeometry(
   });
 
   const sections = [];
+  const crossSections = [];
   const frontPos = -length / 2;
   const backPos = length / 2;
 
   if (closeNose && nosecapLength > 0) {
-    const noseSections = createCapShape(
-      pointArrays[0],
-      nosecapLength,
-      5,
-      nosecapSharpness,
-      false,
-    );
+    const noseSections = createDomeSections(pointArrays[0], nosecapLength, 5, false);
     noseSections.forEach((sec) =>
       sections.push({ points: sec.points, pos: frontPos + sec.offset, y: 0 }),
     );
   }
 
   positions.forEach((p, idx) => {
-    sections.push({
+    const sec = {
       points: pointArrays[idx],
       pos: frontPos + length * p,
       y: tailHeight * p,
-    });
+    };
+    sections.push(sec);
+    crossSections.push(sec);
   });
 
   if (closeTail && tailcapLength > 0) {
-    const tailSections = createCapShape(
+    const tailSections = createDomeSections(
       pointArrays[pointArrays.length - 1],
       tailcapLength,
       5,
-      tailcapSharpness,
       true,
     );
     tailSections.forEach((sec) =>
-      sections.push({
-        points: sec.points,
-        pos: backPos + sec.offset,
-        y: tailHeight,
-      }),
+      sections.push({ points: sec.points, pos: backPos + sec.offset, y: tailHeight }),
     );
   }
 
@@ -296,7 +242,7 @@ function createFuselageGeometry(
   geom.setIndex(indices);
   BufferGeometryUtils.mergeVertices(geom);
   geom.computeVertexNormals();
-  return geom;
+  return { geometry: geom, crossSections };
 }
 
 export default function Fuselage({
@@ -309,6 +255,8 @@ export default function Fuselage({
   taperPosH,
   taperPosV,
   cornerDiameter,
+  topCornerRadius = cornerDiameter / 2,
+  bottomCornerRadius = cornerDiameter / 2,
   curveH = 1,
   curveV = 1,
   tailHeight = 0,
@@ -320,9 +268,11 @@ export default function Fuselage({
   nosecapSharpness = 1,
   tailcapLength = 0,
   tailcapSharpness = 1,
+  segmentCount = 20,
+  debugCrossSections = false,
   wireframe = false,
 }) {
-  const geom = useMemo(
+  const { geometry, crossSections } = useMemo(
     () =>
       createFuselageGeometry(
         length,
@@ -334,6 +284,8 @@ export default function Fuselage({
         taperPosH,
         taperPosV,
         cornerDiameter,
+        topCornerRadius,
+        bottomCornerRadius,
         curveH,
         curveV,
         tailHeight,
@@ -345,6 +297,7 @@ export default function Fuselage({
         nosecapSharpness,
         tailcapLength,
         tailcapSharpness,
+        segmentCount,
       ),
     [
       length,
@@ -356,6 +309,8 @@ export default function Fuselage({
       taperPosH,
       taperPosV,
       cornerDiameter,
+      topCornerRadius,
+      bottomCornerRadius,
       curveH,
       curveV,
       tailHeight,
@@ -367,15 +322,25 @@ export default function Fuselage({
       nosecapSharpness,
       tailcapLength,
       tailcapSharpness,
+      segmentCount,
     ]
   );
 
-
   return (
     <group>
-      <mesh geometry={geom}>
+      <mesh geometry={geometry}>
         <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
+      {debugCrossSections &&
+        crossSections.map((sec, idx) => {
+          const pts3 = sec.points.map((pt) => new THREE.Vector3(pt.x, pt.y + sec.y, 0));
+          const g = new THREE.BufferGeometry().setFromPoints(pts3);
+          return (
+            <lineLoop key={idx} geometry={g} position={[0, 0, sec.pos]}>
+              <lineBasicMaterial color="red" />
+            </lineLoop>
+          );
+        })}
     </group>
   );
 }
