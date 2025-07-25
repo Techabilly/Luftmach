@@ -38,6 +38,8 @@ export default function App({ showAirfoilControls = false } = {}) {
   const groupRef = useRef();
   const {
     sweep,
+    leadCurve,
+    trailCurve,
     mirrored,
     enablePanel1,
     enablePanel2,
@@ -45,6 +47,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     mountZ,
   } = useControls('Wing Settings', {
     sweep: { value: 0, min: -300, max: 300 },
+    leadCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' },
+    trailCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' },
     mirrored: true,
     mountHeight: { value: 0, min: -30, max: 30, step: 1, label: 'Mount Height' },
     mountZ: { value: 0, min: -300, max: 300, step: 1, label: 'Mount Position' },
@@ -332,6 +336,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
+                leadCurve={leadCurve}
+                trailCurve={trailCurve}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -379,6 +385,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
+                leadCurve={leadCurve}
+                trailCurve={trailCurve}
                  showFuselage={fuselageParams.showFuselage}
                  fuselageParams={fuselageParams}
                  wireframe
@@ -415,6 +423,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorTrailCurve={elevatorTrailCurve}
                 elevatorFrontRadius={elevatorFrontRadius}
                 elevatorBackRadius={elevatorBackRadius}
+                leadCurve={leadCurve}
+                trailCurve={trailCurve}
                  showFuselage={fuselageParams.showFuselage}
                  fuselageParams={fuselageParams}
                  wireframe

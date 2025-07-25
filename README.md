@@ -29,3 +29,4 @@ If you are developing a production application, we recommend using TypeScript wi
 - The top front and back corners of the rudder have independent radius controls.
 - Curve settings now control how those corners are rounded.
 - The fuselage can be hidden entirely if desired.
+- Leading and trailing edges of the wing can be curved using new controls.
