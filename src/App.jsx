@@ -2,6 +2,11 @@ import React, { useRef, useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
+import { resetNumber } from './components/ResetNumberPlugin';
+
+function num(value, settings = {}) {
+  return { value, component: resetNumber, ...settings };
+}
 import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
@@ -46,106 +51,85 @@ export default function App({ showAirfoilControls = false } = {}) {
     mountHeight,
     mountZ,
   } = useControls('Wing Settings', {
-    sweep: { value: 0, min: -300, max: 300 },
-    leadCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' },
-    trailCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' },
+    sweep: num(0, { min: -300, max: 300 }),
+    leadCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' }),
+    trailCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' }),
     mirrored: true,
-    mountHeight: { value: 0, min: -30, max: 30, step: 1, label: 'Mount Height' },
-    mountZ: { value: 0, min: -300, max: 300, step: 1, label: 'Mount Position' },
+    mountHeight: num(0, { min: -30, max: 30, step: 1, label: 'Mount Height' }),
+    mountZ: num(0, { min: -300, max: 300, step: 1, label: 'Mount Position' }),
     enablePanel1: { value: false, label: 'Enable Panel 1' },
     enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
 
   const rootParams = useControls('Wing Root', {
-    chord: { value: 100, min: 20, max: 400, render: () => !showAirfoilControls },
-    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
-    camber: { value: 0.02, min: 0, max: 0.1, render: () => showAirfoilControls },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
-    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
-    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
-    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
+    chord: num(100, { min: 20, max: 400, render: () => !showAirfoilControls }),
+    thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
+    camber: num(0.02, { min: 0, max: 0.1, render: () => showAirfoilControls }),
+    camberPos: num(0.4, { min: 0.1, max: 0.9, render: () => showAirfoilControls }),
+    length: num(150, { min: 10, max: 500, label: 'Panel Length' }),
+    angle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+    dihedral: num(0, { min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' }),
   });
 
 
   const panel1Params = useControls('Panel 1 Airfoil', {
-    chord: { value: 80, min: 10, max: 400, render: () => !showAirfoilControls },
-    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
-    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
-    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
-    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
-    pivotPercent: {
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-      label: 'Rotation Center (%)',
-    },
-    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
+    chord: num(80, { min: 10, max: 400, render: () => !showAirfoilControls }),
+    thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
+    camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
+    camberPos: num(0.4, { min: 0.1, max: 0.9, render: () => showAirfoilControls }),
+    length: num(150, { min: 10, max: 500, label: 'Panel Length' }),
+    angle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+    pivotPercent: num(100, { min: 0, max: 100, step: 1, label: 'Rotation Center (%)' }),
+    dihedral: num(0, { min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' }),
   }, { render: (get) => get('Wing Settings.enablePanel1') });
 
   const panel2Params = useControls('Panel 2 Airfoil', {
-    chord: { value: 70, min: 10, max: 400, render: () => !showAirfoilControls },
-    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
-    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
-    length: { value: 150, min: 10, max: 500, label: 'Panel Length' },
-    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' },
-    pivotPercent: {
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-      label: 'Rotation Center (%)',
-    },
-    dihedral: { value: 0, min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' },
+    chord: num(70, { min: 10, max: 400, render: () => !showAirfoilControls }),
+    thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
+    camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
+    camberPos: num(0.4, { min: 0.1, max: 0.9, render: () => showAirfoilControls }),
+    length: num(150, { min: 10, max: 500, label: 'Panel Length' }),
+    angle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+    pivotPercent: num(100, { min: 0, max: 100, step: 1, label: 'Rotation Center (%)' }),
+    dihedral: num(0, { min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' }),
   }, { render: (get) => get('Wing Settings.enablePanel2') });
 
   const tipParams = useControls('Wing Tip', {
-    chord: { value: 60, min: 10, max: 400, render: () => !showAirfoilControls },
-    thickness: { value: 0.12, min: 0.05, max: 0.25, render: () => showAirfoilControls },
-    camber: { value: 0.015, min: 0, max: 0.1, render: () => showAirfoilControls },
-    camberPos: { value: 0.4, min: 0.1, max: 0.9, render: () => showAirfoilControls },
-    angle: { value: 0, min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°' },
-    pivotPercent: {
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-      label: 'Rotation Center (%)',
-    },
+    chord: num(60, { min: 10, max: 400, render: () => !showAirfoilControls }),
+    thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
+    camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
+    camberPos: num(0.4, { min: 0.1, max: 0.9, render: () => showAirfoilControls }),
+    angle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+    pivotPercent: num(100, { min: 0, max: 100, step: 1, label: 'Rotation Center (%)' }),
   });
 
   const fuselageParams = useControls('Fuselage', {
     showFuselage: { value: true, label: 'Show Fuselage' },
     topShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Top Shape' },
     bottomShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Bottom Shape' },
-    length: { value: 200, min: 50, max: 600 },
-    width: { value: 40, min: 10, max: 200 },
-    height: { value: 40, min: 10, max: 200 },
-    taperH: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' },
-    taperTop: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Top Taper' },
-    taperBottom: { value: 0.8, min: 0.1, max: 1, step: 0.01, label: 'Bottom Taper' },
-    taperPosH: { value: 0, min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' },
-    taperPosV: { value: 0, min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' },
+    length: num(200, { min: 50, max: 600 }),
+    width: num(40, { min: 10, max: 200 }),
+    height: num(40, { min: 10, max: 200 }),
+    taperH: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' }),
+    taperTop: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Top Taper' }),
+    taperBottom: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Bottom Taper' }),
+    taperPosH: num(0, { min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' }),
+    taperPosV: num(0, { min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' }),
     cornerDiameter: {
-      value: 10,
-      min: 0,
-      max: 50,
-      label: 'Corner Diameter',
+      ...num(10, { min: 0, max: 50, label: 'Corner Diameter' }),
       render: (get) =>
         get('Fuselage.topShape') === 'Square' ||
         get('Fuselage.bottomShape') === 'Square',
     },
-    curveH: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' },
-    curveV: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' },
-    tailHeight: { value: 0, min: -100, max: 100, step: 1, label: 'Tail Height' },
-      closeNose: { value: false, label: 'Close Nose' },
-  closeTail: { value: false, label: 'Close Tail' },
-  nosecapLength: { value: 20, min: 1, max: 100, step: 1, label: 'Nose Cap Length' },
-  nosecapSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Nose Cap Sharpness' },
-  tailcapLength: { value: 20, min: 1, max: 100, step: 1, label: 'Tail Cap Length' },
-  tailcapSharpness: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' },
+    curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' }),
+    curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' }),
+    tailHeight: num(0, { min: -100, max: 100, step: 1, label: 'Tail Height' }),
+    closeNose: { value: false, label: 'Close Nose' },
+    closeTail: { value: false, label: 'Close Tail' },
+    nosecapLength: num(20, { min: 1, max: 100, step: 1, label: 'Nose Cap Length' }),
+    nosecapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Nose Cap Sharpness' }),
+    tailcapLength: num(20, { min: 1, max: 100, step: 1, label: 'Tail Cap Length' }),
+    tailcapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' }),
   });
 
   const {
@@ -154,8 +138,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     nacelleLength,
   } = useControls('Nacelles', {
     showNacelles: false,
-    nacelleRadius: { value: 10, min: 1, max: 100, step: 1, label: 'Radius' },
-    nacelleLength: { value: 40, min: 10, max: 200, step: 1, label: 'Length' },
+    nacelleRadius: num(10, { min: 1, max: 100, step: 1, label: 'Radius' }),
+    nacelleLength: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
   });
 
   const {
@@ -171,15 +155,15 @@ export default function App({ showAirfoilControls = false } = {}) {
     backCurve,
   } = useControls('Rudder', {
     showRudder: false,
-    rudderHeight: { value: 40, min: 10, max: 100, step: 1, label: 'Height' },
-    rootChord: { value: 30, min: 10, max: 100, step: 1, label: 'Root Chord' },
-    tipChord: { value: 0, min: 0, max: 100, step: 1, label: 'Tip Chord' },
-    rudderThickness: { value: 2, min: 1, max: 10, step: 0.5, label: 'Thickness' },
-    rudderOffset: { value: 0, min: -100, max: 100, step: 1, label: 'Offset' },
-    frontRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Front Radius' },
-    backRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Back Radius' },
-    frontCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Front Curve' },
-    backCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Back Curve' },
+    rudderHeight: num(40, { min: 10, max: 100, step: 1, label: 'Height' }),
+    rootChord: num(30, { min: 10, max: 100, step: 1, label: 'Root Chord' }),
+    tipChord: num(0, { min: 0, max: 100, step: 1, label: 'Tip Chord' }),
+    rudderThickness: num(2, { min: 1, max: 10, step: 0.5, label: 'Thickness' }),
+    rudderOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
+    frontRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Radius' }),
+    backRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Radius' }),
+    frontCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Front Curve' }),
+    backCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Back Curve' }),
   });
 
   const {
@@ -197,15 +181,15 @@ export default function App({ showAirfoilControls = false } = {}) {
   } = useControls('Elevator', {
     showElevator: false,
     elevatorType: { value: 'Flat', options: ['Flat', 'V'], label: 'Type' },
-    elevatorVAngle: { value: 0, min: -60, max: 60, step: 1, label: 'V Angle (°)' },
-    elevatorRootChord: { value: 20, min: 5, max: 100, step: 1, label: 'Root Chord' },
-    elevatorTipChord: { value: 20, min: 0, max: 100, step: 1, label: 'Tip Chord' },
-    elevatorSpan: { value: 60, min: 10, max: 200, step: 1, label: 'Span' },
-    elevatorSweep: { value: 0, min: -50, max: 50, step: 1, label: 'Sweep' },
-    elevatorLeadCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' },
-    elevatorTrailCurve: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' },
-    elevatorFrontRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Front Radius' },
-    elevatorBackRadius: { value: 0, min: 0, max: 50, step: 1, label: 'Back Radius' },
+    elevatorVAngle: num(0, { min: -60, max: 60, step: 1, label: 'V Angle (°)' }),
+    elevatorRootChord: num(20, { min: 5, max: 100, step: 1, label: 'Root Chord' }),
+    elevatorTipChord: num(20, { min: 0, max: 100, step: 1, label: 'Tip Chord' }),
+    elevatorSpan: num(60, { min: 10, max: 200, step: 1, label: 'Span' }),
+    elevatorSweep: num(0, { min: -50, max: 50, step: 1, label: 'Sweep' }),
+    elevatorLeadCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' }),
+    elevatorTrailCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' }),
+    elevatorFrontRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Radius' }),
+    elevatorBackRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Radius' }),
   });
 
   const sections = [rootParams];
