@@ -61,7 +61,8 @@ function createElevatorGeometry({
   const vertices = [];
   for (let i = 0; i < vertCount; i++) {
     const x = pos[i * 3];
-    const z = pos[i * 3 + 1];
+    // Shift so the trailing edge sits at z=0 and forward is along -Z
+    const z = pos[i * 3 + 1] - rootChord;
     const y = Math.tan((vAngle * Math.PI) / 180) * x;
     vertices.push(x, y, z);
   }
@@ -129,8 +130,8 @@ export default function Elevator({
   );
 
   return (
-    <mesh geometry={geom} position={position}
-      meshStandardMaterial color="white" side={THREE.DoubleSide} wireframe={wireframe} />
+    <mesh geometry={geom} position={position}>
+      <meshStandardMaterial color="white" side={THREE.DoubleSide} wireframe={wireframe} />
     </mesh>
   );
 }
