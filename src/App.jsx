@@ -115,8 +115,14 @@ export default function App({ showAirfoilControls = false } = {}) {
     taperBottom: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Bottom Taper' }),
     taperPosH: num(0, { min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' }),
     taperPosV: num(0, { min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' }),
-    cornerDiameter: {
-      ...num(10, { min: 0, max: 50, label: 'Corner Diameter' }),
+    topCornerRadius: {
+      ...num(10, { min: 0, max: 50, label: 'Top Corner Radius' }),
+      render: (get) =>
+        get('Fuselage.topShape') === 'Square' ||
+        get('Fuselage.bottomShape') === 'Square',
+    },
+    bottomCornerRadius: {
+      ...num(10, { min: 0, max: 50, label: 'Bottom Corner Radius' }),
       render: (get) =>
         get('Fuselage.topShape') === 'Square' ||
         get('Fuselage.bottomShape') === 'Square',
@@ -130,6 +136,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     nosecapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Nose Cap Sharpness' }),
     tailcapLength: num(20, { min: 1, max: 100, step: 1, label: 'Tail Cap Length' }),
     tailcapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' }),
+    showCrossSections: { value: false, label: 'Show Cross Sections' },
+    segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
   });
 
   const {

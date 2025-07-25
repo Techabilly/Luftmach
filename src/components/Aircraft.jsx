@@ -55,10 +55,13 @@ export default function Aircraft({
           taperBottom={fuselageParams.taperBottom}
           taperPosH={fuselageParams.taperPosH}
           taperPosV={fuselageParams.taperPosV}
-          cornerDiameter={fuselageParams.cornerDiameter}
+          topCornerRadius={fuselageParams.topCornerRadius}
+          bottomCornerRadius={fuselageParams.bottomCornerRadius}
           curveH={fuselageParams.curveH}
           curveV={fuselageParams.curveV}
           tailHeight={fuselageParams.tailHeight}
+          segmentCount={fuselageParams.segmentCount}
+          debugCrossSections={fuselageParams.showCrossSections}
           wireframe={wireframe}
           closeNose={fuselageParams.closeNose}
           closeTail={fuselageParams.closeTail}
