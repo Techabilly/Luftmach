@@ -62,8 +62,8 @@ export default function Aircraft({
           closeTail={fuselageParams.closeTail}
           nosecapLength={fuselageParams.nosecapLength}
           nosecapSharpness={fuselageParams.nosecapSharpness}
-          tailcapLength={fuselageParams.nosecapLength}
-          tailcapSharpness={fuselageParams.nosecapSharpness}
+          tailcapLength={fuselageParams.tailcapLength}
+          tailcapSharpness={fuselageParams.tailcapSharpness}
         />
       )}
       {showRudder && (
