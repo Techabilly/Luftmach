@@ -99,7 +99,6 @@ export default function App({ showAirfoilControls = false } = {}) {
     pivotPercent: num(100, { min: 0, max: 100, step: 1, label: 'Rotation Center (%)' }),
   });
 
-  const elevatorScale = 0.5;
 
   const fuselageParams = useControls('Fuselage', {
     showFuselage: { value: true, label: 'Show Fuselage' },
@@ -172,7 +171,29 @@ export default function App({ showAirfoilControls = false } = {}) {
     backCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Back Curve' }),
   });
 
-  const { showElevator } = useControls('Elevator', { showElevator: false });
+  const {
+    showElevator,
+    elevatorRootChord,
+    elevatorTipChord,
+    elevatorSpan,
+    elevatorSweep,
+    elevatorDihedral,
+    elevatorThickness,
+    elevatorCamber,
+    elevatorCamberPos,
+    elevatorAngle,
+  } = useControls('Elevator', {
+    showElevator: false,
+    elevatorRootChord: num(50, { min: 10, max: 200, step: 1, label: 'Root Chord' }),
+    elevatorTipChord: num(50, { min: 10, max: 200, step: 1, label: 'Tip Chord' }),
+    elevatorSpan: num(80, { min: 10, max: 300, step: 1, label: 'Span' }),
+    elevatorSweep: num(0, { min: -45, max: 45, step: 1, label: 'Sweep (°)' }),
+    elevatorDihedral: num(0, { min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' }),
+    elevatorThickness: num(0.12, { min: 0.05, max: 0.25, label: 'Thickness' }),
+    elevatorCamber: num(0.02, { min: 0, max: 0.1, label: 'Camber' }),
+    elevatorCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Camber Pos' }),
+    elevatorAngle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+  });
 
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
@@ -292,8 +313,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                 backRadius={backRadius}
                 rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                rootSection={rootParams}
-                elevatorScale={elevatorScale}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorDihedral={elevatorDihedral}
+                elevatorThickness={elevatorThickness}
+                elevatorCamber={elevatorCamber}
+                elevatorCamberPos={elevatorCamberPos}
+                elevatorAngle={elevatorAngle}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -331,8 +359,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                  backRadius={backRadius}
                 rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                rootSection={rootParams}
-                elevatorScale={elevatorScale}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorDihedral={elevatorDihedral}
+                elevatorThickness={elevatorThickness}
+                elevatorCamber={elevatorCamber}
+                elevatorCamberPos={elevatorCamberPos}
+                elevatorAngle={elevatorAngle}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe
@@ -359,8 +394,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                  backRadius={backRadius}
                 rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                rootSection={rootParams}
-                elevatorScale={elevatorScale}
+                elevatorRootChord={elevatorRootChord}
+                elevatorTipChord={elevatorTipChord}
+                elevatorSpan={elevatorSpan}
+                elevatorSweep={elevatorSweep}
+                elevatorDihedral={elevatorDihedral}
+                elevatorThickness={elevatorThickness}
+                elevatorCamber={elevatorCamber}
+                elevatorCamberPos={elevatorCamberPos}
+                elevatorAngle={elevatorAngle}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe

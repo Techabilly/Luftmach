@@ -29,3 +29,5 @@ If you are developing a production application, we recommend using TypeScript wi
 - The top front and back corners of the rudder have independent radius controls.
 - Curve settings now control how those corners are rounded.
 - The fuselage can be hidden entirely if desired.
+- Elevator geometry can now be customized with independent root and tip chords,
+  span, sweep, dihedral and airfoil settings.
