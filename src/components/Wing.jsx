@@ -113,8 +113,8 @@ function createWingGeometry(sections, sweep, mirrored, leadCurve = 1, trailCurve
       const endY = tp.y + yOffset + Math.tan(dihedralRad) * spanLen;
       const rRatio = rp.x / root.chord;
       const tRatio = tp.x / tip.chord;
-      const rZ = root.lead + rp.x + rRatio * (root.trail - root.lead);
-      const tZ = tip.lead + tp.x + tRatio * (tip.trail - tip.lead);
+      const rZ = root.lead + rRatio * (root.trail - root.lead);
+      const tZ = tip.lead + tRatio * (tip.trail - tip.lead);
       vertices.push(startX, startY, rZ);
       vertices.push(endX, endY, tZ);
     }
