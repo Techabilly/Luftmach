@@ -61,7 +61,9 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   });
 }
 
-function createWingGeometry(sections, sweep, mirrored, leadCurve = 1, trailCurve = 1) {
+function createWingGeometry(sections, sweep, mirrored) {
+  const leadCurve = 1;
+  const trailCurve = 1;
   const vertices = [];
   const indices = [];
   let yOffset = 0;
@@ -151,7 +153,9 @@ function createWingGeometry(sections, sweep, mirrored, leadCurve = 1, trailCurve
   return wingGeom;
 }
 
-function computeNacellePositions(sections, sweep, leadCurve = 1, trailCurve = 1) {
+function computeNacellePositions(sections, sweep) {
+  const leadCurve = 1;
+  const trailCurve = 1;
   const xPositions = [0];
   for (let i = 0; i < sections.length - 1; i++) {
     const len = sections[i].length || 0;
@@ -186,8 +190,6 @@ export default function Wing({
   sections,
   sweep,
   mirrored,
-  leadCurve = 1,
-  trailCurve = 1,
   mountHeight = 0,
   mountZ = 0,
   wireframe = false,
@@ -196,11 +198,11 @@ export default function Wing({
   nacelleLength = 40,
 }) {
   const geom = useMemo(() => {
-    return createWingGeometry(sections, sweep, mirrored, leadCurve, trailCurve);
-  }, [sections, sweep, mirrored, leadCurve, trailCurve]);
+    return createWingGeometry(sections, sweep, mirrored);
+  }, [sections, sweep, mirrored]);
   const nacellePositions = useMemo(
-    () => computeNacellePositions(sections, sweep, leadCurve, trailCurve),
-    [sections, sweep, leadCurve, trailCurve],
+    () => computeNacellePositions(sections, sweep),
+    [sections, sweep],
   );
 
   return (

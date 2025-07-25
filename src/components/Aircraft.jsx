@@ -7,8 +7,6 @@ import Elevator from './Elevator';
 export default function Aircraft({
   sections,
   sweep,
-  leadCurve = 1,
-  trailCurve = 1,
   mirrored,
   mountHeight,
   mountZ,
@@ -110,8 +108,6 @@ export default function Aircraft({
         sections={sections}
         sweep={sweep}
         mirrored={mirrored}
-        leadCurve={leadCurve}
-        trailCurve={trailCurve}
         mountHeight={mountHeight}
         mountZ={mountZ}
         showNacelles={showNacelles}
