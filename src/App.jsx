@@ -99,6 +99,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     pivotPercent: num(100, { min: 0, max: 100, step: 1, label: 'Rotation Center (%)' }),
   });
 
+  const elevatorScale = 0.5;
+
   const fuselageParams = useControls('Fuselage', {
     showFuselage: { value: true, label: 'Show Fuselage' },
     topShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Top Shape' },
@@ -170,31 +172,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     backCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Back Curve' }),
   });
 
-  const {
-    showElevator,
-    elevatorType,
-    elevatorVAngle,
-    elevatorRootChord,
-    elevatorTipChord,
-    elevatorSpan,
-    elevatorSweep,
-    elevatorLeadCurve,
-    elevatorTrailCurve,
-    elevatorFrontRadius,
-    elevatorBackRadius,
-  } = useControls('Elevator', {
-    showElevator: false,
-    elevatorType: { value: 'Flat', options: ['Flat', 'V'], label: 'Type' },
-    elevatorVAngle: num(0, { min: -60, max: 60, step: 1, label: 'V Angle (°)' }),
-    elevatorRootChord: num(20, { min: 5, max: 100, step: 1, label: 'Root Chord' }),
-    elevatorTipChord: num(20, { min: 0, max: 100, step: 1, label: 'Tip Chord' }),
-    elevatorSpan: num(60, { min: 10, max: 200, step: 1, label: 'Span' }),
-    elevatorSweep: num(0, { min: -50, max: 50, step: 1, label: 'Sweep' }),
-    elevatorLeadCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Leading Edge Curve' }),
-    elevatorTrailCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Trailing Edge Curve' }),
-    elevatorFrontRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Radius' }),
-    elevatorBackRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Radius' }),
-  });
+  const { showElevator } = useControls('Elevator', { showElevator: false });
 
   const sections = [rootParams];
   if (enablePanel1) sections.push(panel1Params);
@@ -314,16 +292,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 backRadius={backRadius}
                 rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                elevatorType={elevatorType}
-                elevatorVAngle={elevatorVAngle}
-                elevatorRootChord={elevatorRootChord}
-                elevatorTipChord={elevatorTipChord}
-                elevatorSpan={elevatorSpan}
-                elevatorSweep={elevatorSweep}
-                elevatorLeadCurve={elevatorLeadCurve}
-                elevatorTrailCurve={elevatorTrailCurve}
-                elevatorFrontRadius={elevatorFrontRadius}
-                elevatorBackRadius={elevatorBackRadius}
+                rootSection={rootParams}
+                elevatorScale={elevatorScale}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -359,18 +329,10 @@ export default function App({ showAirfoilControls = false } = {}) {
                   backCurve={backCurve}
                   frontRadius={frontRadius}
                  backRadius={backRadius}
-                 rudderOffset={rudderOffset}
+                rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                elevatorType={elevatorType}
-                elevatorVAngle={elevatorVAngle}
-                elevatorRootChord={elevatorRootChord}
-                elevatorTipChord={elevatorTipChord}
-                elevatorSpan={elevatorSpan}
-                elevatorSweep={elevatorSweep}
-                elevatorLeadCurve={elevatorLeadCurve}
-                elevatorTrailCurve={elevatorTrailCurve}
-                elevatorFrontRadius={elevatorFrontRadius}
-                elevatorBackRadius={elevatorBackRadius}
+                rootSection={rootParams}
+                elevatorScale={elevatorScale}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe
@@ -395,18 +357,10 @@ export default function App({ showAirfoilControls = false } = {}) {
                   backCurve={backCurve}
                   frontRadius={frontRadius}
                  backRadius={backRadius}
-                 rudderOffset={rudderOffset}
+                rudderOffset={rudderOffset}
                 showElevator={showElevator}
-                elevatorType={elevatorType}
-                elevatorVAngle={elevatorVAngle}
-                elevatorRootChord={elevatorRootChord}
-                elevatorTipChord={elevatorTipChord}
-                elevatorSpan={elevatorSpan}
-                elevatorSweep={elevatorSweep}
-                elevatorLeadCurve={elevatorLeadCurve}
-                elevatorTrailCurve={elevatorTrailCurve}
-                elevatorFrontRadius={elevatorFrontRadius}
-                elevatorBackRadius={elevatorBackRadius}
+                rootSection={rootParams}
+                elevatorScale={elevatorScale}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe
