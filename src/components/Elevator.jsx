@@ -2,25 +2,44 @@ import React from 'react';
 import Wing from './Wing';
 
 export default function Elevator({
-  rootSection,
-  scale = 0.5,
+  rootChord = 50,
+  tipChord = 50,
+  span = 80,
+  sweep = 0,
+  dihedral = 0,
+  thickness = 0.12,
+  camber = 0.02,
+  camberPos = 0.4,
+  angle = 0,
   position = [0, 0, 0],
   wireframe = false,
 }) {
-  if (!rootSection) return null;
-
-  const section = {
-    ...rootSection,
-    chord: rootSection.chord * scale,
-    length: (rootSection.length || 0) * scale,
+  const root = {
+    chord: rootChord,
+    thickness,
+    camber,
+    camberPos,
+    angle,
+    length: span,
+    dihedral,
   };
 
-  const sections = [section, { ...section }];
+  const tip = {
+    chord: tipChord,
+    thickness,
+    camber,
+    camberPos,
+    angle,
+    length: 0,
+    dihedral,
+  };
+
+  const sections = [root, tip];
 
   return (
     <Wing
       sections={sections}
-      sweep={0}
+      sweep={sweep}
       mirrored
       mountHeight={position[1]}
       mountZ={position[2]}

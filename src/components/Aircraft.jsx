@@ -28,8 +28,15 @@ export default function Aircraft({
   backRadius = 0,
   rudderOffset = 0,
   showElevator = false,
-  rootSection,
-  elevatorScale = 0.5,
+  elevatorRootChord = 50,
+  elevatorTipChord = 50,
+  elevatorSpan = 80,
+  elevatorSweep = 0,
+  elevatorDihedral = 0,
+  elevatorThickness = 0.12,
+  elevatorCamber = 0.02,
+  elevatorCamberPos = 0.4,
+  elevatorAngle = 0,
 }) {
   return (
     <group ref={groupRef}>
@@ -82,8 +89,15 @@ export default function Aircraft({
       )}
       {showElevator && (
         <Elevator
-          rootSection={rootSection}
-          scale={elevatorScale}
+          rootChord={elevatorRootChord}
+          tipChord={elevatorTipChord}
+          span={elevatorSpan}
+          sweep={elevatorSweep}
+          dihedral={elevatorDihedral}
+          thickness={elevatorThickness}
+          camber={elevatorCamber}
+          camberPos={elevatorCamberPos}
+          angle={elevatorAngle}
           wireframe={wireframe}
           position={[0, fuselageParams.tailHeight, fuselageParams.length / 2]}
         />
