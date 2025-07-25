@@ -61,26 +61,10 @@ function rotateAirfoil(points, angle, chord, pivotRatio = 1) {
   });
 }
 
-function createWingGeometry(sections, sweep, mirrored) {
+function createWingGeometry(sections, sweep, mirrored, leadCurve = 1, trailCurve = 1) {
   const vertices = [];
   const indices = [];
   let yOffset = 0;
-
-  const sectionPoints = sections.map((p) => {
-    let pts = createAirfoilPoints(
-      p.chord,
-      p.thickness,
-      p.camber,
-      p.camberPos
-    );
-    pts = rotateAirfoil(
-      pts,
-      p.angle || 0,
-      p.chord,
-      (p.pivotPercent ?? 100) / 100
-    );
-    return new THREE.Shape(pts).getPoints(100);
-  });
 
   const xPositions = [0];
   for (let i = 0; i < sections.length - 1; i++) {
@@ -89,27 +73,52 @@ function createWingGeometry(sections, sweep, mirrored) {
   }
 
   const totalSpan = xPositions[xPositions.length - 1] || 1;
+  const rootChord = sections[0].chord || 0;
+  const tipChord = sections[sections.length - 1].chord || 0;
+
+  const lead = (t) => sweep * Math.pow(t, leadCurve);
+  const trail = (t) => rootChord + (sweep + tipChord - rootChord) * Math.pow(t, trailCurve);
+
+  const sectionPoints = sections.map((p, idx) => {
+    const ratio = xPositions[idx] / totalSpan;
+    const chord = p.chord;
+    let pts = createAirfoilPoints(chord, p.thickness, p.camber, p.camberPos);
+    pts = rotateAirfoil(
+      pts,
+      p.angle || 0,
+      chord,
+      (p.pivotPercent ?? 100) / 100
+    );
+    return {
+      points: new THREE.Shape(pts).getPoints(100),
+      lead: lead(ratio),
+      trail: trail(ratio),
+      chord,
+    };
+  });
 
   for (let s = 0; s < sections.length - 1; s++) {
     const startX = xPositions[s];
     const endX = xPositions[s + 1];
     const spanLen = endX - startX;
-    const startSweep = sweep * (startX / totalSpan);
-    const endSweep = sweep * (endX / totalSpan);
     const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
     const root = sectionPoints[s];
     const tip = sectionPoints[s + 1];
 
     const offset = vertices.length / 3;
-    for (let i = 0; i < root.length; i++) {
-      const rp = root[i];
-      const tp = tip[i];
+    for (let i = 0; i < root.points.length; i++) {
+      const rp = root.points[i];
+      const tp = tip.points[i];
       const startY = rp.y + yOffset;
       const endY = tp.y + yOffset + Math.tan(dihedralRad) * spanLen;
-      vertices.push(startX, startY, rp.x + startSweep);
-      vertices.push(endX, endY, tp.x + endSweep);
+      const rRatio = rp.x / root.chord;
+      const tRatio = tp.x / tip.chord;
+      const rZ = root.lead + rp.x + rRatio * (root.trail - root.lead);
+      const tZ = tip.lead + tp.x + tRatio * (tip.trail - tip.lead);
+      vertices.push(startX, startY, rZ);
+      vertices.push(endX, endY, tZ);
     }
-    for (let i = 0; i < root.length - 1; i++) {
+    for (let i = 0; i < root.points.length - 1; i++) {
       const r1 = offset + 2 * i;
       const t1 = offset + 2 * i + 1;
       const r2 = offset + 2 * (i + 1);
@@ -142,7 +151,7 @@ function createWingGeometry(sections, sweep, mirrored) {
   return wingGeom;
 }
 
-function computeNacellePositions(sections, sweep) {
+function computeNacellePositions(sections, sweep, leadCurve = 1, trailCurve = 1) {
   const xPositions = [0];
   for (let i = 0; i < sections.length - 1; i++) {
     const len = sections[i].length || 0;
@@ -150,6 +159,11 @@ function computeNacellePositions(sections, sweep) {
   }
 
   const totalSpan = xPositions[xPositions.length - 1] || 1;
+
+  const rootChord = sections[0].chord || 0;
+  const tipChord = sections[sections.length - 1].chord || 0;
+  const lead = (t) => sweep * Math.pow(t, leadCurve);
+  const trail = (t) => rootChord + (sweep + tipChord - rootChord) * Math.pow(t, trailCurve);
 
   let yOffset = 0;
   const positions = [];
@@ -159,9 +173,10 @@ function computeNacellePositions(sections, sweep) {
     const spanLen = endX - startX;
     const dihedralRad = ((sections[s].dihedral || 0) * Math.PI) / 180;
     yOffset += Math.tan(dihedralRad) * spanLen;
-    const endSweep = sweep * (endX / totalSpan);
-    const chord = sections[s + 1].chord || sections[s].chord || 0;
-    const z = endSweep + chord / 2;
+    const t = endX / totalSpan;
+    const l = lead(t);
+    const tr = trail(t);
+    const z = l + (tr - l) / 2;
     positions.push([endX, yOffset, z]);
   }
   return positions;
@@ -171,6 +186,8 @@ export default function Wing({
   sections,
   sweep,
   mirrored,
+  leadCurve = 1,
+  trailCurve = 1,
   mountHeight = 0,
   mountZ = 0,
   wireframe = false,
@@ -179,9 +196,12 @@ export default function Wing({
   nacelleLength = 40,
 }) {
   const geom = useMemo(() => {
-    return createWingGeometry(sections, sweep, mirrored);
-  }, [sections, sweep, mirrored]);
-  const nacellePositions = useMemo(() => computeNacellePositions(sections, sweep), [sections, sweep]);
+    return createWingGeometry(sections, sweep, mirrored, leadCurve, trailCurve);
+  }, [sections, sweep, mirrored, leadCurve, trailCurve]);
+  const nacellePositions = useMemo(
+    () => computeNacellePositions(sections, sweep, leadCurve, trailCurve),
+    [sections, sweep, leadCurve, trailCurve],
+  );
 
   return (
     <group position={[0, mountHeight, mountZ]}>
