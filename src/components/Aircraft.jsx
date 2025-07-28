@@ -21,11 +21,8 @@ export default function Aircraft({
   rudderHeight = 40,
   rootChord = 30,
   tipChord = 0,
+  rudderSweep = 0,
   rudderThickness = 2,
-  frontCurve = 1,
-  backCurve = 1,
-  frontRadius = 0,
-  backRadius = 0,
   rudderOffset = 0,
   showElevator = false,
   elevatorRootChord = 50,
@@ -73,11 +70,8 @@ export default function Aircraft({
           height={rudderHeight}
           rootChord={rootChord}
           tipChord={tipChord}
+          sweep={rudderSweep}
           thickness={rudderThickness}
-          frontCurve={backCurve}
-          backCurve={frontCurve}
-          frontRadius={frontRadius}
-          backRadius={backRadius}
           offset={rudderOffset}
           wireframe={wireframe}
           position={[

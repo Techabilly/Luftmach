@@ -152,23 +152,17 @@ export default function App({ showAirfoilControls = false } = {}) {
     rudderHeight,
     rootChord,
     tipChord,
+    rudderSweep,
     rudderThickness,
     rudderOffset,
-    frontRadius,
-    backRadius,
-    frontCurve,
-    backCurve,
   } = useControls('Rudder', {
     showRudder: false,
     rudderHeight: num(40, { min: 10, max: 100, step: 1, label: 'Height' }),
     rootChord: num(30, { min: 10, max: 100, step: 1, label: 'Root Chord' }),
     tipChord: num(0, { min: 0, max: 100, step: 1, label: 'Tip Chord' }),
+    rudderSweep: num(0, { min: -300, max: 300, step: 1, label: 'Sweep' }),
     rudderThickness: num(2, { min: 1, max: 10, step: 0.5, label: 'Thickness' }),
     rudderOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
-    frontRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Radius' }),
-    backRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Radius' }),
-    frontCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Front Curve' }),
-    backCurve: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Back Curve' }),
   });
 
   const {
@@ -306,11 +300,8 @@ export default function App({ showAirfoilControls = false } = {}) {
                 rudderHeight={rudderHeight}
                 rootChord={rootChord}
                 tipChord={tipChord}
+                rudderSweep={rudderSweep}
                 rudderThickness={rudderThickness}
-                frontCurve={frontCurve}
-                backCurve={backCurve}
-                frontRadius={frontRadius}
-                backRadius={backRadius}
                 rudderOffset={rudderOffset}
                 showElevator={showElevator}
                 elevatorRootChord={elevatorRootChord}
@@ -352,12 +343,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
+                  rudderSweep={rudderSweep}
                   rudderThickness={rudderThickness}
-                  frontCurve={frontCurve}
-                  backCurve={backCurve}
-                  frontRadius={frontRadius}
-                 backRadius={backRadius}
-                rudderOffset={rudderOffset}
+                  rudderOffset={rudderOffset}
                 showElevator={showElevator}
                 elevatorRootChord={elevatorRootChord}
                 elevatorTipChord={elevatorTipChord}
@@ -387,12 +375,9 @@ export default function App({ showAirfoilControls = false } = {}) {
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
+                  rudderSweep={rudderSweep}
                   rudderThickness={rudderThickness}
-                  frontCurve={frontCurve}
-                  backCurve={backCurve}
-                  frontRadius={frontRadius}
-                 backRadius={backRadius}
-                rudderOffset={rudderOffset}
+                  rudderOffset={rudderOffset}
                 showElevator={showElevator}
                 elevatorRootChord={elevatorRootChord}
                 elevatorTipChord={elevatorTipChord}
