@@ -29,3 +29,4 @@ If you are developing a production application, we recommend using TypeScript wi
 - The fuselage can be hidden entirely if desired.
 - Elevator geometry can now be customized with independent root and tip chords,
   span, sweep, dihedral and airfoil settings.
+- The elevator can be shifted forward or backward along the fuselage.

@@ -12,6 +12,7 @@ export default function Elevator({
   camberPos = 0.4,
   angle = 0,
   position = [0, 0, 0],
+  offset = 0,
   wireframe = false,
 }) {
   const root = {
@@ -42,7 +43,7 @@ export default function Elevator({
       sweep={sweep}
       mirrored
       mountHeight={position[1]}
-      mountZ={position[2]}
+      mountZ={position[2] + offset}
       wireframe={wireframe}
       showNacelles={false}
     />

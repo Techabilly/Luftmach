@@ -176,6 +176,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorCamber,
     elevatorCamberPos,
     elevatorAngle,
+    elevatorOffset,
   } = useControls('Elevator', {
     showElevator: false,
     elevatorRootChord: num(50, { min: 10, max: 200, step: 1, label: 'Root Chord' }),
@@ -187,6 +188,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorCamber: num(0.02, { min: 0, max: 0.1, label: 'Camber' }),
     elevatorCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Camber Pos' }),
     elevatorAngle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
+    elevatorOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
   });
 
   const sections = [rootParams];
@@ -313,6 +315,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorCamber={elevatorCamber}
                 elevatorCamberPos={elevatorCamberPos}
                 elevatorAngle={elevatorAngle}
+                elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
               />
@@ -356,6 +359,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorCamber={elevatorCamber}
                 elevatorCamberPos={elevatorCamberPos}
                 elevatorAngle={elevatorAngle}
+                elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe
@@ -388,6 +392,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorCamber={elevatorCamber}
                 elevatorCamberPos={elevatorCamberPos}
                 elevatorAngle={elevatorAngle}
+                elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
                 wireframe
