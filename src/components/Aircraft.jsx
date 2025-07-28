@@ -34,6 +34,7 @@ export default function Aircraft({
   elevatorCamber = 0.02,
   elevatorCamberPos = 0.4,
   elevatorAngle = 0,
+  elevatorOffset = 0,
 }) {
   return (
     <group ref={groupRef}>
@@ -93,6 +94,7 @@ export default function Aircraft({
           camberPos={elevatorCamberPos}
           angle={elevatorAngle}
           wireframe={wireframe}
+          offset={elevatorOffset}
           position={[0, fuselageParams.tailHeight, fuselageParams.length / 2]}
         />
       )}
