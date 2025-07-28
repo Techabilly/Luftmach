@@ -23,11 +23,9 @@ If you are developing a production application, we recommend using TypeScript wi
 - Option to choose an elliptical or square fuselage shape.
 - Optional nacelles can be added at the end of each wing panel.
 - A rudder can be added to the rear of the fuselage.
-- The rudder now supports separate root and tip lengths as well as
-  independent front and back curve controls.
+- The rudder now uses the same sweep and chord controls as a wing
+  (without mirroring or airfoil support).
 - The rudder can be shifted forward or backward along the fuselage.
-- The top front and back corners of the rudder have independent radius controls.
-- Curve settings now control how those corners are rounded.
 - The fuselage can be hidden entirely if desired.
 - Elevator geometry can now be customized with independent root and tip chords,
   span, sweep, dihedral and airfoil settings.
