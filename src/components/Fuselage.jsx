@@ -80,12 +80,17 @@ function createFuselageGeometry(
     return Math.max(s, 0.001);
   }
 
+  function verticalBlend(y, height, topScale, bottomScale) {
+    const t = (y + height / 2) / height; // 0 at bottom, 1 at top
+    return bottomScale * (1 - t) + topScale * t;
+  }
+
   const pointArrays = positions.map(p => {
     const hScale = scale(p, taperPosH, taperH, curveH);
     const topScale = scale(p, taperPosV, taperTop, curveV);
     const bottomScale = scale(p, taperPosV, taperBottom, curveV);
 
-    const cross = topShape === 'Ellipse' && bottomShape === 'Ellipse'
+    const shape = (topShape === 'Ellipse' && bottomShape === 'Ellipse')
       ? createEllipseShape(width * hScale, height)
       : createRoundedRectShape(
           width * hScale,
@@ -94,11 +99,10 @@ function createFuselageGeometry(
           bottomCornerRadius * Math.min(hScale, bottomScale)
         );
 
-    return cross.getPoints(32).map(pt =>
-      pt.y >= 0
-        ? new THREE.Vector2(pt.x, pt.y * topScale)
-        : new THREE.Vector2(pt.x, pt.y * bottomScale)
-    );
+    return shape.getPoints(32).map(pt => {
+      const blend = verticalBlend(pt.y, height, topScale, bottomScale);
+      return new THREE.Vector2(pt.x, pt.y * blend);
+    });
   });
 
   const sections = [];
