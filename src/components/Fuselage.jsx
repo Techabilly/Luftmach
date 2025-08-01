@@ -105,6 +105,7 @@ function createFuselageGeometry(
     });
   });
 
+  // --- rest of your code is unchanged ---
   const sections = [];
   const crossSections = [];
   const frontPos = -length / 2;
@@ -175,6 +176,7 @@ function createFuselageGeometry(
 
   return { geometry: geom, crossSections };
 }
+
 
 export default function Fuselage(props) {
   const {
