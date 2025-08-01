@@ -78,7 +78,7 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, an
   return (
     <div style={{ marginTop: '16px', width: '100%' }}>
       <div style={{ color: 'white', marginBottom: '4px' }}>{label} (inches)</div>
-      <svg viewBox={viewBox} width="100%" height="100" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox={viewBox} width="100%" height="200" preserveAspectRatio="xMidYMid meet">
         {/* Grid lines */}
         {gridLines.map((x, i) => (
           <line

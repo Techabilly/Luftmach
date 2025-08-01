@@ -135,7 +135,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     tailcapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' }),
     showCrossSections: { value: false, label: 'Show Cross Sections' },
     segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
-  });
+  }, { render: () => !showAirfoilControls });
 
   const {
     showNacelles,
@@ -145,7 +145,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     showNacelles: false,
     nacelleRadius: num(10, { min: 1, max: 100, step: 1, label: 'Radius' }),
     nacelleLength: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
-  });
+  }, { render: () => !showAirfoilControls });
 
   const {
     showRudder,
