@@ -362,7 +362,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
-                wireframe
+            
                />
               </MiniView>
               <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
@@ -395,8 +395,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
-                wireframe
-               />
+                />
               </MiniView>
             </div>
           </>
