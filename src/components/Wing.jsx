@@ -194,8 +194,9 @@ export default function Wing({
   mountZ = 0,
   wireframe = false,
   showNacelles = false,
-  nacelleRadius = 10,
-  nacelleLength = 40,
+  nacelleParams = {},
+  nacelleFlags = [],
+  nacelleFins = [],
 }) {
   const geom = useMemo(() => {
     return createWingGeometry(sections, sweep, mirrored);
@@ -211,26 +212,30 @@ export default function Wing({
         <meshStandardMaterial color="skyblue" side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
       {showNacelles &&
-        nacellePositions.map((pos, i) => (
-          <Nacelle
-            key={i}
-            position={pos}
-            radius={nacelleRadius}
-            length={nacelleLength}
-            wireframe={wireframe}
-          />
-        ))}
+        nacellePositions.map((pos, i) =>
+          nacelleFlags[i] ? (
+            <Nacelle
+              key={i}
+              position={pos}
+              wireframe={wireframe}
+              fin={nacelleFins[i]}
+              {...nacelleParams}
+            />
+          ) : null
+        )}
       {showNacelles &&
         mirrored &&
-        nacellePositions.map((pos, i) => (
-          <Nacelle
-            key={`m-${i}`}
-            position={[-pos[0], pos[1], pos[2]]}
-            radius={nacelleRadius}
-            length={nacelleLength}
-            wireframe={wireframe}
-          />
-        ))}
+        nacellePositions.map((pos, i) =>
+          nacelleFlags[i] ? (
+            <Nacelle
+              key={`m-${i}`}
+              position={[-pos[0], pos[1], pos[2]]}
+              wireframe={wireframe}
+              fin={nacelleFins[i]}
+              {...nacelleParams}
+            />
+          ) : null
+        )}
     </group>
   );
 }

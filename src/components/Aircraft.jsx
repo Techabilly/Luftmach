@@ -15,8 +15,9 @@ export default function Aircraft({
   wireframe = false,
   showFuselage = true,
   showNacelles = false,
-  nacelleRadius = 10,
-  nacelleLength = 40,
+  nacelleParams = {},
+  nacelleFlags = [],
+  nacelleFins = [],
   showRudder = false,
   rudderHeight = 40,
   rootChord = 30,
@@ -103,8 +104,9 @@ export default function Aircraft({
         mountHeight={mountHeight}
         mountZ={mountZ}
         showNacelles={showNacelles}
-        nacelleRadius={nacelleRadius}
-        nacelleLength={nacelleLength}
+        nacelleParams={nacelleParams}
+        nacelleFlags={nacelleFlags}
+        nacelleFins={nacelleFins}
         wireframe={wireframe}
       />
     </group>

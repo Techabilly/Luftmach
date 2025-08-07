@@ -170,6 +170,7 @@ export default function Fuselage(props) {
     segmentCount = 20,
     debugCrossSections = false,
     wireframe = false,
+    color = 'gray',
   } = props;
 
   const { geometry, crossSections } = useMemo(
@@ -213,7 +214,7 @@ export default function Fuselage(props) {
   return (
     <group>
       <mesh geometry={geometry}>
-        <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
+        <meshStandardMaterial color={color} side={THREE.DoubleSide} wireframe={wireframe} />
       </mesh>
       {debugCrossSections && crossSections.map((sec, idx) => {
         const g = new THREE.BufferGeometry().setFromPoints(
