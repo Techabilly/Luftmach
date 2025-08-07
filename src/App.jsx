@@ -102,37 +102,20 @@ export default function App({ showAirfoilControls = false } = {}) {
 
   const fuselageParams = useControls('Fuselage', {
     showFuselage: { value: true, label: 'Show Fuselage' },
-    topShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Top Shape' },
-    bottomShape: { value: 'Square', options: ['Square', 'Ellipse'], label: 'Bottom Shape' },
     length: num(200, { min: 50, max: 600 }),
-    width: num(40, { min: 10, max: 200 }),
-    height: num(40, { min: 10, max: 200 }),
-    taperH: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Horizontal Taper' }),
-    taperTop: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Top Taper' }),
-    taperBottom: num(0.8, { min: 0.1, max: 1, step: 0.01, label: 'Bottom Taper' }),
-    taperPosH: num(0, { min: 0, max: 1, step: 0.01, label: 'Horizontal Taper Start' }),
-    taperPosV: num(0, { min: 0, max: 1, step: 0.01, label: 'Vertical Taper Start' }),
-    topCornerRadius: {
-      ...num(10, { min: 0, max: 50, label: 'Top Corner Radius' }),
-      render: (get) =>
-        get('Fuselage.topShape') === 'Square' ||
-        get('Fuselage.bottomShape') === 'Square',
-    },
-    bottomCornerRadius: {
-      ...num(10, { min: 0, max: 50, label: 'Bottom Corner Radius' }),
-      render: (get) =>
-        get('Fuselage.topShape') === 'Square' ||
-        get('Fuselage.bottomShape') === 'Square',
-    },
-    curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Horizontal Taper Curve' }),
-    curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Vertical Taper Curve' }),
+    frontWidth: num(40, { min: 10, max: 200, label: 'Front Width' }),
+    frontHeight: num(40, { min: 10, max: 200, label: 'Front Height' }),
+    backWidth: num(40, { min: 10, max: 200, label: 'Back Width' }),
+    backHeight: num(40, { min: 10, max: 200, label: 'Back Height' }),
+    cornerRadius: num(10, { min: 0, max: 50, label: 'Corner Radius' }),
+    curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Width Curve' }),
+    curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Height Curve' }),
+    verticalAlign: num(0.5, { min: 0, max: 1, step: 0.01, label: 'Vertical Align' }),
     tailHeight: num(0, { min: -100, max: 100, step: 1, label: 'Tail Height' }),
     closeNose: { value: false, label: 'Close Nose' },
     closeTail: { value: false, label: 'Close Tail' },
     nosecapLength: num(20, { min: 1, max: 100, step: 1, label: 'Nose Cap Length' }),
-    nosecapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Nose Cap Sharpness' }),
     tailcapLength: num(20, { min: 1, max: 100, step: 1, label: 'Tail Cap Length' }),
-    tailcapSharpness: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Tail Cap Sharpness' }),
     showCrossSections: { value: false, label: 'Show Cross Sections' },
     segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
   }, { render: () => !showAirfoilControls });

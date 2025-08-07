@@ -27,12 +27,6 @@ function createRoundedRectShape(width, height, topRadius = 0, bottomRadius = 0) 
   return shape;
 }
 
-function createEllipseShape(width, height) {
-  const shape = new THREE.Shape();
-  shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
-  return shape;
-}
-
 // Dome-style nose/tail cap generator
 function createDomeSections(startPoints, length, segments = 5, reverse = false) {
   const results = [];
@@ -48,20 +42,15 @@ function createDomeSections(startPoints, length, segments = 5, reverse = false) 
 
 function createFuselageGeometry(
   length,
-  width,
-  height,
-  taperH,
-  taperTop,
-  taperBottom,
-  taperPosH,
-  taperPosV,
-  topCornerRadius,
-  bottomCornerRadius,
+  frontWidth,
+  frontHeight,
+  backWidth,
+  backHeight,
+  cornerRadius,
   curveH,
   curveV,
   tailHeight = 0,
-  topShape = 'Square',
-  bottomShape = 'Square',
+  verticalAlign = 0.5,
   closeNose = false,
   closeTail = false,
   nosecapLength = 0,
@@ -70,42 +59,21 @@ function createFuselageGeometry(
 ) {
   const segments = segmentCount;
   const positions = Array.from({ length: segments + 1 }, (_, i) => i / segments);
+  const alignFactor = 0.5 - verticalAlign;
 
-  function scale(p, pos, taper, curve) {
-    if (pos >= 1) return p < 1 ? 1 : taper;
-    if (p <= pos) return 1;
-    const t = (p - pos) / (1 - pos);
-    const curved = Math.pow(t, curve);
-    const s = 1 + curved * (taper - 1);
-    return Math.max(s, 0.001);
-  }
+  const pointArrays = [];
+  const yOffsets = [];
 
-  function verticalBlend(y, height, topScale, bottomScale) {
-    const t = (y + height / 2) / height; // 0 at bottom, 1 at top
-    return bottomScale * (1 - t) + topScale * t;
-  }
-
-  const pointArrays = positions.map(p => {
-    const hScale = scale(p, taperPosH, taperH, curveH);
-    const topScale = scale(p, taperPosV, taperTop, curveV);
-    const bottomScale = scale(p, taperPosV, taperBottom, curveV);
-
-    const shape = (topShape === 'Ellipse' && bottomShape === 'Ellipse')
-      ? createEllipseShape(width * hScale, height)
-      : createRoundedRectShape(
-          width * hScale,
-          height,
-          topCornerRadius * Math.min(hScale, topScale),
-          bottomCornerRadius * Math.min(hScale, bottomScale)
-        );
-
-    return shape.getPoints(32).map(pt => {
-      const blend = verticalBlend(pt.y, height, topScale, bottomScale);
-      return new THREE.Vector2(pt.x, pt.y * blend);
-    });
+  positions.forEach(p => {
+    const w = frontWidth + (backWidth - frontWidth) * Math.pow(p, curveH);
+    const h = frontHeight + (backHeight - frontHeight) * Math.pow(p, curveV);
+    const r = Math.min(cornerRadius, w / 2, h / 2);
+    const shape = createRoundedRectShape(w, h, r, r);
+    pointArrays.push(shape.getPoints(32));
+    const yOff = alignFactor * (frontHeight - h) + tailHeight * p;
+    yOffsets.push(yOff);
   });
 
-  // --- rest of your code is unchanged ---
   const sections = [];
   const crossSections = [];
   const frontPos = -length / 2;
@@ -114,7 +82,7 @@ function createFuselageGeometry(
   if (closeNose && nosecapLength > 0) {
     const noseSections = createDomeSections(pointArrays[0], nosecapLength, 5, false);
     noseSections.forEach(sec =>
-      sections.push({ points: sec.points, pos: frontPos + sec.offset, y: 0 })
+      sections.push({ points: sec.points, pos: frontPos + sec.offset, y: yOffsets[0] })
     );
   }
 
@@ -122,7 +90,7 @@ function createFuselageGeometry(
     const sec = {
       points: pointArrays[idx],
       pos: frontPos + length * p,
-      y: tailHeight * p
+      y: yOffsets[idx]
     };
     sections.push(sec);
     crossSections.push(sec);
@@ -136,7 +104,7 @@ function createFuselageGeometry(
       true
     );
     tailSections.forEach(sec =>
-      sections.push({ points: sec.points, pos: backPos + sec.offset, y: tailHeight })
+      sections.push({ points: sec.points, pos: backPos + sec.offset, y: yOffsets[yOffsets.length - 1] })
     );
   }
 
@@ -181,20 +149,15 @@ function createFuselageGeometry(
 export default function Fuselage(props) {
   const {
     length,
-    width,
-    height,
-    taperH,
-    taperTop,
-    taperBottom,
-    taperPosH,
-    taperPosV,
-    topCornerRadius = 0,
-    bottomCornerRadius = 0,
+    frontWidth,
+    frontHeight,
+    backWidth,
+    backHeight,
+    cornerRadius = 0,
     curveH = 1,
     curveV = 1,
+    verticalAlign = 0.5,
     tailHeight = 0,
-    topShape = 'Square',
-    bottomShape = 'Square',
     closeNose = false,
     closeTail = false,
     nosecapLength = 0,
@@ -208,20 +171,15 @@ export default function Fuselage(props) {
     () =>
       createFuselageGeometry(
         length,
-        width,
-        height,
-        taperH,
-        taperTop,
-        taperBottom,
-        taperPosH,
-        taperPosV,
-        topCornerRadius,
-        bottomCornerRadius,
+        frontWidth,
+        frontHeight,
+        backWidth,
+        backHeight,
+        cornerRadius,
         curveH,
         curveV,
         tailHeight,
-        topShape,
-        bottomShape,
+        verticalAlign,
         closeNose,
         closeTail,
         nosecapLength,
@@ -229,14 +187,20 @@ export default function Fuselage(props) {
         segmentCount
       ),
     [
-      length, width, height,
-      taperH, taperTop, taperBottom,
-      taperPosH, taperPosV,
-      topCornerRadius, bottomCornerRadius,
-      curveH, curveV,
-      tailHeight, topShape, bottomShape,
-      closeNose, closeTail,
-      nosecapLength, tailcapLength,
+      length,
+      frontWidth,
+      frontHeight,
+      backWidth,
+      backHeight,
+      cornerRadius,
+      curveH,
+      curveV,
+      tailHeight,
+      verticalAlign,
+      closeNose,
+      closeTail,
+      nosecapLength,
+      tailcapLength,
       segmentCount
     ]
   );
