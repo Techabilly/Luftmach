@@ -22,6 +22,7 @@ If you are developing a production application, we recommend using TypeScript wi
 - Adjustable fuselage height independent of width.
 - Option to choose an elliptical or square fuselage shape.
 - Optional nacelles can be added at the end of each wing panel.
+- Nacelles can be toggled per wing panel and support fuselage-style geometry options with optional top or bottom fins.
 - A rudder can be added to the rear of the fuselage.
 - The rudder now uses the same sweep and chord controls as a wing
   (without mirroring or airfoil support).
