@@ -69,7 +69,12 @@ function createFuselageGeometry(
     const h = frontHeight + (backHeight - frontHeight) * Math.pow(p, curveV);
     const r = Math.min(cornerRadius, w / 2, h / 2);
     const shape = createRoundedRectShape(w, h, r, r);
-    pointArrays.push(shape.getPoints(32));
+    // Use evenly spaced points to ensure each cross section
+    // has the same number of vertices regardless of corner
+    // radius or degenerate dimensions (e.g. very narrow tail).
+    // This prevents crashes when sections at the tail have
+    // fewer path segments than those at the nose.
+    pointArrays.push(shape.getSpacedPoints(64));
     const yOff = alignFactor * (frontHeight - h) + tailHeight * p;
     yOffsets.push(yOff);
   });
