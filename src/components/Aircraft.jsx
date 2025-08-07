@@ -36,24 +36,24 @@ export default function Aircraft({
   elevatorAngle = 0,
   elevatorOffset = 0,
 }) {
+  const tailCenterY =
+    (0.5 - fuselageParams.verticalAlign) *
+      (fuselageParams.frontHeight - fuselageParams.backHeight) +
+    fuselageParams.tailHeight;
+
   return (
     <group ref={groupRef}>
       {showFuselage && (
         <Fuselage
           length={fuselageParams.length}
-          width={fuselageParams.width}
-          height={fuselageParams.height}
-          topShape={fuselageParams.topShape}
-          bottomShape={fuselageParams.bottomShape}
-          taperH={fuselageParams.taperH}
-          taperTop={fuselageParams.taperTop}
-          taperBottom={fuselageParams.taperBottom}
-          taperPosH={fuselageParams.taperPosH}
-          taperPosV={fuselageParams.taperPosV}
-          topCornerRadius={fuselageParams.topCornerRadius}
-          bottomCornerRadius={fuselageParams.bottomCornerRadius}
+          frontWidth={fuselageParams.frontWidth}
+          frontHeight={fuselageParams.frontHeight}
+          backWidth={fuselageParams.backWidth}
+          backHeight={fuselageParams.backHeight}
+          cornerRadius={fuselageParams.cornerRadius}
           curveH={fuselageParams.curveH}
           curveV={fuselageParams.curveV}
+          verticalAlign={fuselageParams.verticalAlign}
           tailHeight={fuselageParams.tailHeight}
           segmentCount={fuselageParams.segmentCount}
           debugCrossSections={fuselageParams.showCrossSections}
@@ -61,9 +61,7 @@ export default function Aircraft({
           closeNose={fuselageParams.closeNose}
           closeTail={fuselageParams.closeTail}
           nosecapLength={fuselageParams.nosecapLength}
-          nosecapSharpness={fuselageParams.nosecapSharpness}
           tailcapLength={fuselageParams.tailcapLength}
-          tailcapSharpness={fuselageParams.tailcapSharpness}
         />
       )}
       {showRudder && (
@@ -77,7 +75,7 @@ export default function Aircraft({
           wireframe={wireframe}
           position={[
             0,
-            fuselageParams.tailHeight + fuselageParams.height / 2,
+            tailCenterY + fuselageParams.backHeight / 2,
             fuselageParams.length / 2,
           ]}
         />
@@ -95,7 +93,7 @@ export default function Aircraft({
           angle={elevatorAngle}
           wireframe={wireframe}
           offset={elevatorOffset}
-          position={[0, fuselageParams.tailHeight, fuselageParams.length / 2]}
+          position={[0, tailCenterY, fuselageParams.length / 2]}
         />
       )}
       <Wing
