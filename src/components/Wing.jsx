@@ -194,7 +194,7 @@ export default function Wing({
   mountZ = 0,
   wireframe = false,
   showNacelles = false,
-  nacelleParams = {},
+  nacelleParamsList = [],
   nacelleFlags = [],
   nacelleFins = [],
 }) {
@@ -218,8 +218,9 @@ export default function Wing({
               key={i}
               position={pos}
               wireframe={wireframe}
-              fin={nacelleFins[i]}
-              {...nacelleParams}
+              topFin={nacelleFins[i] === 'top' || nacelleFins[i] === 'both'}
+              bottomFin={nacelleFins[i] === 'bottom' || nacelleFins[i] === 'both'}
+              {...(nacelleParamsList[i] || {})}
             />
           ) : null
         )}
@@ -231,8 +232,9 @@ export default function Wing({
               key={`m-${i}`}
               position={[-pos[0], pos[1], pos[2]]}
               wireframe={wireframe}
-              fin={nacelleFins[i]}
-              {...nacelleParams}
+              topFin={nacelleFins[i] === 'top' || nacelleFins[i] === 'both'}
+              bottomFin={nacelleFins[i] === 'bottom' || nacelleFins[i] === 'both'}
+              {...(nacelleParamsList[i] || {})}
             />
           ) : null
         )}

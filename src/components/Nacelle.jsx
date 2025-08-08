@@ -5,7 +5,9 @@ import Rudder from './Rudder';
 export default function Nacelle({
   position = [0, 0, 0],
   wireframe = false,
-  fin = null, // 'top' | 'bottom' | null
+  topFin = false,
+  bottomFin = false,
+  finAngle = 45,
   length = 40,
   frontWidth = 20,
   frontHeight = 20,
@@ -52,8 +54,12 @@ export default function Nacelle({
   );
 
   const nacelleMaxHeight = Math.max(frontHeight, backHeight);
-  const finComponent = fin
-    ? (
+  const angleRad = (finAngle * Math.PI) / 180;
+
+  const fins = [];
+  if (topFin) {
+    fins.push(
+      <group rotation={[0, 0, angleRad]} key="top">
         <Rudder
           height={finHeight}
           rootChord={finRootChord}
@@ -62,15 +68,32 @@ export default function Nacelle({
           thickness={finThickness}
           offset={finOffset}
           wireframe={wireframe}
-          position={[0, fin === 'top' ? nacelleMaxHeight / 2 : -nacelleMaxHeight / 2, 0]}
+          position={[0, nacelleMaxHeight / 2, 0]}
         />
-      )
-    : null;
+      </group>,
+    );
+  }
+  if (bottomFin) {
+    fins.push(
+      <group rotation={[0, 0, -angleRad]} key="bottom">
+        <Rudder
+          height={finHeight}
+          rootChord={finRootChord}
+          tipChord={finTipChord}
+          sweep={finSweep}
+          thickness={finThickness}
+          offset={finOffset}
+          wireframe={wireframe}
+          position={[0, -nacelleMaxHeight / 2, 0]}
+        />
+      </group>,
+    );
+  }
 
   return (
     <group position={position}>
       {body}
-      {finComponent}
+      {fins}
     </group>
   );
 }

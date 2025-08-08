@@ -80,8 +80,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     nacelle: { value: false, label: 'Nacelle' },
     nacelleFin: {
       value: 'none',
-      options: { None: 'none', Top: 'top', Bottom: 'bottom' },
-      label: 'Nacelle Fin',
+      options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
+      label: 'Nacelle Fins',
       render: (get) => get('Panel 1 Airfoil.nacelle'),
     },
   }, { render: (get) => get('Wing Settings.enablePanel1') });
@@ -98,8 +98,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     nacelle: { value: false, label: 'Nacelle' },
     nacelleFin: {
       value: 'none',
-      options: { None: 'none', Top: 'top', Bottom: 'bottom' },
-      label: 'Nacelle Fin',
+      options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
+      label: 'Nacelle Fins',
       render: (get) => get('Panel 2 Airfoil.nacelle'),
     },
   }, { render: (get) => get('Wing Settings.enablePanel2') });
@@ -114,8 +114,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     nacelle: { value: false, label: 'Nacelle' },
     nacelleFin: {
       value: 'none',
-      options: { None: 'none', Top: 'top', Bottom: 'bottom' },
-      label: 'Nacelle Fin',
+      options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
+      label: 'Nacelle Fins',
       render: (get) => get('Wing Tip.nacelle'),
     },
   });
@@ -141,53 +141,110 @@ export default function App({ showAirfoilControls = false } = {}) {
     segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
   }, { render: () => !showAirfoilControls });
 
-  const {
-    showNacelles,
-    length: nacelleLength,
-    frontWidth: nacelleFrontWidth,
-    frontHeight: nacelleFrontHeight,
-    backWidth: nacelleBackWidth,
-    backHeight: nacelleBackHeight,
-    cornerRadius: nacelleCornerRadius,
-    curveH: nacelleCurveH,
-    curveV: nacelleCurveV,
-    verticalAlign: nacelleVerticalAlign,
-    tailHeight: nacelleTailHeight,
-    closeNose: nacelleCloseNose,
-    closeTail: nacelleCloseTail,
-    nosecapLength: nacelleNosecapLength,
-    tailcapLength: nacelleTailcapLength,
-    segmentCount: nacelleSegmentCount,
-    finHeight,
-    finRootChord,
-    finTipChord,
-    finSweep,
-    finThickness,
-    finOffset,
-  } = useControls('Nacelles', {
-    showNacelles: false,
-    length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
-    frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
-    frontHeight: num(20, { min: 1, max: 100, step: 1, label: 'Front Height' }),
-    backWidth: num(20, { min: 1, max: 100, step: 1, label: 'Back Width' }),
-    backHeight: num(20, { min: 1, max: 100, step: 1, label: 'Back Height' }),
-    cornerRadius: num(5, { min: 0, max: 50, step: 1, label: 'Corner Radius' }),
-    curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Width Curve' }),
-    curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Height Curve' }),
-    verticalAlign: num(0.5, { min: 0, max: 1, step: 0.01, label: 'Vertical Align' }),
-    tailHeight: num(0, { min: -50, max: 50, step: 1, label: 'Tail Height' }),
-    closeNose: { value: false, label: 'Close Nose' },
-    closeTail: { value: false, label: 'Close Tail' },
-    nosecapLength: num(5, { min: 0, max: 50, step: 1, label: 'Nose Cap Length' }),
-    tailcapLength: num(5, { min: 0, max: 50, step: 1, label: 'Tail Cap Length' }),
-    segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
-    finHeight: num(10, { min: 1, max: 100, step: 1, label: 'Fin Height' }),
-    finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
-    finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
-    finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
-    finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
-    finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-  }, { render: () => !showAirfoilControls });
+  const panel1NacelleParams = useControls(
+    'Panel 1 Nacelle',
+    {
+      length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
+      frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
+      frontHeight: num(20, { min: 1, max: 100, step: 1, label: 'Front Height' }),
+      backWidth: num(20, { min: 1, max: 100, step: 1, label: 'Back Width' }),
+      backHeight: num(20, { min: 1, max: 100, step: 1, label: 'Back Height' }),
+      cornerRadius: num(5, { min: 0, max: 50, step: 1, label: 'Corner Radius' }),
+      curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Width Curve' }),
+      curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Height Curve' }),
+      verticalAlign: num(0.5, { min: 0, max: 1, step: 0.01, label: 'Vertical Align' }),
+      tailHeight: num(0, { min: -50, max: 50, step: 1, label: 'Tail Height' }),
+      closeNose: { value: false, label: 'Close Nose' },
+      closeTail: { value: false, label: 'Close Tail' },
+      nosecapLength: num(5, { min: 0, max: 50, step: 1, label: 'Nose Cap Length' }),
+      tailcapLength: num(5, { min: 0, max: 50, step: 1, label: 'Tail Cap Length' }),
+      segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
+      finHeight: num(10, { min: 1, max: 100, step: 1, label: 'Fin Height' }),
+      finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
+      finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
+      finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
+      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
+      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+    },
+    {
+      render: (get) =>
+        get('Wing Settings.enablePanel1') &&
+        get('Panel 1 Airfoil.nacelle') &&
+        !showAirfoilControls,
+    },
+  );
+
+  const panel2NacelleParams = useControls(
+    'Panel 2 Nacelle',
+    {
+      length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
+      frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
+      frontHeight: num(20, { min: 1, max: 100, step: 1, label: 'Front Height' }),
+      backWidth: num(20, { min: 1, max: 100, step: 1, label: 'Back Width' }),
+      backHeight: num(20, { min: 1, max: 100, step: 1, label: 'Back Height' }),
+      cornerRadius: num(5, { min: 0, max: 50, step: 1, label: 'Corner Radius' }),
+      curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Width Curve' }),
+      curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Height Curve' }),
+      verticalAlign: num(0.5, { min: 0, max: 1, step: 0.01, label: 'Vertical Align' }),
+      tailHeight: num(0, { min: -50, max: 50, step: 1, label: 'Tail Height' }),
+      closeNose: { value: false, label: 'Close Nose' },
+      closeTail: { value: false, label: 'Close Tail' },
+      nosecapLength: num(5, { min: 0, max: 50, step: 1, label: 'Nose Cap Length' }),
+      tailcapLength: num(5, { min: 0, max: 50, step: 1, label: 'Tail Cap Length' }),
+      segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
+      finHeight: num(10, { min: 1, max: 100, step: 1, label: 'Fin Height' }),
+      finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
+      finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
+      finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
+      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
+      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+    },
+    {
+      render: (get) =>
+        get('Wing Settings.enablePanel2') &&
+        get('Panel 2 Airfoil.nacelle') &&
+        !showAirfoilControls,
+    },
+  );
+
+  const tipNacelleParams = useControls(
+    'Tip Nacelle',
+    {
+      length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
+      frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
+      frontHeight: num(20, { min: 1, max: 100, step: 1, label: 'Front Height' }),
+      backWidth: num(20, { min: 1, max: 100, step: 1, label: 'Back Width' }),
+      backHeight: num(20, { min: 1, max: 100, step: 1, label: 'Back Height' }),
+      cornerRadius: num(5, { min: 0, max: 50, step: 1, label: 'Corner Radius' }),
+      curveH: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Width Curve' }),
+      curveV: num(1, { min: 0.1, max: 5, step: 0.1, label: 'Height Curve' }),
+      verticalAlign: num(0.5, { min: 0, max: 1, step: 0.01, label: 'Vertical Align' }),
+      tailHeight: num(0, { min: -50, max: 50, step: 1, label: 'Tail Height' }),
+      closeNose: { value: false, label: 'Close Nose' },
+      closeTail: { value: false, label: 'Close Tail' },
+      nosecapLength: num(5, { min: 0, max: 50, step: 1, label: 'Nose Cap Length' }),
+      tailcapLength: num(5, { min: 0, max: 50, step: 1, label: 'Tail Cap Length' }),
+      segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
+      finHeight: num(10, { min: 1, max: 100, step: 1, label: 'Fin Height' }),
+      finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
+      finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
+      finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
+      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
+      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+    },
+    {
+      render: (get) => get('Wing Tip.nacelle') && !showAirfoilControls,
+    },
+  );
+
+  const { showNacelles } = useControls(
+    'Nacelles',
+    { showNacelles: false },
+    { render: () => !showAirfoilControls },
+  );
 
   const {
     showRudder,
@@ -236,43 +293,23 @@ export default function App({ showAirfoilControls = false } = {}) {
   const sections = [rootParams];
   const nacelleFlags = [];
   const nacelleFins = [];
+  const nacelleParamsList = [];
   if (enablePanel1) {
     sections.push(panel1Params);
     nacelleFlags.push(panel1Params.nacelle);
-    nacelleFins.push(panel1Params.nacelleFin === 'none' ? null : panel1Params.nacelleFin);
+    nacelleFins.push(panel1Params.nacelleFin);
+    nacelleParamsList.push(panel1NacelleParams);
     if (enablePanel2) {
       sections.push(panel2Params);
       nacelleFlags.push(panel2Params.nacelle);
-      nacelleFins.push(panel2Params.nacelleFin === 'none' ? null : panel2Params.nacelleFin);
+      nacelleFins.push(panel2Params.nacelleFin);
+      nacelleParamsList.push(panel2NacelleParams);
     }
   }
   sections.push(tipParams);
   nacelleFlags.push(tipParams.nacelle);
-  nacelleFins.push(tipParams.nacelleFin === 'none' ? null : tipParams.nacelleFin);
-
-  const nacelleParams = {
-    length: nacelleLength,
-    frontWidth: nacelleFrontWidth,
-    frontHeight: nacelleFrontHeight,
-    backWidth: nacelleBackWidth,
-    backHeight: nacelleBackHeight,
-    cornerRadius: nacelleCornerRadius,
-    curveH: nacelleCurveH,
-    curveV: nacelleCurveV,
-    verticalAlign: nacelleVerticalAlign,
-    tailHeight: nacelleTailHeight,
-    closeNose: nacelleCloseNose,
-    closeTail: nacelleCloseTail,
-    nosecapLength: nacelleNosecapLength,
-    tailcapLength: nacelleTailcapLength,
-    segmentCount: nacelleSegmentCount,
-    finHeight,
-    finRootChord,
-    finTipChord,
-    finSweep,
-    finThickness,
-    finOffset,
-  };
+  nacelleFins.push(tipParams.nacelleFin);
+  nacelleParamsList.push(tipNacelleParams);
 
   const previewElements = (
     <>
@@ -374,7 +411,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 mountHeight={mountHeight}
                 mountZ={mountZ}
                 showNacelles={showNacelles}
-                nacelleParams={nacelleParams}
+                nacelleParamsList={nacelleParamsList}
                 nacelleFlags={nacelleFlags}
                 nacelleFins={nacelleFins}
                 showRudder={showRudder}
@@ -418,11 +455,11 @@ export default function App({ showAirfoilControls = false } = {}) {
                   mirrored={mirrored}
                   mountHeight={mountHeight}
                   mountZ={mountZ}
-                  showNacelles={showNacelles}
-                  nacelleParams={nacelleParams}
-                  nacelleFlags={nacelleFlags}
-                  nacelleFins={nacelleFins}
-                  showRudder={showRudder}
+                showNacelles={showNacelles}
+                nacelleParamsList={nacelleParamsList}
+                nacelleFlags={nacelleFlags}
+                nacelleFins={nacelleFins}
+                showRudder={showRudder}
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
@@ -452,11 +489,11 @@ export default function App({ showAirfoilControls = false } = {}) {
                   mirrored={mirrored}
                   mountHeight={mountHeight}
                   mountZ={mountZ}
-                  showNacelles={showNacelles}
-                  nacelleParams={nacelleParams}
-                  nacelleFlags={nacelleFlags}
-                  nacelleFins={nacelleFins}
-                  showRudder={showRudder}
+                showNacelles={showNacelles}
+                nacelleParamsList={nacelleParamsList}
+                nacelleFlags={nacelleFlags}
+                nacelleFins={nacelleFins}
+                showRudder={showRudder}
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
