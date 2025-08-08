@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
@@ -14,6 +14,51 @@ import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
 import ThemeSwitcher from './components/ThemeSwitcher';
+
+const themeList = ['light', 'dark', 'blue', 'green'];
+
+const levaThemes = {
+  light: {
+    colors: {
+      elevation1: '#ffffff',
+      elevation2: '#f0f0f0',
+      highlight1: '#007acc',
+      accent1: '#007acc',
+      accent2: '#005f99',
+      text: '#1a1a1a',
+    },
+  },
+  dark: {
+    colors: {
+      elevation1: '#1e1e1e',
+      elevation2: '#333333',
+      highlight1: '#66aaff',
+      accent1: '#66aaff',
+      accent2: '#99ccff',
+      text: '#e0e0e0',
+    },
+  },
+  blue: {
+    colors: {
+      elevation1: '#003f5c',
+      elevation2: '#005f7f',
+      highlight1: '#00bfff',
+      accent1: '#00bfff',
+      accent2: '#80dfff',
+      text: '#e0f7ff',
+    },
+  },
+  green: {
+    colors: {
+      elevation1: '#1b3b2f',
+      elevation2: '#2e8b57',
+      highlight1: '#2ecc71',
+      accent1: '#2ecc71',
+      accent2: '#27ae60',
+      text: '#e9f7ef',
+    },
+  },
+};
 //
 function ResizeHandler() {
   const { camera, size } = useThree();
@@ -40,6 +85,15 @@ function CameraCenter({ controlsRef, targetGroup }) {
 }
 // Trigger rebuild
 export default function App({ showAirfoilControls = false } = {}) {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const themeClasses = themeList.map((t) => `theme-${t}`);
+    const root = document.documentElement;
+    root.classList.remove(...themeClasses);
+    root.classList.add(`theme-${theme}`);
+  }, [theme]);
+
   const controlsRef = useRef();
   const groupRef = useRef();
   const {
@@ -399,16 +453,12 @@ export default function App({ showAirfoilControls = false } = {}) {
         borderRight: '1px solid #333',
         overflowY: 'auto'
       }}>
-        <Leva
-          collapsed={false}
-          fill
-          theme={{ colors: { elevation1: '#d1ebeb' } }}
-        />
+        <Leva collapsed={false} fill theme={levaThemes[theme]} />
       </div>
 
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
-        <ThemeSwitcher />
+        <ThemeSwitcher theme={theme} setTheme={setTheme} themes={themeList} />
         {showAirfoilControls ? (
           <div style={{ padding: '10px' }}>{previewElements}</div>
         ) : (
