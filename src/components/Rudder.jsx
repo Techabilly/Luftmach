@@ -20,8 +20,11 @@ export default function Rudder({
     const lead = (t) => sweep * t;
     const trail = (t) => rootChord + (sweep + tipChord - rootChord) * t;
 
-    let fcr = Math.max(0, frontCornerRadius);
-    let bcr = Math.max(0, backCornerRadius);
+    // The front and back corner radii are intentionally swapped so that the
+    // "front" parameter controls the corner nearest the trailing edge and vice
+    // versa. This matches the expected layout of the UI controls.
+    let fcr = Math.max(0, backCornerRadius);
+    let bcr = Math.max(0, frontCornerRadius);
     const topWidth = trail(1) - lead(1);
     if (bcr > topWidth) bcr = topWidth;
     if (fcr > topWidth - bcr) fcr = topWidth - bcr;
@@ -56,7 +59,7 @@ export default function Rudder({
     g.rotateY(Math.PI / 2);
     g.translate(-thickness / 2, 0, 0);
     return g;
-  }, [height, rootChord, tipChord, sweep, thickness, frontCornerRadius, backCornerRadius]);
+  }, [height, rootChord, tipChord, sweep, thickness, backCornerRadius, frontCornerRadius]);
 
   const finalPos = [position[0], position[1], position[2] + offset];
 
