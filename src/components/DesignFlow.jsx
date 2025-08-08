@@ -6,6 +6,7 @@ import ExportStep from './steps/ExportStep.jsx';
 import AuthModal from '../auth/AuthModal.jsx';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { createDesign, deleteDesign, listDesigns, updateDesign } from '../data/designsApi.js';
+import { setDesignState } from '../lib/designState.js';
 
 function UserMenu({ email, onSignOut, onShowDesigns }) {
   const [open, setOpen] = useState(false);
@@ -83,7 +84,7 @@ export default function DesignFlow() {
   const loadDesign = (design) => {
     setCurrentDesignId(design.id);
     setShowLoad(false);
-    // design.data not applied; placeholder for future use
+    setDesignState(design.data);
   };
 
   const steps = [
