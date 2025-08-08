@@ -27,7 +27,7 @@ If you are developing a production application, we recommend using TypeScript wi
 - The rudder now uses the same sweep and chord controls as a wing
   (without mirroring or airfoil support).
 - The rudder can be shifted forward or backward along the fuselage.
-- The front and back top corners of the rudder and nacelle fins can be curved.
+- The front and back corners of the rudder and nacelle fins curve smoothly into the lower edge.
 - The fuselage can be hidden entirely if desired.
 - Elevator geometry can now be customized with independent root and tip chords,
   span, sweep, dihedral and airfoil settings.

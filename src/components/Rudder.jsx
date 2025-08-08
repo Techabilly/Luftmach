@@ -28,26 +28,27 @@ export default function Rudder({
     const limitedFcr = Math.min(fcr, height);
     const limitedBcr = Math.min(bcr, height);
 
+    const trailingSweep = trail(1) - trail(0);
+    const leadingSweep = lead(1) - lead(0);
+
     shape.moveTo(lead(0), 0);
     shape.lineTo(trail(0), 0);
-    shape.lineTo(trail(1), height - limitedBcr);
-    if (limitedBcr)
-      shape.quadraticCurveTo(
-        trail(1),
-        height,
-        trail(1) - limitedBcr,
-        height,
-      );
-    else shape.lineTo(trail(1), height);
+    if (limitedBcr) {
+      const bx = trail(1) - (limitedBcr * trailingSweep) / height;
+      const by = height - limitedBcr;
+      shape.lineTo(bx, by);
+      shape.quadraticCurveTo(trail(1), height, trail(1) - limitedBcr, height);
+    } else {
+      shape.lineTo(trail(1), height);
+    }
     shape.lineTo(lead(1) + limitedFcr, height);
-    if (limitedFcr)
-      shape.quadraticCurveTo(
-        lead(1),
-        height,
-        lead(1),
-        height - limitedFcr,
-      );
-    else shape.lineTo(lead(1), height);
+    if (limitedFcr) {
+      const fx = lead(1) - (limitedFcr * leadingSweep) / height;
+      const fy = height - limitedFcr;
+      shape.quadraticCurveTo(lead(1), height, fx, fy);
+    } else {
+      shape.lineTo(lead(1), height);
+    }
     shape.lineTo(lead(0), 0);
     shape.closePath();
 

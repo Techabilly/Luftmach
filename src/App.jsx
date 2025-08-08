@@ -328,8 +328,8 @@ export default function App({ showAirfoilControls = false } = {}) {
     rudderSweep: num(0, { min: -300, max: 300, step: 1, label: 'Sweep' }),
     rudderThickness: num(2, { min: 1, max: 10, step: 0.5, label: 'Thickness' }),
     rudderOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
-    frontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Top Radius' }),
-    backCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Top Radius' }),
+    frontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Corner Radius' }),
+    backCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Corner Radius' }),
   });
 
   const {
