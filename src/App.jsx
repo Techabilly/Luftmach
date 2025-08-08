@@ -165,7 +165,8 @@ export default function App({ showAirfoilControls = false } = {}) {
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
       finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+      topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
+      bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
     {
       render: (get) =>
@@ -199,7 +200,8 @@ export default function App({ showAirfoilControls = false } = {}) {
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
       finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+      topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
+      bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
     {
       render: (get) =>
@@ -233,7 +235,8 @@ export default function App({ showAirfoilControls = false } = {}) {
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
       finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finAngle: num(45, { min: -180, max: 180, step: 1, label: 'Fin Angle (°)' }),
+      topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
+      bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
     {
       render: (get) => get('Wing Tip.nacelle') && !showAirfoilControls,
