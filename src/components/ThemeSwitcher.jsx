@@ -1,17 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-const themes = ['light', 'dark', 'blue', 'green'];
-
-export default function ThemeSwitcher() {
-  const [theme, setTheme] = useState('light');
-
-  useEffect(() => {
-    const themeClasses = themes.map((t) => `theme-${t}`);
-    const root = document.documentElement;
-    root.classList.remove(...themeClasses);
-    root.classList.add(`theme-${theme}`);
-  }, [theme]);
-
+export default function ThemeSwitcher({ theme, setTheme, themes }) {
   return (
     <div style={{ position: 'absolute', top: 20, right: 20 }}>
       <select value={theme} onChange={(e) => setTheme(e.target.value)}>
