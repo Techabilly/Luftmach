@@ -8,3 +8,14 @@ export function getDesignState() {
   });
   return values;
 }
+
+export function setDesignState(values) {
+  if (!values) return;
+  Object.entries(values).forEach(([key, value]) => {
+    try {
+      levaStore.setValueAtPath(key, value);
+    } catch {
+      /* ignore missing paths */
+    }
+  });
+}
