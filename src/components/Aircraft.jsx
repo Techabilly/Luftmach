@@ -15,7 +15,7 @@ export default function Aircraft({
   wireframe = false,
   showFuselage = true,
   showNacelles = false,
-  nacelleParams = {},
+  nacelleParamsList = [],
   nacelleFlags = [],
   nacelleFins = [],
   showRudder = false,
@@ -104,7 +104,7 @@ export default function Aircraft({
         mountHeight={mountHeight}
         mountZ={mountZ}
         showNacelles={showNacelles}
-        nacelleParams={nacelleParams}
+        nacelleParamsList={nacelleParamsList}
         nacelleFlags={nacelleFlags}
         nacelleFins={nacelleFins}
         wireframe={wireframe}
