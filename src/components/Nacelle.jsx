@@ -60,15 +60,28 @@ export default function Nacelle({
   const topY = centerY + nacelleMaxHeight / 2;
   const bottomY = centerY - nacelleMaxHeight / 2;
 
-  const topAngleDeg = topFinAngle ?? finAngle;
-  const bottomAngleDeg = bottomFinAngle ?? -finAngle;
+  // Determine which side of the aircraft the nacelle is on so fin angles can be mirrored
+  const side = position[0] < 0 ? -1 : 1;
+
+  const topAngleDeg = (topFinAngle ?? finAngle) * side;
+  const bottomAngleDeg = (bottomFinAngle ?? finAngle) * side;
   const topAngleRad = (topAngleDeg * Math.PI) / 180;
   const bottomAngleRad = (bottomAngleDeg * Math.PI) / 180;
+
+  // Compute the slope of the nacelle's top and bottom surfaces so fins mount flush
+  const topFront = frontHeight / 2;
+  const topBack =
+    backHeight / 2 + (0.5 - verticalAlign) * (frontHeight - backHeight) + tailHeight;
+  const bottomFront = -frontHeight / 2;
+  const bottomBack =
+    -backHeight / 2 + (0.5 - verticalAlign) * (frontHeight - backHeight) + tailHeight;
+  const topSlopeRad = Math.atan2(topBack - topFront, length);
+  const bottomSlopeRad = Math.atan2(bottomBack - bottomFront, length);
 
   const fins = [];
   if (topFin) {
     fins.push(
-      <group rotation={[0, 0, topAngleRad]} key="top">
+      <group position={[0, topY, 0]} rotation={[topSlopeRad, 0, topAngleRad]} key="top">
         <Rudder
           height={finHeight}
           rootChord={finRootChord}
@@ -77,14 +90,17 @@ export default function Nacelle({
           thickness={finThickness}
           offset={finOffset}
           wireframe={wireframe}
-          position={[0, topY, 0]}
         />
       </group>,
     );
   }
   if (bottomFin) {
     fins.push(
-      <group rotation={[0, 0, bottomAngleRad]} key="bottom">
+      <group
+        position={[0, bottomY, 0]}
+        rotation={[Math.PI - bottomSlopeRad, 0, -bottomAngleRad]}
+        key="bottom"
+      >
         <Rudder
           height={finHeight}
           rootChord={finRootChord}
@@ -93,8 +109,6 @@ export default function Nacelle({
           thickness={finThickness}
           offset={finOffset}
           wireframe={wireframe}
-          position={[0, bottomY, 0]}
-          rotation={[Math.PI, 0, 0]}
         />
       </group>,
     );
