@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import DesignFlow from './components/DesignFlow.jsx'
 import { AuthProvider } from './auth/AuthContext.jsx'
-//gggggggg
+//ggggggggg
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
