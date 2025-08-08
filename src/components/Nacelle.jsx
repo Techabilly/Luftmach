@@ -8,6 +8,8 @@ export default function Nacelle({
   topFin = false,
   bottomFin = false,
   finAngle = 45,
+  topFinAngle,
+  bottomFinAngle,
   length = 40,
   frontWidth = 20,
   frontHeight = 20,
@@ -54,12 +56,16 @@ export default function Nacelle({
   );
 
   const nacelleMaxHeight = Math.max(frontHeight, backHeight);
-  const angleRad = (finAngle * Math.PI) / 180;
+
+  const topAngleDeg = topFinAngle ?? finAngle;
+  const bottomAngleDeg = bottomFinAngle ?? -finAngle;
+  const topAngleRad = (topAngleDeg * Math.PI) / 180;
+  const bottomAngleRad = (bottomAngleDeg * Math.PI) / 180;
 
   const fins = [];
   if (topFin) {
     fins.push(
-      <group rotation={[0, 0, angleRad]} key="top">
+      <group rotation={[0, 0, topAngleRad]} key="top">
         <Rudder
           height={finHeight}
           rootChord={finRootChord}
@@ -75,7 +81,7 @@ export default function Nacelle({
   }
   if (bottomFin) {
     fins.push(
-      <group rotation={[0, 0, -angleRad]} key="bottom">
+      <group rotation={[0, 0, bottomAngleRad]} key="bottom">
         <Rudder
           height={finHeight}
           rootChord={finRootChord}
@@ -85,6 +91,7 @@ export default function Nacelle({
           offset={finOffset}
           wireframe={wireframe}
           position={[0, -nacelleMaxHeight / 2, 0]}
+          rotation={[Math.PI, 0, 0]}
         />
       </group>,
     );
