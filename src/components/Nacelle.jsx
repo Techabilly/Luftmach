@@ -31,6 +31,8 @@ export default function Nacelle({
   finSweep = 0,
   finThickness = 1,
   finOffset = 0,
+  finFrontCornerRadius = 0,
+  finBackCornerRadius = 0,
 }) {
   const body = (
     <Fuselage
@@ -89,6 +91,8 @@ export default function Nacelle({
           sweep={finSweep}
           thickness={finThickness}
           offset={finOffset}
+          frontCornerRadius={finFrontCornerRadius}
+          backCornerRadius={finBackCornerRadius}
           wireframe={wireframe}
         />
       </group>,
@@ -108,6 +112,8 @@ export default function Nacelle({
           sweep={finSweep}
           thickness={finThickness}
           offset={finOffset}
+          frontCornerRadius={finFrontCornerRadius}
+          backCornerRadius={finBackCornerRadius}
           wireframe={wireframe}
         />
       </group>,
