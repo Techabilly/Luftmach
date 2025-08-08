@@ -8,3 +8,13 @@ export function getDesignState() {
   });
   return values;
 }
+
+export function getDesignThumbnail() {
+  const canvas = document.querySelector('canvas');
+  if (!canvas) return null;
+  try {
+    return canvas.toDataURL('image/png');
+  } catch {
+    return null;
+  }
+}

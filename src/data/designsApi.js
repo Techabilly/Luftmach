@@ -9,23 +9,23 @@ export async function listDesigns() {
   return data;
 }
 
-export async function createDesign({ name, data }) {
+export async function createDesign({ name, data, thumbnail }) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: row, error } = await supabase
     .from('designs')
-    .insert({ name, data, user_id: user.id })
+    .insert({ name, data, thumbnail, user_id: user.id })
     .select()
     .single();
   if (error) throw error;
   return row;
 }
 
-export async function updateDesign(id, { name, data }) {
+export async function updateDesign(id, { name, data, thumbnail }) {
   const { data: row, error } = await supabase
     .from('designs')
-    .update({ name, data })
+    .update({ name, data, thumbnail })
     .eq('id', id)
     .select()
     .single();

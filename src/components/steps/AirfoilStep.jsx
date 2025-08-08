@@ -1,7 +1,7 @@
 import React from 'react';
 import DesignApp from '../../App.jsx';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { getDesignState } from '../../lib/designState.js';
+import { getDesignState, getDesignThumbnail } from '../../lib/designState.js';
 
 export default function AirfoilStep({ onSave, onSaveAs, onLoad }) {
   const { user } = useAuth();
@@ -11,14 +11,18 @@ export default function AirfoilStep({ onSave, onSaveAs, onLoad }) {
         <div style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
           <button
             type="button"
-            onClick={() => onSave(getDesignState())}
+            onClick={() =>
+              onSave({ data: getDesignState(), thumbnail: getDesignThumbnail() })
+            }
             disabled={!user}
           >
             Save
           </button>
           <button
             type="button"
-            onClick={() => onSaveAs(getDesignState())}
+            onClick={() =>
+              onSaveAs({ data: getDesignState(), thumbnail: getDesignThumbnail() })
+            }
             disabled={!user}
           >
             Save as…

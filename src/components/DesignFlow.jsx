@@ -57,20 +57,20 @@ export default function DesignFlow() {
   const [designs, setDesigns] = useState([]);
   const [showLoad, setShowLoad] = useState(false);
 
-  const handleSave = async (data) => {
+  const handleSave = async ({ data, thumbnail }) => {
     if (!user) return;
     if (currentDesignId) {
-      await updateDesign(currentDesignId, { data });
+      await updateDesign(currentDesignId, { data, thumbnail });
     } else {
-      await handleSaveAs(data);
+      await handleSaveAs({ data, thumbnail });
     }
   };
 
-  const handleSaveAs = async (data) => {
+  const handleSaveAs = async ({ data, thumbnail }) => {
     if (!user) return;
     const name = window.prompt('Design name');
     if (!name) return;
-    const row = await createDesign({ name, data });
+    const row = await createDesign({ name, data, thumbnail });
     setCurrentDesignId(row.id);
   };
 
@@ -184,8 +184,20 @@ export default function DesignFlow() {
               {designs.map((d) => (
                 <li
                   key={d.id}
-                  style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '0.5rem',
+                    gap: '0.5rem',
+                  }}
                 >
+                  {d.thumbnail && (
+                    <img
+                      src={d.thumbnail}
+                      alt={d.name}
+                      style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                    />
+                  )}
                   <button
                     type="button"
                     onClick={() => loadDesign(d)}
