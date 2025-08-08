@@ -56,6 +56,9 @@ export default function Nacelle({
   );
 
   const nacelleMaxHeight = Math.max(frontHeight, backHeight);
+  const centerY = (0.5 - verticalAlign) * (frontHeight - backHeight) + tailHeight;
+  const topY = centerY + nacelleMaxHeight / 2;
+  const bottomY = centerY - nacelleMaxHeight / 2;
 
   const topAngleDeg = topFinAngle ?? finAngle;
   const bottomAngleDeg = bottomFinAngle ?? -finAngle;
@@ -74,7 +77,7 @@ export default function Nacelle({
           thickness={finThickness}
           offset={finOffset}
           wireframe={wireframe}
-          position={[0, nacelleMaxHeight / 2, 0]}
+          position={[0, topY, 0]}
         />
       </group>,
     );
@@ -90,7 +93,7 @@ export default function Nacelle({
           thickness={finThickness}
           offset={finOffset}
           wireframe={wireframe}
-          position={[0, -nacelleMaxHeight / 2, 0]}
+          position={[0, bottomY, 0]}
           rotation={[Math.PI, 0, 0]}
         />
       </group>,

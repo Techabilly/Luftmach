@@ -10,6 +10,7 @@ export default function Rudder({
   offset = 0,
   wireframe = false,
   position = [0, 0, 0],
+  rotation = [0, 0, 0],
 }) {
   const geom = useMemo(() => {
     const shape = new THREE.Shape();
@@ -25,13 +26,14 @@ export default function Rudder({
 
     const g = new THREE.ExtrudeGeometry(shape, { depth: thickness, bevelEnabled: false });
     g.rotateY(Math.PI / 2);
+    g.translate(-thickness / 2, 0, 0);
     return g;
   }, [height, rootChord, tipChord, sweep, thickness]);
 
   const finalPos = [position[0], position[1], position[2] + offset];
 
   return (
-    <mesh geometry={geom} position={finalPos}>
+    <mesh geometry={geom} position={finalPos} rotation={rotation}>
       <meshStandardMaterial color="gray" side={THREE.DoubleSide} wireframe={wireframe} />
     </mesh>
   );
