@@ -8,7 +8,7 @@ export function getDesignState() {
   });
   return values;
 }
-
+codex/add-thumbnail-to-saved-designs
 export function getDesignThumbnail() {
   const canvas = document.querySelector('canvas');
   if (!canvas) return null;
@@ -17,4 +17,14 @@ export function getDesignThumbnail() {
   } catch {
     return null;
   }
+export function setDesignState(values) {
+  if (!values) return;
+  Object.entries(values).forEach(([key, value]) => {
+    try {
+      levaStore.setValueAtPath(key, value);
+    } catch {
+      /* ignore missing paths */
+    }
+  });
+main
 }
