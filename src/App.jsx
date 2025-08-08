@@ -13,6 +13,7 @@ import AirfoilPreview from './components/AirfoilPreview';
 import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
+import ThemeSwitcher from './components/ThemeSwitcher';
 //
 function ResizeHandler() {
   const { camera, size } = useThree();
@@ -397,6 +398,7 @@ export default function App({ showAirfoilControls = false } = {}) {
 
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
+        <ThemeSwitcher />
         {showAirfoilControls ? (
           <div style={{ padding: '10px' }}>{previewElements}</div>
         ) : (
