@@ -458,7 +458,12 @@ export default function App({ showAirfoilControls = false } = {}) {
 
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
-        <ThemeSwitcher theme={theme} setTheme={setTheme} themes={themeList} />
+        <div style={{ padding: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <ThemeSwitcher theme={theme} setTheme={setTheme} themes={themeList} />
+          {!showAirfoilControls && (
+            <ViewControls controls={controlsRef} targetGroup={groupRef} />
+          )}
+        </div>
         {showAirfoilControls ? (
           <div style={{ padding: '10px' }}>{previewElements}</div>
         ) : (
@@ -503,7 +508,6 @@ export default function App({ showAirfoilControls = false } = {}) {
                 fuselageParams={fuselageParams}
               />
               <OrbitControls ref={controlsRef} />
-              <ViewControls controls={controlsRef} targetGroup={groupRef} />
             </Canvas>
             <div
               style={{
@@ -548,7 +552,7 @@ export default function App({ showAirfoilControls = false } = {}) {
                 elevatorOffset={elevatorOffset}
                 showFuselage={fuselageParams.showFuselage}
                 fuselageParams={fuselageParams}
-            
+
                />
               </MiniView>
               <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
