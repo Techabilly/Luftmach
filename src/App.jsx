@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
@@ -14,52 +14,7 @@ import ViewControls from './components/ViewControls';
 import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
 import ThemeSwitcher from './components/ThemeSwitcher';
-
-const themeList = ['light', 'dark', 'blue', 'green'];
-
-const levaThemes = {
-  light: {
-    colors: {
-      elevation1: '#ffffff',
-      elevation2: '#f0f0f0',
-      highlight1: '#007acc',
-      accent1: '#007acc',
-      accent2: '#005f99',
-      text: '#1a1a1a',
-    },
-  },
-  dark: {
-    colors: {
-      elevation1: '#1e1e1e',
-      elevation2: '#333333',
-      highlight1: '#66aaff',
-      accent1: '#66aaff',
-      accent2: '#99ccff',
-      text: '#e0e0e0',
-    },
-  },
-  blue: {
-    colors: {
-      elevation1: '#003f5c',
-      elevation2: '#005f7f',
-      highlight1: '#00bfff',
-      accent1: '#00bfff',
-      accent2: '#80dfff',
-      text: '#e0f7ff',
-    },
-  },
-  green: {
-    colors: {
-      elevation1: '#1b3b2f',
-      elevation2: '#2e8b57',
-      highlight1: '#2ecc71',
-      accent1: '#2ecc71',
-      accent2: '#27ae60',
-      text: '#e9f7ef',
-    },
-  },
-};
-//
+import { hsvToHex, adjustHSV } from './lib/color';
 function ResizeHandler() {
   const { camera, size } = useThree();
   useEffect(() => {
@@ -85,14 +40,45 @@ function CameraCenter({ controlsRef, targetGroup }) {
 }
 // Trigger rebuild
 export default function App({ showAirfoilControls = false } = {}) {
-  const [theme, setTheme] = useState('light');
+  const [color, setColor] = useState({ h: 200, s: 60, v: 50 });
+
+  const themeColors = useMemo(() => {
+    const link = hsvToHex(color.h, color.s, color.v);
+    const { h: hh, s: hs, v: hv } = adjustHSV(color, { dv: 10 });
+    const linkHover = hsvToHex(hh, hs, hv);
+    const { h: bh, s: bs, v: bv } = adjustHSV(color, { dv: -20, ds: -20 });
+    const buttonBg = hsvToHex(bh, bs, bv);
+    const { h: gh, s: gs, v: gv } = adjustHSV(color, { ds: -80, dv: 40 });
+    const bgColor = hsvToHex(gh, gs, gv);
+    const { h: th, s: ts, v: tv } = adjustHSV(color, { ds: -80, dv: -40 });
+    const textColor = hsvToHex(th, ts, tv);
+    return { link, linkHover, buttonBg, bgColor, textColor };
+  }, [color]);
 
   useEffect(() => {
-    const themeClasses = themeList.map((t) => `theme-${t}`);
     const root = document.documentElement;
-    root.classList.remove(...themeClasses);
-    root.classList.add(`theme-${theme}`);
-  }, [theme]);
+    root.style.setProperty('--link-color', themeColors.link);
+    root.style.setProperty('--link-hover', themeColors.linkHover);
+    root.style.setProperty('--button-bg', themeColors.buttonBg);
+    root.style.setProperty('--bg-color', themeColors.bgColor);
+    root.style.setProperty('--text-color', themeColors.textColor);
+    root.style.color = themeColors.textColor;
+    root.style.backgroundColor = themeColors.bgColor;
+  }, [themeColors]);
+
+  const levaTheme = useMemo(
+    () => ({
+      colors: {
+        elevation1: themeColors.bgColor,
+        elevation2: themeColors.buttonBg,
+        highlight1: themeColors.linkHover,
+        accent1: themeColors.link,
+        accent2: themeColors.linkHover,
+        text: themeColors.textColor,
+      },
+    }),
+    [themeColors]
+  );
 
   const controlsRef = useRef();
   const groupRef = useRef();
@@ -453,13 +439,13 @@ export default function App({ showAirfoilControls = false } = {}) {
         borderRight: '1px solid #333',
         overflowY: 'auto'
       }}>
-        <Leva collapsed={false} fill theme={levaThemes[theme]} />
+        <Leva collapsed={false} fill theme={levaTheme} />
       </div>
 
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
         <div style={{ padding: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <ThemeSwitcher theme={theme} setTheme={setTheme} themes={themeList} />
+          <ThemeSwitcher color={color} setColor={setColor} />
           {!showAirfoilControls && (
             <ViewControls controls={controlsRef} targetGroup={groupRef} />
           )}
