@@ -1,21 +1,6 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import DesignFlow from './components/DesignFlow.jsx'
-import { AuthProvider } from './auth/AuthContext.jsx'
-import { UiProvider } from './ui/UiContext.jsx'
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
-const theme = createTheme()
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <UiProvider>
-          <DesignFlow />
-        </UiProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </StrictMode>,
-)
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);

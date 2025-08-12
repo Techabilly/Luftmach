@@ -1,37 +1,23 @@
 {
-  "name": "airplane-viewer",
+  "name": "luftmach",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port 4173"
   },
   "dependencies": {
-    "@react-three/drei": "^10.5.1",
-    "@react-three/fiber": "^9.2.0",
-    "@supabase/supabase-js": "^2.54.0",
-    "@mui/material": "^5.15.14",
-    "@mui/icons-material": "^5.15.14",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "leva": "^0.10.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.178.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.167.0",
+    "@react-three/fiber": "^8.16.1",
+    "@react-three/drei": "^9.121.3",
+    "leva": "^0.9.41"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.30.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "vite": "^7.0.4",
-    "vite-plugin-gh-pages": "^1.0.1"
+    "vite": "^5.3.3",
+    "@vitejs/plugin-react": "^4.3.1"
   }
 }
