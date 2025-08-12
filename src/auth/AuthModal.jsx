@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext.jsx';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Tabs,
+  Tab,
+  TextField,
+  Button,
+  Alert,
+  Box,
+} from '@mui/material';
 
 export default function AuthModal({ open, onClose }) {
   const { signInWithEmail, signUpWithEmail, signInWithOAuth } = useAuth();
@@ -7,8 +19,6 @@ export default function AuthModal({ open, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-
-  if (!open) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,72 +30,57 @@ export default function AuthModal({ open, onClose }) {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div style={{ background: '#fff', padding: '1rem', width: '300px', position: 'relative' }}>
-        <div style={{ display: 'flex', marginBottom: '1rem' }}>
-          <button
-            type="button"
-            onClick={() => setTab('signin')}
-            disabled={tab === 'signin'}
-            style={{ flex: 1 }}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab('signup')}
-            disabled={tab === 'signup'}
-            style={{ flex: 1 }}
-          >
-            Create Account
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <input
+    <Dialog open={open} onClose={onClose} fullWidth>
+      <DialogTitle>{tab === 'signin' ? 'Sign In' : 'Create Account'}</DialogTitle>
+      <DialogContent>
+        <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 2 }}>
+          <Tab value="signin" label="Sign In" />
+          <Tab value="signup" label="Create Account" />
+        </Tabs>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        >
+          <TextField
             type="email"
-            placeholder="Email"
+            label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
+          <TextField
             type="password"
-            placeholder="Password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {error && <div style={{ color: 'red' }}>{error}</div>}
-          <button type="submit">{tab === 'signin' ? 'Sign In' : 'Sign Up'}</button>
-        </form>
-        <div style={{ margin: '1rem 0', textAlign: 'center' }}>or</div>
-        <button
-          type="button"
+          {error && <Alert severity="error">{error}</Alert>}
+          <Button type="submit" variant="contained">
+            {tab === 'signin' ? 'Sign In' : 'Sign Up'}
+          </Button>
+        </Box>
+        <Box sx={{ my: 2, textAlign: 'center' }}>or</Box>
+        <Button
+          variant="outlined"
+          fullWidth
+          sx={{ mb: 1 }}
           onClick={() => signInWithOAuth('github')}
-          style={{ width: '100%', marginBottom: '0.5rem' }}
         >
           Sign in with GitHub
-        </button>
-        <button type="button" onClick={() => signInWithOAuth('google')} style={{ width: '100%' }}>
-          Sign in with Google
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}
+        </Button>
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => signInWithOAuth('google')}
         >
-          ×
-        </button>
-      </div>
-    </div>
+          Sign in with Google
+        </Button>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
   );
 }

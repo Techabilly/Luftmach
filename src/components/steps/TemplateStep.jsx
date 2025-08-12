@@ -1,21 +1,24 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 export default function TemplateStep() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Templates</h2>
-      <section>
-        <h3>Personal</h3>
-        <p>Your saved templates will appear here.</p>
-      </section>
-      <section>
-        <h3>Public</h3>
-        <p>Explore templates shared by the community.</p>
-      </section>
-      <section>
-        <h3>Basic</h3>
-        <p>Start from a simple preset.</p>
-      </section>
-    </div>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Templates
+      </Typography>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6">Personal</Typography>
+        <Typography>Your saved templates will appear here.</Typography>
+      </Box>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6">Public</Typography>
+        <Typography>Explore templates shared by the community.</Typography>
+      </Box>
+      <Box>
+        <Typography variant="h6">Basic</Typography>
+        <Typography>Start from a simple preset.</Typography>
+      </Box>
+    </Box>
   );
 }
