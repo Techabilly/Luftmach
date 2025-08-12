@@ -18,10 +18,10 @@ export default function DesignFlow() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <header
         style={{
-          background: '#222',
-          color: '#fff',
+          background: 'var(--bg-color)',
+          color: 'var(--text-color)',
           padding: '1rem',
-          borderBottom: '1px solid #333',
+          borderBottom: '1px solid var(--link-color)',
         }}
       >
         <ul
@@ -41,8 +41,8 @@ export default function DesignFlow() {
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  background: current === index ? '#646cff' : '#333',
-                  color: 'inherit',
+                  background: current === index ? 'var(--link-color)' : 'var(--button-bg)',
+                  color: 'var(--text-color)',
                   border: 'none',
                   cursor: 'pointer',
                 }}

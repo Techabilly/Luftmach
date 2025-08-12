@@ -77,7 +77,7 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, an
 
   return (
     <div style={{ marginTop: '16px', width: '100%' }}>
-      <div style={{ color: 'white', marginBottom: '4px' }}>{label} (inches)</div>
+      <div style={{ color: 'var(--text-color)', marginBottom: '4px' }}>{label} (inches)</div>
       <svg viewBox={viewBox} width="100%" height="200" preserveAspectRatio="xMidYMid meet">
         {/* Grid lines */}
         {gridLines.map((x, i) => (
@@ -87,17 +87,17 @@ export default function AirfoilPreview({ chord, thickness, camber, camberPos, an
             y1={-height / 2}
             x2={x}
             y2={height / 2}
-            stroke="#444"
+            stroke="var(--link-color)"
             strokeDasharray="2,2"
           />
         ))}
 
         {/* Airfoil path */}
-        <path d={pathData} stroke="cyan" fill="none" strokeWidth="1" />
+        <path d={pathData} stroke="var(--link-hover)" fill="none" strokeWidth="1" />
 
         {/* Chord edge lines */}
-        <line x1={0} y1={-height / 2} x2={0} y2={height / 2} stroke="gray" strokeDasharray="4,2" />
-        <line x1={chord} y1={-height / 2} x2={chord} y2={height / 2} stroke="gray" strokeDasharray="4,2" />
+        <line x1={0} y1={-height / 2} x2={0} y2={height / 2} stroke="var(--text-color)" strokeDasharray="4,2" />
+        <line x1={chord} y1={-height / 2} x2={chord} y2={height / 2} stroke="var(--text-color)" strokeDasharray="4,2" />
       </svg>
     </div>
   );
