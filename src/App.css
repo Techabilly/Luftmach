@@ -15,10 +15,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--link-color));
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em var(--link-hover));
 }
 
 @keyframes logo-spin {
@@ -41,7 +41,7 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--text-color);
 }
 html, body, #root {
   margin: 0;
@@ -60,5 +60,5 @@ html, body, #root {
 
 .canvas-container {
   flex: 1;
-  background-color: #111;
+  background-color: var(--bg-color);
 }

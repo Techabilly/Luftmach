@@ -431,12 +431,12 @@ export default function App({ showAirfoilControls = false } = {}) {
       {/* Sidebar: Controls + Previews */}
       <div style={{
         width: '340px',
-        backgroundColor: '#b2bfbf',
+        backgroundColor: 'var(--button-bg)',
         padding: '10px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        borderRight: '1px solid #333',
+        borderRight: '1px solid var(--link-color)',
         overflowY: 'auto'
       }}>
         <Leva collapsed={false} fill theme={levaTheme} />
