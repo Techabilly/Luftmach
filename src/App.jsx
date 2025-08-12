@@ -3,6 +3,9 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls, Leva } from 'leva';
 import { resetNumber } from './components/ResetNumberPlugin';
+import AddPartsDrawer from './components/AddPartsDrawer.jsx';
+import ControlsPanel from './components/ControlsPanel.jsx';
+import { useUi } from './ui/UiContext.jsx';
 
 function num(value, settings = {}) {
   return { value, component: resetNumber, ...settings };
@@ -40,6 +43,7 @@ function CameraCenter({ controlsRef, targetGroup }) {
 }
 // Trigger rebuild
 export default function App({ showAirfoilControls = false } = {}) {
+  const { selectPart } = useUi();
   const [color, setColor] = useState({ h: 200, s: 60, v: 50 });
 
   const themeColors = useMemo(() => {
@@ -429,16 +433,21 @@ export default function App({ showAirfoilControls = false } = {}) {
   return (
     <div id="app" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       {/* Sidebar: Controls + Previews */}
-      <div style={{
-        width: '340px',
-        backgroundColor: 'var(--button-bg)',
-        padding: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        borderRight: '1px solid var(--link-color)',
-        overflowY: 'auto'
-      }}>
+      <div
+        style={{
+          width: '340px',
+          backgroundColor: 'var(--button-bg)',
+          padding: '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          borderRight: '1px solid var(--link-color)',
+          overflowY: 'auto',
+          gap: '10px',
+        }}
+      >
+        <AddPartsDrawer />
+        <ControlsPanel />
         <Leva collapsed={false} fill theme={levaTheme} />
       </div>
 
@@ -454,7 +463,11 @@ export default function App({ showAirfoilControls = false } = {}) {
           <div style={{ padding: '10px' }}>{previewElements}</div>
         ) : (
           <>
-            <Canvas style={{ width: '100%', height: '100%' }} camera={{ position: [0, 0, 400], fov: 50 }}>
+            <Canvas
+              style={{ width: '100%', height: '100%' }}
+              camera={{ position: [0, 0, 400], fov: 50 }}
+              onPointerMissed={() => selectPart(null)}
+            >
               <ResizeHandler />
               <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
               <ambientLight intensity={0.5} />
