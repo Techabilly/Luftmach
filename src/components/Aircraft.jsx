@@ -1,118 +1,49 @@
-import React from 'react';
-import Fuselage from './Fuselage';
-import Wing from './Wing';
-import Rudder from './Rudder';
-import Elevator from './Elevator';
+import React, { useEffect } from 'react';
+import Wing from './Wing.jsx';
+import Elevator from './Elevator.jsx';
+import Rudder from './Rudder.jsx';
+import Nacelle from './Nacelle.jsx';
+import Fuselage from './Fuselage.jsx';
+import { useUi } from '../ui/UiContext.jsx';
 
-export default function Aircraft({
-  sections,
-  sweep,
-  mirrored,
-  mountHeight,
-  mountZ,
-  fuselageParams,
-  groupRef,
-  wireframe = false,
-  showFuselage = true,
-  showNacelles = false,
-  nacelleParamsList = [],
-  nacelleFlags = [],
-  nacelleFins = [],
-  showRudder = false,
-  rudderHeight = 40,
-  rootChord = 30,
-  tipChord = 0,
-  rudderSweep = 0,
-  rudderThickness = 2,
-  rudderOffset = 0,
-  frontCornerRadius = 0,
-  backCornerRadius = 0,
-  showElevator = false,
-  elevatorRootChord = 50,
-  elevatorTipChord = 50,
-  elevatorSpan = 80,
-  elevatorSweep = 0,
-  elevatorDihedral = 0,
-  elevatorThickness = 0.12,
-  elevatorCamber = 0.02,
-  elevatorCamberPos = 0.4,
-  elevatorAngle = 0,
-  elevatorOffset = 0,
-}) {
-  const tailCenterY =
-    (0.5 - fuselageParams.verticalAlign) *
-      (fuselageParams.frontHeight - fuselageParams.backHeight) +
-    fuselageParams.tailHeight;
+/**
+ * Renders aircraft parts based on the UI context. All props received are
+ * forwarded to the individual part components so existing props continue to
+ * work. Each rendered part is wrapped in a group with a partId so the 3D view
+ * can determine which part was clicked.
+ */
+export default function Aircraft(props) {
+  const { enabledParts, registry, registerParts, selectPart } = useUi();
+
+  // register known parts on mount
+  useEffect(() => {
+    registerParts([
+      { id: 'wing', label: 'Wing', Component: Wing },
+      { id: 'elevator', label: 'Elevator', Component: Elevator },
+      { id: 'rudder', label: 'Rudder', Component: Rudder },
+      { id: 'nacelle', label: 'Nacelle', Component: Nacelle },
+      { id: 'fuselage', label: 'Fuselage', Component: Fuselage },
+    ]);
+  }, [registerParts]);
 
   return (
-    <group ref={groupRef}>
-      {showFuselage && (
-        <Fuselage
-          length={fuselageParams.length}
-          frontWidth={fuselageParams.frontWidth}
-          frontHeight={fuselageParams.frontHeight}
-          backWidth={fuselageParams.backWidth}
-          backHeight={fuselageParams.backHeight}
-          cornerRadius={fuselageParams.cornerRadius}
-          curveH={fuselageParams.curveH}
-          curveV={fuselageParams.curveV}
-          verticalAlign={fuselageParams.verticalAlign}
-          tailHeight={fuselageParams.tailHeight}
-          segmentCount={fuselageParams.segmentCount}
-          debugCrossSections={fuselageParams.showCrossSections}
-          wireframe={wireframe}
-          closeNose={fuselageParams.closeNose}
-          closeTail={fuselageParams.closeTail}
-          nosecapLength={fuselageParams.nosecapLength}
-          tailcapLength={fuselageParams.tailcapLength}
-        />
-      )}
-      {showRudder && (
-        <Rudder
-          height={rudderHeight}
-          rootChord={rootChord}
-          tipChord={tipChord}
-          sweep={rudderSweep}
-          thickness={rudderThickness}
-          offset={rudderOffset}
-          frontCornerRadius={frontCornerRadius}
-          backCornerRadius={backCornerRadius}
-          wireframe={wireframe}
-          position={[
-            0,
-            tailCenterY + fuselageParams.backHeight / 2,
-            fuselageParams.length / 2,
-          ]}
-        />
-      )}
-      {showElevator && (
-        <Elevator
-          rootChord={elevatorRootChord}
-          tipChord={elevatorTipChord}
-          span={elevatorSpan}
-          sweep={elevatorSweep}
-          dihedral={elevatorDihedral}
-          thickness={elevatorThickness}
-          camber={elevatorCamber}
-          camberPos={elevatorCamberPos}
-          angle={elevatorAngle}
-          wireframe={wireframe}
-          offset={elevatorOffset}
-          position={[0, tailCenterY, fuselageParams.length / 2]}
-        />
-      )}
-      <Wing
-        sections={sections}
-        sweep={sweep}
-        mirrored={mirrored}
-        mountHeight={mountHeight}
-        mountZ={mountZ}
-        showNacelles={showNacelles}
-        nacelleParamsList={nacelleParamsList}
-        nacelleFlags={nacelleFlags}
-        nacelleFins={nacelleFins}
-        wireframe={wireframe}
-      />
+    <group>
+      {enabledParts.map((id) => {
+        const Item = registry[id]?.Component;
+        if (!Item) return null;
+        return (
+          <group
+            key={id}
+            userData={{ partId: id }}
+            onClick={(e) => {
+              e.stopPropagation();
+              selectPart(id);
+            }}
+          >
+            <Item {...props} />
+          </group>
+        );
+      })}
     </group>
   );
 }
