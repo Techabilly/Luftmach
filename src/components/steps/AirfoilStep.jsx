@@ -2,37 +2,40 @@ import React from 'react';
 import DesignApp from '../../App.jsx';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { getDesignState, getDesignThumbnail } from '../../lib/designState.js';
+import { Box, Button, Stack } from '@mui/material';
 
 export default function AirfoilStep({ onSave, onSaveAs, onLoad }) {
   const { user } = useAuth();
   return (
-    <div>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {user && (
-        <div style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-          <button
-            type="button"
+        <Stack direction="row" spacing={1} sx={{ p: 1 }}>
+          <Button
+            variant="contained"
             onClick={() =>
               onSave({ data: getDesignState(), thumbnail: getDesignThumbnail() })
             }
             disabled={!user}
           >
             Save
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="contained"
             onClick={() =>
               onSaveAs({ data: getDesignState(), thumbnail: getDesignThumbnail() })
             }
             disabled={!user}
           >
             Save as…
-          </button>
-          <button type="button" onClick={onLoad} disabled={!user}>
+          </Button>
+          <Button variant="contained" onClick={onLoad} disabled={!user}>
             Load
-          </button>
-        </div>
+          </Button>
+        </Stack>
       )}
-      <DesignApp showAirfoilControls />
-    </div>
+      <Box sx={{ flex: 1, minHeight: 0 }}>
+        <DesignApp showAirfoilControls />
+      </Box>
+    </Box>
   );
 }

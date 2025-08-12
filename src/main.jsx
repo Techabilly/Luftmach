@@ -3,11 +3,17 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import DesignFlow from './components/DesignFlow.jsx'
 import { AuthProvider } from './auth/AuthContext.jsx'
-//ggggggggg
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+
+const theme = createTheme()
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <DesignFlow />
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
+        <DesignFlow />
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>,
 )
