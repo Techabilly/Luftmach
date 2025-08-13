@@ -29,8 +29,10 @@ export default function Aircraft(props) {
   return (
     <group>
       {enabledParts.map((id) => {
-        const Item = registry[id]?.Component;
-        if (!Item) return null;
+        const item = registry[id];
+        if (!item) return null;
+        const Component = item.Component;
+        if (id === 'fuselage' && !props.showFuselage) return null;
         return (
           <group
             key={id}
@@ -40,7 +42,11 @@ export default function Aircraft(props) {
               selectPart(id);
             }}
           >
-            <Item {...props} />
+            {id === 'fuselage' ? (
+              <Component {...props.fuselageParams} />
+            ) : (
+              <Component {...props} />
+            )}
           </group>
         );
       })}
