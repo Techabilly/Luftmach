@@ -121,12 +121,20 @@ function createFuselageGeometry(
     const start = sections[s];
     const end = sections[s + 1];
 
-    for (let i = 0; i < start.points.length; i++) {
-      vertices.push(start.points[i].x, start.points[i].y + start.y, start.pos);
-      vertices.push(end.points[i].x, end.points[i].y + end.y, end.pos);
+    // Some sections can end up with differing point counts which would
+    // cause null/undefined accesses when building the geometry. Guard
+    // against this by only iterating over the shared subset of points.
+    const count = Math.min(start.points.length, end.points.length);
+
+    for (let i = 0; i < count; i++) {
+      const sp = start.points[i];
+      const ep = end.points[i];
+      if (!sp || !ep) continue;
+      vertices.push(sp.x, sp.y + start.y, start.pos);
+      vertices.push(ep.x, ep.y + end.y, end.pos);
     }
 
-    for (let i = 0; i < start.points.length - 1; i++) {
+    for (let i = 0; i < count - 1; i++) {
       const r1 = offset + 2 * i;
       const t1 = offset + 2 * i + 1;
       const r2 = offset + 2 * (i + 1);
@@ -135,10 +143,12 @@ function createFuselageGeometry(
       indices.push(t1, t2, r2);
     }
 
-    const last = start.points.length - 1;
-    indices.push(offset + 2 * last, offset + 2 * last + 1, offset);
-    indices.push(offset + 2 * last + 1, offset + 1, offset);
-    offset += start.points.length * 2;
+    const last = count - 1;
+    if (last >= 0) {
+      indices.push(offset + 2 * last, offset + 2 * last + 1, offset);
+      indices.push(offset + 2 * last + 1, offset + 1, offset);
+    }
+    offset += count * 2;
   }
 
   const geom = new THREE.BufferGeometry();
@@ -218,7 +228,9 @@ export default function Fuselage(props) {
       </mesh>
       {debugCrossSections && crossSections.map((sec, idx) => {
         const g = new THREE.BufferGeometry().setFromPoints(
-          sec.points.map(p => new THREE.Vector3(p.x, p.y + sec.y, 0))
+          sec.points
+            .filter(Boolean)
+            .map((p) => new THREE.Vector3(p.x, p.y + sec.y, 0))
         );
         return (
           <lineLoop key={idx} geometry={g} position={[0, 0, sec.pos]}>
