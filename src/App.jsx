@@ -43,7 +43,7 @@ function CameraCenter({ controlsRef, targetGroup }) {
 }
 // Trigger rebuild
 export default function App({ showAirfoilControls = false } = {}) {
-  const { selectPart } = useUi();
+  const { selectPart, enabledParts } = useUi();
   const [color, setColor] = useState({ h: 200, s: 60, v: 50 });
 
   const themeColors = useMemo(() => {
@@ -184,7 +184,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     tailcapLength: num(20, { min: 1, max: 100, step: 1, label: 'Tail Cap Length' }),
     showCrossSections: { value: false, label: 'Show Cross Sections' },
     segmentCount: num(10, { min: 2, max: 50, step: 1, label: 'Segment Count' }),
-  }, { render: () => !showAirfoilControls });
+  }, { render: () => enabledParts.includes('fuselage') && !showAirfoilControls });
 
   const panel1NacelleParams = useControls(
     'Panel 1 Nacelle',
@@ -217,6 +217,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     },
     {
       render: (get) =>
+        enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel1') &&
         get('Panel 1 Airfoil.nacelle') &&
         !showAirfoilControls,
@@ -254,6 +255,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     },
     {
       render: (get) =>
+        enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel2') &&
         get('Panel 2 Airfoil.nacelle') &&
         !showAirfoilControls,
@@ -290,14 +292,17 @@ export default function App({ showAirfoilControls = false } = {}) {
       bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
     {
-      render: (get) => get('Wing Tip.nacelle') && !showAirfoilControls,
+      render: (get) =>
+        enabledParts.includes('nacelle') &&
+        get('Wing Tip.nacelle') &&
+        !showAirfoilControls,
     },
   );
 
   const { showNacelles } = useControls(
     'Nacelles',
     { showNacelles: false },
-    { render: () => !showAirfoilControls },
+    { render: () => enabledParts.includes('nacelle') && !showAirfoilControls },
   );
 
   const {
@@ -320,7 +325,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     rudderOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
     frontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Corner Radius' }),
     backCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Corner Radius' }),
-  });
+  }, { render: () => enabledParts.includes('rudder') && !showAirfoilControls });
 
   const {
     showElevator,
@@ -346,7 +351,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Camber Pos' }),
     elevatorAngle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
     elevatorOffset: num(-32, { min: -100, max: 100, step: 1, label: 'Offset' }),
-  });
+  }, { render: () => enabledParts.includes('elevator') && !showAirfoilControls });
 
   const sections = [rootParams];
   const nacelleFlags = [];
