@@ -107,10 +107,15 @@ function createWingGeometry(sections, sweep, mirrored) {
     const root = sectionPoints[s];
     const tip = sectionPoints[s + 1];
 
+    // Ensure both sections contribute the same number of points to avoid
+    // accessing undefined/null entries when building the geometry.
+    const count = Math.min(root.points.length, tip.points.length);
+
     const offset = vertices.length / 3;
-    for (let i = 0; i < root.points.length; i++) {
+    for (let i = 0; i < count; i++) {
       const rp = root.points[i];
       const tp = tip.points[i];
+      if (!rp || !tp) continue;
       const startY = rp.y + yOffset;
       const endY = tp.y + yOffset + Math.tan(dihedralRad) * spanLen;
       const rRatio = rp.x / root.chord;
@@ -120,7 +125,7 @@ function createWingGeometry(sections, sweep, mirrored) {
       vertices.push(startX, startY, rZ);
       vertices.push(endX, endY, tZ);
     }
-    for (let i = 0; i < root.points.length - 1; i++) {
+    for (let i = 0; i < count - 1; i++) {
       const r1 = offset + 2 * i;
       const t1 = offset + 2 * i + 1;
       const r2 = offset + 2 * (i + 1);
