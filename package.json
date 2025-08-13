@@ -14,7 +14,7 @@
     "three": "^0.167.0",
     "@react-three/fiber": "^8.16.1",
     "@react-three/drei": "^9.121.3",
-    "leva": "^0.9.41"
+    "leva": "^0.10.0"
   },
   "devDependencies": {
     "vite": "^5.3.3",
