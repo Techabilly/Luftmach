@@ -1,53 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { IconButton, Popover, Stack, Slider } from '@mui/material';
+import PaletteIcon from '@mui/icons-material/Palette';
 
 export default function ThemeSwitcher({ color, setColor }) {
-  const update = (key) => (e) => setColor({ ...color, [key]: Number(e.target.value) });
-  const sliderStyle = { width: '100%' };
-  const containerStyle = {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 1000,
-    background: 'var(--bg-color)',
-    padding: '10px',
-    borderRadius: '8px',
-    color: 'var(--text-color)',
-  };
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+  const update = (key) => (_e, value) => setColor({ ...color, [key]: value });
+
   return (
-    <div style={containerStyle}>
-      <label>
-        Hue: {color.h}
-        <input
-          type="range"
-          min="0"
-          max="360"
-          value={color.h}
-          onChange={update('h')}
-          style={sliderStyle}
-        />
-      </label>
-      <label>
-        Saturation: {color.s}
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={color.s}
-          onChange={update('s')}
-          style={sliderStyle}
-        />
-      </label>
-      <label>
-        Value: {color.v}
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={color.v}
-          onChange={update('v')}
-          style={sliderStyle}
-        />
-      </label>
-    </div>
+    <>
+      <IconButton color="inherit" onClick={handleOpen} aria-label="theme settings">
+        <PaletteIcon />
+      </IconButton>
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Stack sx={{ p: 2, width: 200 }} spacing={2}>
+          <Slider value={color.h} min={0} max={360} onChange={update('h')} />
+          <Slider value={color.s} min={0} max={100} onChange={update('s')} />
+          <Slider value={color.v} min={0} max={100} onChange={update('v')} />
+        </Stack>
+      </Popover>
+    </>
   );
 }
