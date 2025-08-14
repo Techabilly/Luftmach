@@ -3,11 +3,11 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useControls } from 'leva';
 import { resetNumber } from './components/ResetNumberPlugin';
-import AddPartsDrawer from './components/AddPartsDrawer.jsx';
-import ControlsDrawer from './components/ControlsDrawer.jsx';
+import PartsDrawer from './components/PartsDrawer.jsx';
+import ControlsPanel from './components/ControlsPanel.jsx';
+import { Leva } from 'leva';
 import { useUi } from './ui/UiContext.jsx';
-import { AppBar, Toolbar, IconButton, Box } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, Box } from '@mui/material';
 
 function num(value, settings = {}) {
   return { value, component: resetNumber, ...settings };
@@ -47,7 +47,6 @@ function CameraCenter({ controlsRef, targetGroup }) {
 export default function App({ showAirfoilControls = false } = {}) {
   const { selectPart, enabledParts } = useUi();
   const [color, setColor] = useState({ h: 200, s: 60, v: 50 });
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const themeColors = useMemo(() => {
     const link = hsvToHex(color.h, color.s, color.v);
@@ -448,37 +447,25 @@ export default function App({ showAirfoilControls = false } = {}) {
         sx={{ background: 'var(--button-bg)', color: 'var(--text-color)' }}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={() => setDrawerOpen(true)}
-            aria-label="open controls"
-          >
-            <MenuIcon />
-          </IconButton>
+          <PartsDrawer />
           <Box sx={{ flexGrow: 1 }} />
-          <AddPartsDrawer />
           <ThemeSwitcher color={color} setColor={setColor} />
         </Toolbar>
       </AppBar>
-      <ControlsDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        levaTheme={levaTheme}
-      />
-      <Box sx={{ flex: 1, position: 'relative' }}>
-        {showAirfoilControls ? (
-          <Box sx={{ p: 2 }}>{previewElements}</Box>
-        ) : (
-          <>
-            <Canvas
-              style={{ width: '100%', height: '100%' }}
-              camera={{ position: [0, 0, 400], fov: 50 }}
-              onPointerMissed={() => selectPart(null)}
-            >
-              <ResizeHandler />
-              <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
-              <ambientLight intensity={0.5} />
+      <Box sx={{ display: 'flex', flex: 1, position: 'relative' }}>
+        <Box sx={{ flex: 1, position: 'relative' }}>
+          {showAirfoilControls ? (
+            <Box sx={{ p: 2 }}>{previewElements}</Box>
+          ) : (
+            <>
+              <Canvas
+                style={{ width: '100%', height: '100%' }}
+                camera={{ position: [0, 0, 400], fov: 50 }}
+                onPointerMissed={() => selectPart(null)}
+              >
+                <ResizeHandler />
+                <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
+                <ambientLight intensity={0.5} />
               <directionalLight position={[1, 2, 3]} intensity={1} />
               <Aircraft
                 groupRef={groupRef}
@@ -602,6 +589,20 @@ export default function App({ showAirfoilControls = false } = {}) {
             </Box>
           </>
         )}
+        </Box>
+        <Box
+          sx={{
+            width: 340,
+            p: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            overflow: 'auto',
+          }}
+        >
+          <ControlsPanel />
+          <Leva collapsed={false} fill theme={levaTheme} />
+        </Box>
       </Box>
     </div>
   );
