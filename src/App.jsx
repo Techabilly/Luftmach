@@ -105,7 +105,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     enablePanel2: { value: false, label: 'Enable Panel 2' },
   });
 
-  const rootParams = useControls('Wing Root', {
+  const rootParams = useControls('Wing Root Section', {
     chord: num(100, { min: 20, max: 400, render: () => !showAirfoilControls }),
     thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
     camber: num(0.02, { min: 0, max: 0.1, render: () => showAirfoilControls }),
@@ -116,7 +116,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   });
 
 
-  const panel1Params = useControls('Panel 1 Airfoil', {
+  const panel1Params = useControls('Wing Panel 1 Airfoil', {
     chord: num(80, { min: 10, max: 400, render: () => !showAirfoilControls }),
     thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
     camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
@@ -130,11 +130,11 @@ export default function App({ showAirfoilControls = false } = {}) {
       value: 'none',
       options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
       label: 'Nacelle Fins',
-      render: (get) => get('Panel 1 Airfoil.nacelle'),
+      render: (get) => get('Wing Panel 1 Airfoil.nacelle'),
     },
   }, { render: (get) => get('Wing Settings.enablePanel1') });
 
-  const panel2Params = useControls('Panel 2 Airfoil', {
+  const panel2Params = useControls('Wing Panel 2 Airfoil', {
     chord: num(70, { min: 10, max: 400, render: () => !showAirfoilControls }),
     thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
     camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
@@ -148,11 +148,11 @@ export default function App({ showAirfoilControls = false } = {}) {
       value: 'none',
       options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
       label: 'Nacelle Fins',
-      render: (get) => get('Panel 2 Airfoil.nacelle'),
+      render: (get) => get('Wing Panel 2 Airfoil.nacelle'),
     },
   }, { render: (get) => get('Wing Settings.enablePanel2') });
 
-  const tipParams = useControls('Wing Tip', {
+  const tipParams = useControls('Wing Tip Airfoil', {
     chord: num(60, { min: 10, max: 400, render: () => !showAirfoilControls }),
     thickness: num(0.12, { min: 0.05, max: 0.25, render: () => showAirfoilControls }),
     camber: num(0.015, { min: 0, max: 0.1, render: () => showAirfoilControls }),
@@ -164,12 +164,12 @@ export default function App({ showAirfoilControls = false } = {}) {
       value: 'none',
       options: { None: 'none', Top: 'top', Bottom: 'bottom', Both: 'both' },
       label: 'Nacelle Fins',
-      render: (get) => get('Wing Tip.nacelle'),
+      render: (get) => get('Wing Tip Airfoil.nacelle'),
     },
   });
 
 
-  const fuselageParams = useControls('Fuselage', {
+  const fuselageParams = useControls('Fuselage Settings', {
     showFuselage: { value: true, label: 'Show Fuselage' },
     length: num(200, { min: 50, max: 600 }),
     frontWidth: num(40, { min: 10, max: 200, label: 'Front Width' }),
@@ -190,7 +190,7 @@ export default function App({ showAirfoilControls = false } = {}) {
   }, { render: () => enabledParts.includes('fuselage') && !showAirfoilControls });
 
   const panel1NacelleParams = useControls(
-    'Panel 1 Nacelle',
+    'Wing Panel 1 Nacelle',
     {
       length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
       frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
@@ -222,13 +222,13 @@ export default function App({ showAirfoilControls = false } = {}) {
       render: (get) =>
         enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel1') &&
-        get('Panel 1 Airfoil.nacelle') &&
+        get('Wing Panel 1 Airfoil.nacelle') &&
         !showAirfoilControls,
     },
   );
 
   const panel2NacelleParams = useControls(
-    'Panel 2 Nacelle',
+    'Wing Panel 2 Nacelle',
     {
       length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
       frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
@@ -260,13 +260,13 @@ export default function App({ showAirfoilControls = false } = {}) {
       render: (get) =>
         enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel2') &&
-        get('Panel 2 Airfoil.nacelle') &&
+        get('Wing Panel 2 Airfoil.nacelle') &&
         !showAirfoilControls,
     },
   );
 
   const tipNacelleParams = useControls(
-    'Tip Nacelle',
+    'Wing Tip Nacelle',
     {
       length: num(40, { min: 10, max: 200, step: 1, label: 'Length' }),
       frontWidth: num(20, { min: 1, max: 100, step: 1, label: 'Front Width' }),
@@ -297,13 +297,13 @@ export default function App({ showAirfoilControls = false } = {}) {
     {
       render: (get) =>
         enabledParts.includes('nacelle') &&
-        get('Wing Tip.nacelle') &&
+        get('Wing Tip Airfoil.nacelle') &&
         !showAirfoilControls,
     },
   );
 
   const { showNacelles } = useControls(
-    'Nacelles',
+    'Nacelle Toggle',
     { showNacelles: false },
     { render: () => enabledParts.includes('nacelle') && !showAirfoilControls },
   );
@@ -318,7 +318,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     rudderOffset,
     frontCornerRadius,
     backCornerRadius,
-  } = useControls('Rudder', {
+  } = useControls('Rudder Settings', {
     showRudder: false,
     rudderHeight: num(40, { min: 10, max: 100, step: 1, label: 'Height' }),
     rootChord: num(30, { min: 10, max: 100, step: 1, label: 'Root Chord' }),
@@ -342,7 +342,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     elevatorCamberPos,
     elevatorAngle,
     elevatorOffset,
-  } = useControls('Elevator', {
+  } = useControls('Elevator Settings', {
     showElevator: false,
     elevatorRootChord: num(50, { min: 10, max: 200, step: 1, label: 'Root Chord' }),
     elevatorTipChord: num(50, { min: 10, max: 200, step: 1, label: 'Tip Chord' }),
@@ -386,7 +386,7 @@ export default function App({ showAirfoilControls = false } = {}) {
         camber={rootParams.camber}
         camberPos={rootParams.camberPos}
         angle={rootParams.angle}
-        label="Wing Root"
+        label="Wing Root Section"
       />
       {enablePanel1 && (
         <AirfoilPreview
@@ -397,7 +397,7 @@ export default function App({ showAirfoilControls = false } = {}) {
           camberPos={panel1Params.camberPos}
           angle={panel1Params.angle}
           pivotPercent={panel1Params.pivotPercent}
-          label="Panel 1 Airfoil"
+          label="Wing Panel 1 Airfoil"
         />
       )}
       {enablePanel2 && (
@@ -409,7 +409,7 @@ export default function App({ showAirfoilControls = false } = {}) {
           camberPos={panel2Params.camberPos}
           angle={panel2Params.angle}
           pivotPercent={panel2Params.pivotPercent}
-          label="Panel 2 Airfoil"
+          label="Wing Panel 2 Airfoil"
         />
       )}
       <AirfoilPreview
@@ -420,7 +420,7 @@ export default function App({ showAirfoilControls = false } = {}) {
         camberPos={tipParams.camberPos}
         angle={tipParams.angle}
         pivotPercent={tipParams.pivotPercent}
-        label="Wing Tip"
+        label="Wing Tip Airfoil"
       />
     </>
   );
