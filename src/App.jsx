@@ -211,10 +211,10 @@ export default function App({ showAirfoilControls = false } = {}) {
       finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
       finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
-      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finThickness: num(0.12, { min: 0.05, max: 0.25, label: 'Fin Thickness' }),
+      finCamber: num(0.02, { min: 0, max: 0.1, label: 'Fin Camber' }),
+      finCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Fin Camber Pos' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finFrontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Front Top Radius' }),
-      finBackCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Back Top Radius' }),
       topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
       bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
@@ -249,10 +249,10 @@ export default function App({ showAirfoilControls = false } = {}) {
       finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
       finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
-      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finThickness: num(0.12, { min: 0.05, max: 0.25, label: 'Fin Thickness' }),
+      finCamber: num(0.02, { min: 0, max: 0.1, label: 'Fin Camber' }),
+      finCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Fin Camber Pos' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finFrontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Front Top Radius' }),
-      finBackCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Back Top Radius' }),
       topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
       bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
@@ -287,10 +287,10 @@ export default function App({ showAirfoilControls = false } = {}) {
       finRootChord: num(15, { min: 1, max: 100, step: 1, label: 'Fin Root Chord' }),
       finTipChord: num(0, { min: 0, max: 100, step: 1, label: 'Fin Tip Chord' }),
       finSweep: num(0, { min: -300, max: 300, step: 1, label: 'Fin Sweep' }),
-      finThickness: num(1, { min: 0.1, max: 10, step: 0.1, label: 'Fin Thickness' }),
+      finThickness: num(0.12, { min: 0.05, max: 0.25, label: 'Fin Thickness' }),
+      finCamber: num(0.02, { min: 0, max: 0.1, label: 'Fin Camber' }),
+      finCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Fin Camber Pos' }),
       finOffset: num(0, { min: -100, max: 100, step: 1, label: 'Fin Offset' }),
-      finFrontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Front Top Radius' }),
-      finBackCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Fin Back Top Radius' }),
       topFinAngle: num(45, { min: -180, max: 180, step: 1, label: 'Top Fin Angle (°)' }),
       bottomFinAngle: num(-45, { min: -180, max: 180, step: 1, label: 'Bottom Fin Angle (°)' }),
     },
@@ -315,19 +315,21 @@ export default function App({ showAirfoilControls = false } = {}) {
     tipChord,
     rudderSweep,
     rudderThickness,
+    rudderCamber,
+    rudderCamberPos,
+    rudderAngle,
     rudderOffset,
-    frontCornerRadius,
-    backCornerRadius,
   } = useControls('Rudder', {
     showRudder: false,
     rudderHeight: num(40, { min: 10, max: 100, step: 1, label: 'Height' }),
     rootChord: num(30, { min: 10, max: 100, step: 1, label: 'Root Chord' }),
     tipChord: num(0, { min: 0, max: 100, step: 1, label: 'Tip Chord' }),
     rudderSweep: num(0, { min: -300, max: 300, step: 1, label: 'Sweep' }),
-    rudderThickness: num(2, { min: 1, max: 10, step: 0.5, label: 'Thickness' }),
+    rudderThickness: num(0.12, { min: 0.05, max: 0.25, label: 'Thickness' }),
+    rudderCamber: num(0.02, { min: 0, max: 0.1, label: 'Camber' }),
+    rudderCamberPos: num(0.4, { min: 0.1, max: 0.9, label: 'Camber Pos' }),
+    rudderAngle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
     rudderOffset: num(0, { min: -100, max: 100, step: 1, label: 'Offset' }),
-    frontCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Front Corner Radius' }),
-    backCornerRadius: num(0, { min: 0, max: 50, step: 1, label: 'Back Corner Radius' }),
   }, { render: () => enabledParts.includes('rudder') && !showAirfoilControls });
 
   const {
@@ -492,14 +494,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                 nacelleFlags={nacelleFlags}
                 nacelleFins={nacelleFins}
                 showRudder={showRudder}
-                rudderHeight={rudderHeight}
+                height={rudderHeight}
                 rootChord={rootChord}
                 tipChord={tipChord}
                 rudderSweep={rudderSweep}
-                rudderThickness={rudderThickness}
-                rudderOffset={rudderOffset}
-                frontCornerRadius={frontCornerRadius}
-                backCornerRadius={backCornerRadius}
+                thickness={rudderThickness}
+                camber={rudderCamber}
+                camberPos={rudderCamberPos}
+                angle={rudderAngle}
+                offset={rudderOffset}
                 showElevator={showElevator}
                 elevatorRootChord={elevatorRootChord}
                 elevatorTipChord={elevatorTipChord}
@@ -541,14 +544,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                   nacelleFlags={nacelleFlags}
                   nacelleFins={nacelleFins}
                   showRudder={showRudder}
-                  rudderHeight={rudderHeight}
+                  height={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
                   rudderSweep={rudderSweep}
-                  rudderThickness={rudderThickness}
-                  rudderOffset={rudderOffset}
-                  frontCornerRadius={frontCornerRadius}
-                  backCornerRadius={backCornerRadius}
+                  thickness={rudderThickness}
+                  camber={rudderCamber}
+                  camberPos={rudderCamberPos}
+                  angle={rudderAngle}
+                  offset={rudderOffset}
                   showElevator={showElevator}
                   elevatorRootChord={elevatorRootChord}
                   elevatorTipChord={elevatorTipChord}
@@ -576,14 +580,15 @@ export default function App({ showAirfoilControls = false } = {}) {
                   nacelleFlags={nacelleFlags}
                   nacelleFins={nacelleFins}
                   showRudder={showRudder}
-                  rudderHeight={rudderHeight}
+                  height={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
                   rudderSweep={rudderSweep}
-                  rudderThickness={rudderThickness}
-                  rudderOffset={rudderOffset}
-                  frontCornerRadius={frontCornerRadius}
-                  backCornerRadius={backCornerRadius}
+                  thickness={rudderThickness}
+                  camber={rudderCamber}
+                  camberPos={rudderCamberPos}
+                  angle={rudderAngle}
+                  offset={rudderOffset}
                   showElevator={showElevator}
                   elevatorRootChord={elevatorRootChord}
                   elevatorTipChord={elevatorTipChord}

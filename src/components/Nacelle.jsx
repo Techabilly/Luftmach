@@ -29,10 +29,10 @@ export default function Nacelle({
   finRootChord = 15,
   finTipChord = 0,
   finSweep = 0,
-  finThickness = 1,
+  finThickness = 0.12,
+  finCamber = 0.02,
+  finCamberPos = 0.4,
   finOffset = 0,
-  finFrontCornerRadius = 0,
-  finBackCornerRadius = 0,
 }) {
   const body = (
     <Fuselage
@@ -88,11 +88,11 @@ export default function Nacelle({
           height={finHeight}
           rootChord={finRootChord}
           tipChord={finTipChord}
-          sweep={finSweep}
+          rudderSweep={finSweep}
           thickness={finThickness}
+          camber={finCamber}
+          camberPos={finCamberPos}
           offset={finOffset}
-          frontCornerRadius={finFrontCornerRadius}
-          backCornerRadius={finBackCornerRadius}
           wireframe={wireframe}
         />
       </group>,
@@ -109,11 +109,11 @@ export default function Nacelle({
           height={finHeight}
           rootChord={finRootChord}
           tipChord={finTipChord}
-          sweep={finSweep}
+          rudderSweep={finSweep}
           thickness={finThickness}
+          camber={finCamber}
+          camberPos={finCamberPos}
           offset={finOffset}
-          frontCornerRadius={finFrontCornerRadius}
-          backCornerRadius={finBackCornerRadius}
           wireframe={wireframe}
         />
       </group>,
