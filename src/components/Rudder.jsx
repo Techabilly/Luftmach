@@ -4,7 +4,7 @@ import * as THREE from 'three';
 export default function Rudder({
   height = 40,
   rootChord = 30,
-  tipChord = 0,
+  tipChord = 20,
   sweep = 0,
   thickness = 2,
   offset = 0,
