@@ -12,7 +12,7 @@ import { useUi } from '../ui/UiContext.jsx';
  * work. Each rendered part is wrapped in a group with a partId so the 3D view
  * can determine which part was clicked.
  */
-export default function Aircraft(props) {
+export default function Aircraft({ groupRef, ...props }) {
   const { enabledParts, registry, registerParts, selectPart } = useUi();
 
   // register known parts on mount
@@ -27,7 +27,7 @@ export default function Aircraft(props) {
   }, [registerParts]);
 
   return (
-    <group>
+    <group ref={groupRef}>
       {enabledParts.map((id) => {
         const item = registry[id];
         if (!item) return null;

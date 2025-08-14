@@ -29,18 +29,21 @@ function ResizeHandler() {
   return null;
 }
 
-function CameraCenter({ controlsRef, targetGroup }) {
-  const { camera } = useThree();
+function CameraCenter({ controlsRef, targetGroup, enabledParts }) {
+  const { camera, size } = useThree();
   useEffect(() => {
     if (!controlsRef.current || !targetGroup.current) return;
     const box = new THREE.Box3().setFromObject(targetGroup.current);
     const center = new THREE.Vector3();
     box.getCenter(center);
-    const offset = new THREE.Vector3().subVectors(camera.position, controlsRef.current.target);
+    const offset = new THREE.Vector3().subVectors(
+      camera.position,
+      controlsRef.current.target
+    );
     controlsRef.current.target.copy(center);
     camera.position.copy(center.clone().add(offset));
     controlsRef.current.update();
-  }, [camera, controlsRef, targetGroup]);
+  }, [camera, controlsRef, targetGroup, size, enabledParts]);
   return null;
 }
 // Trigger rebuild
@@ -88,6 +91,17 @@ export default function App({ showAirfoilControls = false } = {}) {
 
   const controlsRef = useRef();
   const groupRef = useRef();
+  const [viewport, setViewport] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () =>
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const {
     sweep,
     mirrored,
@@ -102,7 +116,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     mountZ: num(-87, { min: -300, max: 300, step: 1, label: 'Mount Position' }),
     enablePanel1: { value: false, label: 'Enable Panel 1' },
     enablePanel2: { value: false, label: 'Enable Panel 2' },
-  });
+  }, { render: () => enabledParts.includes('wing') });
 
   const rootParams = useControls('Wing Root Section', {
     chord: num(100, { min: 20, max: 400, render: () => !showAirfoilControls }),
@@ -112,7 +126,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     length: num(150, { min: 10, max: 500, label: 'Panel Length' }),
     angle: num(0, { min: -15, max: 15, step: 0.1, label: 'Angle of Attack (°)' }),
     dihedral: num(0, { min: -20, max: 20, step: 0.1, label: 'Dihedral (°)' }),
-  });
+  }, { render: () => enabledParts.includes('wing') });
 
 
   const panel1Params = useControls('Wing Panel 1 Airfoil', {
@@ -131,7 +145,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       label: 'Nacelle Fins',
       render: (get) => get('Wing Panel 1 Airfoil.nacelle'),
     },
-  }, { render: (get) => get('Wing Settings.enablePanel1') });
+  }, { render: (get) => enabledParts.includes('wing') && get('Wing Settings.enablePanel1') });
 
   const panel2Params = useControls('Wing Panel 2 Airfoil', {
     chord: num(70, { min: 10, max: 400, render: () => !showAirfoilControls }),
@@ -149,7 +163,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       label: 'Nacelle Fins',
       render: (get) => get('Wing Panel 2 Airfoil.nacelle'),
     },
-  }, { render: (get) => get('Wing Settings.enablePanel2') });
+  }, { render: (get) => enabledParts.includes('wing') && get('Wing Settings.enablePanel2') });
 
   const tipParams = useControls('Wing Tip Airfoil', {
     chord: num(60, { min: 10, max: 400, render: () => !showAirfoilControls }),
@@ -165,7 +179,7 @@ export default function App({ showAirfoilControls = false } = {}) {
       label: 'Nacelle Fins',
       render: (get) => get('Wing Tip Airfoil.nacelle'),
     },
-  });
+  }, { render: () => enabledParts.includes('wing') });
 
 
   const fuselageParams = useControls('Fuselage Settings', {
@@ -219,6 +233,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     },
     {
       render: (get) =>
+        enabledParts.includes('wing') &&
         enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel1') &&
         get('Wing Panel 1 Airfoil.nacelle') &&
@@ -257,6 +272,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     },
     {
       render: (get) =>
+        enabledParts.includes('wing') &&
         enabledParts.includes('nacelle') &&
         get('Wing Settings.enablePanel2') &&
         get('Wing Panel 2 Airfoil.nacelle') &&
@@ -295,6 +311,7 @@ export default function App({ showAirfoilControls = false } = {}) {
     },
     {
       render: (get) =>
+        enabledParts.includes('wing') &&
         enabledParts.includes('nacelle') &&
         get('Wing Tip Airfoil.nacelle') &&
         !showAirfoilControls,
@@ -304,7 +321,12 @@ export default function App({ showAirfoilControls = false } = {}) {
   const { showNacelles } = useControls(
     'Nacelle Toggle',
     { showNacelles: false },
-    { render: () => enabledParts.includes('nacelle') && !showAirfoilControls },
+    {
+      render: () =>
+        enabledParts.includes('wing') &&
+        enabledParts.includes('nacelle') &&
+        !showAirfoilControls,
+    },
   );
 
   const {
@@ -440,7 +462,13 @@ export default function App({ showAirfoilControls = false } = {}) {
   return (
     <div
       id="app"
-      style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+      style={{
+        width: viewport.width,
+        height: viewport.height,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
       <AppBar
         position="static"
@@ -464,7 +492,11 @@ export default function App({ showAirfoilControls = false } = {}) {
                 onPointerMissed={() => selectPart(null)}
               >
                 <ResizeHandler />
-                <CameraCenter controlsRef={controlsRef} targetGroup={groupRef} />
+                <CameraCenter
+                  controlsRef={controlsRef}
+                  targetGroup={groupRef}
+                  enabledParts={enabledParts}
+                />
                 <ambientLight intensity={0.5} />
               <directionalLight position={[1, 2, 3]} intensity={1} />
               <Aircraft
