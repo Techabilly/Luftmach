@@ -33,6 +33,7 @@ export default function Aircraft(props) {
         if (!item) return null;
         const Component = item.Component;
         if (id === 'fuselage' && !props.showFuselage) return null;
+        if (id === 'rudder' && !props.showRudder) return null;
         return (
           <group
             key={id}

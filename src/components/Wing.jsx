@@ -162,7 +162,7 @@ function computeNacellePositions(sections, sweep) {
   const leadCurve = 1;
   const trailCurve = 1;
   const xPositions = [0];
-  for (let i = 0; i < sections.length - 1; i++) {
+  for (let i = 0; i < sections.length; i++) {
     const len = sections[i].length || 0;
     xPositions.push(xPositions[i] + len);
   }
@@ -172,11 +172,12 @@ function computeNacellePositions(sections, sweep) {
   const rootChord = sections[0].chord || 0;
   const tipChord = sections[sections.length - 1].chord || 0;
   const lead = (t) => sweep * Math.pow(t, leadCurve);
-  const trail = (t) => rootChord + (sweep + tipChord - rootChord) * Math.pow(t, trailCurve);
+  const trail = (t) =>
+    rootChord + (sweep + tipChord - rootChord) * Math.pow(t, trailCurve);
 
   let yOffset = 0;
   const positions = [];
-  for (let s = 0; s < sections.length - 1; s++) {
+  for (let s = 0; s < sections.length; s++) {
     const startX = xPositions[s];
     const endX = xPositions[s + 1];
     const spanLen = endX - startX;
@@ -188,6 +189,7 @@ function computeNacellePositions(sections, sweep) {
     const z = l + (tr - l) / 2;
     positions.push([endX, yOffset, z]);
   }
+  positions.shift();
   return positions;
 }
 
