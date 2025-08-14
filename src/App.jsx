@@ -12,7 +12,6 @@ import { AppBar, Toolbar, Box } from '@mui/material';
 function num(value, settings = {}) {
   return { value, component: resetNumber, ...settings };
 }
-import * as THREE from 'three';
 import './App.css';
 import AirfoilPreview from './components/AirfoilPreview';
 import ViewControls from './components/ViewControls';
@@ -20,6 +19,7 @@ import Aircraft from './components/Aircraft';
 import MiniView from './components/MiniView';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import { hsvToHex, adjustHSV } from './lib/color';
+import { fitCameraToObject } from './lib/camera';
 function ResizeHandler() {
   const { camera, size } = useThree();
   useEffect(() => {
@@ -33,16 +33,7 @@ function CameraCenter({ controlsRef, targetGroup, enabledParts }) {
   const { camera, size } = useThree();
   useEffect(() => {
     if (!controlsRef.current || !targetGroup.current) return;
-    const box = new THREE.Box3().setFromObject(targetGroup.current);
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    const offset = new THREE.Vector3().subVectors(
-      camera.position,
-      controlsRef.current.target
-    );
-    controlsRef.current.target.copy(center);
-    camera.position.copy(center.clone().add(offset));
-    controlsRef.current.update();
+    fitCameraToObject(camera, controlsRef.current, targetGroup.current, size);
   }, [camera, controlsRef, targetGroup, size, enabledParts]);
   return null;
 }
@@ -446,18 +437,6 @@ export default function App({ showAirfoilControls = false } = {}) {
     </>
   );
 
-  // Center the orbit controls on the aircraft when it is first rendered
-  useEffect(() => {
-    if (!controlsRef.current || !groupRef.current) return;
-    const box = new THREE.Box3().setFromObject(groupRef.current);
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    const camera = controlsRef.current.object;
-    const offset = new THREE.Vector3().subVectors(camera.position, controlsRef.current.target);
-    controlsRef.current.target.copy(center);
-    camera.position.copy(center.clone().add(offset));
-    controlsRef.current.update();
-  }, []);
 
   return (
     <div
