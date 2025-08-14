@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { useControls, Leva } from 'leva';
+import { useControls } from 'leva';
 import { resetNumber } from './components/ResetNumberPlugin';
 import AddPartsDrawer from './components/AddPartsDrawer.jsx';
-import ControlsPanel from './components/ControlsPanel.jsx';
+import ControlsDrawer from './components/ControlsDrawer.jsx';
 import { useUi } from './ui/UiContext.jsx';
+import { AppBar, Toolbar, IconButton, Box } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function num(value, settings = {}) {
   return { value, component: resetNumber, ...settings };
@@ -45,6 +47,7 @@ function CameraCenter({ controlsRef, targetGroup }) {
 export default function App({ showAirfoilControls = false } = {}) {
   const { selectPart, enabledParts } = useUi();
   const [color, setColor] = useState({ h: 200, s: 60, v: 50 });
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const themeColors = useMemo(() => {
     const link = hsvToHex(color.h, color.s, color.v);
@@ -436,36 +439,36 @@ export default function App({ showAirfoilControls = false } = {}) {
   }, []);
 
   return (
-    <div id="app" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      {/* Sidebar: Controls + Previews */}
-      <div
-        style={{
-          width: '340px',
-          backgroundColor: 'var(--button-bg)',
-          padding: '10px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          borderRight: '1px solid var(--link-color)',
-          overflowY: 'auto',
-          gap: '10px',
-        }}
+    <div
+      id="app"
+      style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+    >
+      <AppBar
+        position="static"
+        sx={{ background: 'var(--button-bg)', color: 'var(--text-color)' }}
       >
-        <AddPartsDrawer />
-        <ControlsPanel />
-        <Leva collapsed={false} fill theme={levaTheme} />
-      </div>
-
-      {/* Main Content */}
-      <div style={{ flex: 1, position: 'relative', height: '100%', overflowY: 'auto' }}>
-        <div style={{ padding: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="open controls"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }} />
+          <AddPartsDrawer />
           <ThemeSwitcher color={color} setColor={setColor} />
-          {!showAirfoilControls && (
-            <ViewControls controls={controlsRef} targetGroup={groupRef} />
-          )}
-        </div>
+        </Toolbar>
+      </AppBar>
+      <ControlsDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        levaTheme={levaTheme}
+      />
+      <Box sx={{ flex: 1, position: 'relative' }}>
         {showAirfoilControls ? (
-          <div style={{ padding: '10px' }}>{previewElements}</div>
+          <Box sx={{ p: 2 }}>{previewElements}</Box>
         ) : (
           <>
             <Canvas
@@ -513,14 +516,17 @@ export default function App({ showAirfoilControls = false } = {}) {
               />
               <OrbitControls ref={controlsRef} />
             </Canvas>
-            <div
-              style={{
+            <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+              <ViewControls controls={controlsRef} targetGroup={groupRef} />
+            </Box>
+            <Box
+              sx={{
                 position: 'absolute',
                 bottom: 20,
                 left: 20,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
+                gap: 1,
               }}
             >
               <MiniView position={[0, 0, 400]} up={[0, 1, 0]}>
@@ -530,34 +536,33 @@ export default function App({ showAirfoilControls = false } = {}) {
                   mirrored={mirrored}
                   mountHeight={mountHeight}
                   mountZ={mountZ}
-                showNacelles={showNacelles}
-                nacelleParamsList={nacelleParamsList}
-                nacelleFlags={nacelleFlags}
-                nacelleFins={nacelleFins}
-                showRudder={showRudder}
+                  showNacelles={showNacelles}
+                  nacelleParamsList={nacelleParamsList}
+                  nacelleFlags={nacelleFlags}
+                  nacelleFins={nacelleFins}
+                  showRudder={showRudder}
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
-                rudderSweep={rudderSweep}
-                rudderThickness={rudderThickness}
-                rudderOffset={rudderOffset}
-                frontCornerRadius={frontCornerRadius}
-                backCornerRadius={backCornerRadius}
-                showElevator={showElevator}
-                elevatorRootChord={elevatorRootChord}
-                elevatorTipChord={elevatorTipChord}
-                elevatorSpan={elevatorSpan}
-                elevatorSweep={elevatorSweep}
-                elevatorDihedral={elevatorDihedral}
-                elevatorThickness={elevatorThickness}
-                elevatorCamber={elevatorCamber}
-                elevatorCamberPos={elevatorCamberPos}
-                elevatorAngle={elevatorAngle}
-                elevatorOffset={elevatorOffset}
-                showFuselage={fuselageParams.showFuselage}
-                fuselageParams={fuselageParams}
-
-               />
+                  rudderSweep={rudderSweep}
+                  rudderThickness={rudderThickness}
+                  rudderOffset={rudderOffset}
+                  frontCornerRadius={frontCornerRadius}
+                  backCornerRadius={backCornerRadius}
+                  showElevator={showElevator}
+                  elevatorRootChord={elevatorRootChord}
+                  elevatorTipChord={elevatorTipChord}
+                  elevatorSpan={elevatorSpan}
+                  elevatorSweep={elevatorSweep}
+                  elevatorDihedral={elevatorDihedral}
+                  elevatorThickness={elevatorThickness}
+                  elevatorCamber={elevatorCamber}
+                  elevatorCamberPos={elevatorCamberPos}
+                  elevatorAngle={elevatorAngle}
+                  elevatorOffset={elevatorOffset}
+                  showFuselage={fuselageParams.showFuselage}
+                  fuselageParams={fuselageParams}
+                />
               </MiniView>
               <MiniView position={[0, 400, 0]} up={[0, 0, 1]}>
                 <Aircraft
@@ -566,38 +571,38 @@ export default function App({ showAirfoilControls = false } = {}) {
                   mirrored={mirrored}
                   mountHeight={mountHeight}
                   mountZ={mountZ}
-                showNacelles={showNacelles}
-                nacelleParamsList={nacelleParamsList}
-                nacelleFlags={nacelleFlags}
-                nacelleFins={nacelleFins}
-                showRudder={showRudder}
+                  showNacelles={showNacelles}
+                  nacelleParamsList={nacelleParamsList}
+                  nacelleFlags={nacelleFlags}
+                  nacelleFins={nacelleFins}
+                  showRudder={showRudder}
                   rudderHeight={rudderHeight}
                   rootChord={rootChord}
                   tipChord={tipChord}
-                rudderSweep={rudderSweep}
-                rudderThickness={rudderThickness}
-                rudderOffset={rudderOffset}
-                frontCornerRadius={frontCornerRadius}
-                backCornerRadius={backCornerRadius}
-                showElevator={showElevator}
-                elevatorRootChord={elevatorRootChord}
-                elevatorTipChord={elevatorTipChord}
-                elevatorSpan={elevatorSpan}
-                elevatorSweep={elevatorSweep}
-                elevatorDihedral={elevatorDihedral}
-                elevatorThickness={elevatorThickness}
-                elevatorCamber={elevatorCamber}
-                elevatorCamberPos={elevatorCamberPos}
-                elevatorAngle={elevatorAngle}
-                elevatorOffset={elevatorOffset}
-                showFuselage={fuselageParams.showFuselage}
-                fuselageParams={fuselageParams}
+                  rudderSweep={rudderSweep}
+                  rudderThickness={rudderThickness}
+                  rudderOffset={rudderOffset}
+                  frontCornerRadius={frontCornerRadius}
+                  backCornerRadius={backCornerRadius}
+                  showElevator={showElevator}
+                  elevatorRootChord={elevatorRootChord}
+                  elevatorTipChord={elevatorTipChord}
+                  elevatorSpan={elevatorSpan}
+                  elevatorSweep={elevatorSweep}
+                  elevatorDihedral={elevatorDihedral}
+                  elevatorThickness={elevatorThickness}
+                  elevatorCamber={elevatorCamber}
+                  elevatorCamberPos={elevatorCamberPos}
+                  elevatorAngle={elevatorAngle}
+                  elevatorOffset={elevatorOffset}
+                  showFuselage={fuselageParams.showFuselage}
+                  fuselageParams={fuselageParams}
                 />
               </MiniView>
-            </div>
+            </Box>
           </>
         )}
-      </div>
+      </Box>
     </div>
   );
 }

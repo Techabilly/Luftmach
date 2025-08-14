@@ -1,5 +1,7 @@
 import React from 'react';
 import * as THREE from 'three';
+import { Paper, IconButton } from '@mui/material';
+import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
 
 export default function ViewControls({ controls, targetGroup }) {
   const getCamera = () => (controls.current ? controls.current.object : null);
@@ -17,8 +19,10 @@ export default function ViewControls({ controls, targetGroup }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '4px' }}>
-      <button onClick={centerView}>Center</button>
-    </div>
+    <Paper elevation={3} sx={{ display: 'flex' }}>
+      <IconButton size="small" onClick={centerView} aria-label="center view">
+        <CenterFocusStrongIcon fontSize="small" />
+      </IconButton>
+    </Paper>
   );
 }

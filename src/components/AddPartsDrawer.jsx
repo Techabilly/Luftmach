@@ -27,7 +27,7 @@ export default function AddPartsDrawer() {
       >
         <AddIcon />
       </IconButton>
-      <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
+      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
         <List sx={{ width: 250 }}>
           {disabled.map((p) => (
             <ListItemButton
