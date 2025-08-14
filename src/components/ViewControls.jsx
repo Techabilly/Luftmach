@@ -1,7 +1,7 @@
 import React from 'react';
-import * as THREE from 'three';
 import { Paper, IconButton } from '@mui/material';
 import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
+import { fitCameraToObject } from '../lib/camera';
 
 export default function ViewControls({ controls, targetGroup }) {
   const getCamera = () => (controls.current ? controls.current.object : null);
@@ -9,13 +9,8 @@ export default function ViewControls({ controls, targetGroup }) {
   const centerView = () => {
     const camera = getCamera();
     if (!camera || !controls.current || !targetGroup.current) return;
-    const box = new THREE.Box3().setFromObject(targetGroup.current);
-    const c = new THREE.Vector3();
-    box.getCenter(c);
-    const offset = new THREE.Vector3().subVectors(camera.position, controls.current.target);
-    controls.current.target.copy(c);
-    camera.position.copy(c.clone().add(offset));
-    controls.current.update();
+    const { clientWidth: width, clientHeight: height } = controls.current.domElement;
+    fitCameraToObject(camera, controls.current, targetGroup.current, { width, height });
   };
 
   return (
