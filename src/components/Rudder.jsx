@@ -5,7 +5,7 @@ export default function Rudder({
   height = 40,
   rootChord = 30,
   tipChord = 20,
-  sweep = 0,
+  rudderSweep = 0,
   thickness = 2,
   offset = 0,
   frontCornerRadius = 0,
@@ -14,6 +14,7 @@ export default function Rudder({
   position = [0, 0, 0],
   rotation = [0, 0, 0],
 }) {
+  const sweep = rudderSweep;
   const geom = useMemo(() => {
     const shape = new THREE.Shape();
 
