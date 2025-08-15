@@ -459,8 +459,14 @@ export default function App({ showAirfoilControls = false } = {}) {
           <ThemeSwitcher color={color} setColor={setColor} />
         </Toolbar>
       </AppBar>
-      <Box sx={{ display: 'flex', flex: 1, position: 'relative' }}>
-        <Box sx={{ flex: 1, position: 'relative' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          position: 'relative',
+        }}
+      >
+        <Box sx={{ flex: 1, minWidth: 0, position: 'relative' }}>
           {showAirfoilControls ? (
             <Box sx={{ p: 2 }}>{previewElements}</Box>
           ) : (
@@ -603,7 +609,9 @@ export default function App({ showAirfoilControls = false } = {}) {
         </Box>
         <Box
           sx={{
-            width: 340,
+            width: { xs: 260, sm: 340 },
+            minWidth: { xs: 260, sm: 340 },
+            flexShrink: 0,
             p: 1,
             display: 'flex',
             flexDirection: 'column',
